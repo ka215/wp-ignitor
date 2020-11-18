@@ -1,0 +1,139 @@
+/**
+ * Settings Page Styles on Admin
+ */
+#wpbody-content {
+  font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, Meiryo, sans-serif;
+  font-size: 13px;
+  line-height: 1.6923;
+  letter-spacing: 0.25px;
+  font-feature-settings: 'palt';
+}
+
+code,
+.code {
+  font-family: Hack, monospace;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+
+.form-table {
+  th,
+  td,
+  td p:not(.description) {
+    font-size: 13px;
+    line-height: 1.6923;
+  }
+}
+
+.button {
+  font-size: 13px;
+  line-height: 2.142857;
+}
+
+input {
+  font-size: 13px;
+  line-height: 2.142857;
+
+  &.large-text, &.full-text {
+    width: 99%;
+  }
+}
+
+textarea {
+  font-size: 14px;
+  line-height: 1.5172414;
+  background-color: #ffffff;
+
+  &.large-text, &.full-text {
+    width: 99%;
+  }
+}
+
+.medium-text {
+  width: 35em;
+}
+
+.regular-text {
+  width: 25em;
+}
+
+.semi-regular-text {
+  width: 21em;
+}
+
+.normal-text {
+  width: 18em;
+}
+
+.little-text {
+  width: 12em;
+
+  /* same default size */
+}
+
+input.small-text {
+  width: 50px;
+  padding: 0 6px;
+}
+
+label input.small-text {
+  margin-top: -4px;
+}
+
+input {
+  &[type=number].small-text {
+    width: 65px;
+    padding-right: 0;
+  }
+
+  &.tiny-text {
+    width: 35px;
+  }
+
+  &[type=number].tiny-text {
+    width: 45px;
+    padding-right: 0;
+  }
+}
+
+.prefix,
+.surfix,
+.gap {
+  font-size: 14.5px;
+  line-height: 2.142857;
+
+  .mdi {
+    font-size: 16px;
+  }
+}
+
+.prefix { margin: auto 6px auto 2px; }
+.surfix { margin: auto 2px auto 6px; }
+.gap { margin: auto 7px; }
+
+input + button,
+input + .button,
+select + button,
+select + .button {
+  margin-left: 5px !important;
+}
+
+.mdi {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.text-success { color: #018786 !important; }
+.text-info { color: #5bc0de !important; }
+.text-warn { color: #cc3300 !important; }
+.text-alert { color: #bb2124 !important; }
+.text-denger { color: #b00020 !important; }
+
+/*
+ * Loader
+ */
+.loader-container {
+  width: 100px;
+  height: max-content;
+  margin: auto;
+}

@@ -1,0 +1,13 @@
+node_modules
+vendor
+assets/css/*.js
+
+.DS_Store
+.sass-cache/
+*.log
+*.orig
+__.*
+
+package-lock.json
+composer.lock
+yarn.lock
