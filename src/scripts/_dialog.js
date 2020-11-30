@@ -1,4 +1,4 @@
-import { parseObject, isElement } from './_utils'
+import { parseObject, isElement, logger } from './_utils'
 
 /**
  * Add handler of the dialog
@@ -137,7 +137,7 @@ function generateDialog( options ) {
                                     dialogBody.innerHTML = response.content
                                 })
                                 .catch((error) => {
-                                    console.error('Error:', error)
+                                    logger(error)
                                 })
                             } else
                             if ( content[0] ) {
@@ -238,7 +238,7 @@ function generateDialog( options ) {
                     switch(mutation.type) {
                         case 'childList':
                             Array.prototype.forEach.call(mutation.addedNodes, (elm) => {
-                                if ( elm.classList.contains('dialog-content') ) {
+                                if ( elm.classList && elm.classList.contains('dialog-content') ) {
                                     insertTitle()
                                     insertContent()
                                     insertFoot()

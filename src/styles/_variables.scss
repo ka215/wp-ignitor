@@ -1,6 +1,11 @@
+$base-size: 12px;
+$small-size: $base-size * 0.8335;
+$icon-size: 16px;
+
 $white: #fefefe;
 $white-smoke: #f5f5f5;
-$light-gray: #d3d3d3;
+$smoke: #e5e5e5;
+$light-gray: #d0d0d0;
 $fog: #abb1b5;
 $gray: #7d7d7d;
 $dark-gray: #594e52;
@@ -11,6 +16,13 @@ $green: #00a968;
 $signal-red: #e8383d;
 $orange: #ee7800;
 $yellow: #e9bc00;
+
+$primary: #007cba;
+$success: #018786;
+$info: #5bc0de;
+$warn: #cc3300;
+$alert: #bb2124;
+$denger: #b00020;
 
 $overlay-z: 100000;
 $dialog-z: 100001;

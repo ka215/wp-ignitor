@@ -13,7 +13,6 @@ class abstractClass {
     /**
      * Holds singleton objects (=instance)
      *
-     * @since 1.0.0
      * @access private
      * @var array
      */
@@ -22,7 +21,6 @@ class abstractClass {
     /**
      * Holds options key
      *
-     * @since 1.0.0
      * @access protected
      * @var string
      */
@@ -35,7 +33,6 @@ class abstractClass {
      * or create a method named default_options() which returns
      * an array of options.
      *
-     * @since 1.0.0
      * @access protected
      * @var object
      */
@@ -44,7 +41,6 @@ class abstractClass {
     /**
      * Constructor
      *
-     * @since 1.0.0
      * @access protected
      */
     protected function __construct() {
@@ -55,7 +51,6 @@ class abstractClass {
     /**
      * Clone
      *
-     * @since 1.0.0
      * @access private
      */
     private function __clone() {}
@@ -63,7 +58,6 @@ class abstractClass {
     /**
      * Returns singleton instance
      *
-     * @since 1.0.0
      * @access public
      *
      * @param string $class Class to instantiate
@@ -84,7 +78,6 @@ class abstractClass {
     /**
      * Called when object is constructed
      *
-     * @since 1.0.0
      * @access protected
      */
     protected function load() {
@@ -94,7 +87,6 @@ class abstractClass {
     /**
      * Loads options from DB
      *
-     * @since 1.0.0
      * @access public
      *
      * @param array|string
@@ -115,7 +107,6 @@ class abstractClass {
     /**
      * Saves options to DB
      *
-     * @since 1.0.0
      * @access public
      */
     public function save_options() {
@@ -126,7 +117,6 @@ class abstractClass {
     /**
      * Retrieves an option
      *
-     * @since 1.0.0
      * @access public
      *
      * @param string|array $option Name of option to retrieve or an array of hierarchy for multidimensional options
@@ -142,7 +132,6 @@ class abstractClass {
     /**
      * Recursively retrieves a multidimensional option
      *
-     * @since 1.0.0
      * @access private
      *
      * @param array $option Array of hierarchy
@@ -162,7 +151,6 @@ class abstractClass {
     /**
      * Retrieves all options
      *
-     * @since 1.0.0
      * @access public
      *
      * @return array Options
@@ -174,7 +162,6 @@ class abstractClass {
     /**
      * Sets an option
      *
-     * @since 1.0.0
      * @access public
      *
      * @param string $option Name of option to set or an array of hierarchy for multidimensional options
@@ -190,7 +177,6 @@ class abstractClass {
     /**
      * Recursively sets a multidimensional option
      *
-     * @since 1.0.0
      * @access private
      *
      * @param array $option Array of hierarchy
@@ -210,7 +196,6 @@ class abstractClass {
     /**
      * Sets all options
      *
-     * @since 1.0.0
      * @access public
      *
      * @param array $options Options array
@@ -222,7 +207,6 @@ class abstractClass {
     /**
      * Deletes an option
      *
-     * @since 1.0.0
      * @access public
      *
      * @param string $option Name of option to delete
@@ -237,7 +221,6 @@ class abstractClass {
     /**
      * Recursively finds and deletes a multidimensional option
      *
-     * @since 1.0.0
      * @access private
      *
      * @param array $option Array of hierarchy

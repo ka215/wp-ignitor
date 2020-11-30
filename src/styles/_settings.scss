@@ -3,35 +3,57 @@
  */
 #wpbody-content {
   font-family: "BIZ UDPGothic", "Hiragino Kaku Gothic ProN", "Hiragino Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, Meiryo, sans-serif;
-  font-size: 13px;
+  font-size: $base-size;
   line-height: 1.6923;
   letter-spacing: 0.25px;
   font-feature-settings: 'palt';
 }
 
+#wp-option-list {
+  li {
+    line-height: 30px;
+    
+    label {
+      font-weight: 600;
+    }
+  }
+}
+
+#allowed-hosts li,
+#allowed-addresses li,
+#allowed-referers li {
+  transition: all 0.2s linear;
+}
+
+p { font-size: $base-size; }
+
 code,
 .code {
   font-family: Hack, monospace;
-  font-size: 13px;
+  font-size: $base-size;
   letter-spacing: 0;
+}
+
+.nav-tab {
+  font-size: $base-size;
 }
 
 .form-table {
   th,
   td,
   td p:not(.description) {
-    font-size: 13px;
+    font-size: $base-size;
     line-height: 1.6923;
   }
 }
 
 .button {
-  font-size: 13px;
+  font-size: $base-size;
   line-height: 2.142857;
 }
 
 input {
-  font-size: 13px;
+  font-size: $base-size;
   line-height: 2.142857;
 
   &.large-text, &.full-text {
@@ -40,9 +62,9 @@ input {
 }
 
 textarea {
-  font-size: 14px;
+  font-size: $base-size;
   line-height: 1.5172414;
-  background-color: #ffffff;
+  background-color: $white;
 
   &.large-text, &.full-text {
     width: 99%;
@@ -96,14 +118,31 @@ input {
   }
 }
 
+select {
+  appearance: none;
+  font-size: $base-size !important;
+
+  option {
+    min-height: $base-size * 1.5 !important;
+  }
+}
+
+.unit {
+  margin-left: 0.5em;
+  font-size: $small-size;
+  line-height: 30px;
+  vertical-align: bottom;
+  color: $gray;
+}
+
 .prefix,
 .surfix,
 .gap {
-  font-size: 14.5px;
+  font-size: $small-size;
   line-height: 2.142857;
 
   .mdi {
-    font-size: 16px;
+    font-size: $icon-size;
   }
 }
 
@@ -118,16 +157,141 @@ select + .button {
   margin-left: 5px !important;
 }
 
-.mdi {
-  font-size: 16px;
-  line-height: 1;
+input[readonly] {
+  background-color: $smoke;
+  border-color: $light-gray;
+  color: $gray;
 }
 
-.text-success { color: #018786 !important; }
-.text-info { color: #5bc0de !important; }
-.text-warn { color: #cc3300 !important; }
-.text-alert { color: #bb2124 !important; }
-.text-denger { color: #b00020 !important; }
+.mdi {
+  position: relative;
+  font-size: $icon-size;
+  line-height: 1;
+  opacity: 0.86;
+
+  &::before {
+    transform: translateY(1px);
+  }
+}
+
+.button .mdi {
+  font-size: inherit;
+  pointer-events: none;
+}
+
+.short-lived {
+  opacity: 1;
+  transition: all 0.2s linear;
+}
+
+.prefix-toggle {
+  margin-top: 0.25em !important;
+}
+
+.text-success { color: $success !important; }
+.text-info { color: $info !important; }
+.text-warn { color: $warn !important; }
+.text-alert { color: $alert !important; }
+.text-denger { color: $denger !important; }
+
+/*
+ * Toggle button
+ */
+.tgl {
+  position: relative;
+  margin: auto 0;
+  padding-left: 50px;
+  min-height: 22px;
+  line-height: 30px;
+  vertical-align: middle;
+
+  input[type="checkbox"] {
+    display: none;
+
+    &,
+    &::after,
+    &::before,
+    & *,
+    & *::after,
+    & *::before,
+    & ~ .tgl-btn {
+      box-sizing: border-box;
+
+      &::selection { background: none; }
+    }
+
+    + .tgl-btn {
+      outline: 0;
+      display: block;
+      width: 44px;
+      height: 22px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+      user-select: none;
+
+      background: rgba($fog, 0.5);
+      border-radius: $base-size;
+      padding: 3px;
+      transition: all 0.4s ease;
+
+      &::after,
+      &::before {
+        position: relative;
+        display: block;
+        content: '';
+        width: 16px;
+        height: 100%;
+      }
+
+      &::after {
+        left: 1px;
+        border-radius: 16px;
+        background: $white;
+        transition: all 0.2s ease;
+      }
+
+      &::before { display: none; }
+    }
+
+    &:checked + .tgl-btn {
+      /* theme */
+      background: $primary;
+
+      &::after {
+        left: 21px;
+      }
+    }
+  }
+
+  &.flat {
+    input[type="checkbox"] {
+      + .tgl-btn {
+        padding: 3px;
+        background: transparent;
+        border: 4px solid $light-gray;
+        transition: all 0.2s ease;
+
+        &::after {
+          width: calc(50% - 4px);
+          background: $light-gray;
+          border-radius: 50%;
+        }
+      }
+
+      &:checked + .tgl-btn {
+        background: transparent;
+        border: 4px solid $primary;
+
+        &::after {
+          left: calc(50% + 4px);
+          background: $primary;
+        }
+      }
+    }
+  }
+}
 
 /*
  * Loader

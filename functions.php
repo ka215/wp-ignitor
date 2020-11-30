@@ -8,6 +8,6 @@
  * @filters:
  * - wpignitor_filter_regex( string $regex, string $target_path ): string
  * - wpignitor_exclude_files_to_move( array $exclude_files, string $target_path ): array
- * - 
+ * - wpignitor_rest_route_redirect( string $redirect_to, array $rest_behavior ): string
  * - 
  */

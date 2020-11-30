@@ -8,37 +8,163 @@
 namespace wpIgnitor;
 
 trait actions {
-    //
+    /**
+     * Fires after a taxonomy is unregistered.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 4.5.0
+     */
     public function registered_taxonomy( $taxonomy, $object_type, $args ) {
         //var_dump( __METHOD__, $taxonomy, $object_type, $args );
     }
 
-    public function registered_post_type( $post_type, $args ) {
+    /**
+     * Fires after a post type is registered.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 4.6.0
+     */
+    public function registered_post_type( string $post_type, $args ) {
         //var_dump( __METHOD__, $post_type, $args );
     }
 
+    /**
+     * Fires after the theme is loaded
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 3.0.0
+     */
+    public function after_setup_theme() {
+        global $_wp_theme_features;
+        $cleanup_options = $this->get_option( 'cleanup_html' );
+        if ( isset( $cleanup_options['feedlinks'] ) && $cleanup_options['feedlinks'] && array_key_exists( 'automatic-feed-links', $_wp_theme_features ) ) {
+            // Prevent output all feed links
+            unset( $_wp_theme_features['automatic-feed-links'] );
+        }
+        if ( isset( $cleanup_options['comments'] ) && $cleanup_options['comments'] && array_key_exists( 'html5', $_wp_theme_features ) ) {
+            // Disable comment
+            unset( $_wp_theme_features['html5']['comment-form'] );
+            unset( $_wp_theme_features['html5']['comment-list'] );
+        }
+        ob_start( function( $buffer ) {
+            // Remove the `<link rel="profile" href="https://gmpg.org/xfn/11">`
+            //$buffer = str_replace( "<link rel=\"profile\" href=\"https://gmpg.org/xfn/11\">\n", '', $buffer );
+            // Remove the `id='twentytwenty-*'` attributes
+            //$buffer = preg_replace( '/id=(\'|")twentytwenty\-.*?(\'|")/', '', $buffer );
+            if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
+                // Remove wp-embed.min.js
+                $buffer = preg_replace( '@<script\s+.*?id=(\'|")wp\-embed\-js(\'|").*?></script>@', '', $buffer );
+            }
+            return $buffer;
+        } );
+    }
+
+    /**
+     * Fires after WordPress has finished loading but before any headers are sent.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 1.5.0
+     */
     public function init() {
+        $cleanup_options = $this->get_option( 'cleanup_html' );
+        if ( isset( $cleanup_options['feedlinks'] ) && $cleanup_options['feedlinks'] ) {
+            // Remove feed links
+            remove_action( 'wp_head', 'feed_links', 2 );
+            remove_action( 'wp_head', 'feed_links_extra', 3 );
+        }
+        if ( isset( $cleanup_options['emoji'] ) && $cleanup_options['emoji'] ) {
+            // Remove emoji
+            remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+            remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+            remove_action( 'wp_print_styles', 'print_emoji_styles' );
+            remove_action( 'admin_print_styles', 'print_emoji_styles' );
+            remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+            remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+            remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+        }
+        if ( isset( $cleanup_options['rsd_link'] ) && $cleanup_options['rsd_link'] ) {
+            // Remove RSD link
+            remove_action( 'wp_head', 'rsd_link' );
+        }
+        if ( isset( $cleanup_options['wlwmanifest'] ) && $cleanup_options['wlwmanifest'] ) {
+            // Remove wlwmanifest link
+            remove_action( 'wp_head', 'wlwmanifest_link' );
+        }
+        if ( isset( $cleanup_options['canonical'] ) && $cleanup_options['canonical'] ) {
+            // Remove canonical link
+            remove_action( 'wp_head', 'rel_canonical' );
+        }
+        if ( isset( $cleanup_options['others'] ) && $cleanup_options['others'] ) {
+            // Remove Others
+            remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head' );
+            remove_action( 'wp_head', 'wp_generator' );
+            remove_action( 'wp_head', 'wp_shortlink_wp_head' );
+        }
+        if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
+            // Remove oEmbeds
+            remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+            remove_action( 'wp_head', 'wp_oembed_add_host_js' );
+        }
+        if ( isset( $cleanup_options['rest_api'] ) && $cleanup_options['rest_api'] ) {
+            // Remove rest api links
+            remove_action( 'wp_head', 'rest_output_link_wp_head' );
+            remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+        }
         // Register private custom taxonomies
         /*
-        register_taxonomy( 'measure', 'salon', [
-            'label' => 'コロナ対策', 'public' => false, 'rewrite' => false, 'hierarchical' => true, 'capabilities' => [ 'assign_terms' ], 'sort' => true
-        ] );
-        register_taxonomy( 'treatment', 'salon', [
-            'label' => '施術内容', 'public' => false, 'rewrite' => false, 'hierarchical' => false, 'capabilities' => [ 'assign_terms' ], 'sort' => true
-        ] );
-        register_taxonomy( 'spec', 'salon', [
-            'label' => '店舗スペック', 'public' => false, 'rewrite' => false, 'hierarchical' => false, 'capabilities' => [ 'assign_terms' ], 'sort' => true
-        ] );
         register_taxonomy( 'payment', 'salon', [
             'label' => '決済方法', 'public' => false, 'rewrite' => false, 'hierarchical' => false, 'capabilities' => [ 'assign_terms' ], 'sort' => true
         ] );
         */
     }
 
+    /**
+     * Fires after all default WordPress widgets have been registered.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.2.0
+     */
+    public function widgets_init() {
+        global $wp_widget_factory;
+        $cleanup_options = $this->get_option( 'cleanup_html' );
+        if ( isset( $cleanup_options['comments'] ) && $cleanup_options['comments'] ) {
+            // Remove recent comment style
+            remove_action( 'wp_head', [ $wp_widget_factory->widgets['WP_Widget_Recent_Comments'], 'recent_comments_style' ] );
+        }
+    }
+
+    /**
+     * Fires when scripts and styles are enqueued.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
+     */
+    public function wp_enqueue_scripts() {
+        $cleanup_options = $this->get_option( 'cleanup_html' );
+        if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
+            // Remove oEmbeds
+            wp_deregister_script( 'wp-embed' );
+            wp_dequeue_script( 'wp-embed' );
+        }
+        if ( isset( $cleanup_options['block_editor'] ) && $cleanup_options['block_editor'] && ! is_admin() ) {
+            // Remove script tags for block editor
+            wp_dequeue_style( 'wp-block-library' );
+            wp_dequeue_style( 'wp-block-library-theme' );
+        }
+    }
+
     /*
      * Ajax for admin screen
      *
      * @access public
+     * @package WpIgnitor
+     * @since 1.0.0
      */
     public function wpignitor_ajax() {
         $nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
@@ -52,43 +178,58 @@ trait actions {
         switch ( $method ) {
             case 'move-install-path':
                 $new_install_path  = filter_input( INPUT_POST, 'new_install_path', FILTER_SANITIZE_STRING );
-                $without_subdir    = filter_input( INPUT_POST, 'without_subdir', FILTER_VALIDATE_BOOLEAN ) ?: false;
-                $optimize_htaccess = filter_input( INPUT_POST, 'optimize_htaccess', FILTER_VALIDATE_BOOLEAN ) ?: false;
+                $without_subdir    = filter_input( INPUT_POST, 'without_subdir', FILTER_VALIDATE_BOOLEAN ) ?? false;
+                $optimize_htaccess = filter_input( INPUT_POST, 'optimize_htaccess', FILTER_VALIDATE_BOOLEAN ) ?? false;
+                $step              = filter_input( INPUT_POST, 'step', FILTER_VALIDATE_INT ) ?? 0;
                 $messages          = [];
+                $result            = false;
+                $response          = [ 'button_text' => __( 'Close' ) ];
+                $is_moved          = false;
                 if ( empty( $new_install_path ) ) {
                     $messages[] = __( 'The new path to move to is not specified.', IGNITOR );
+                } elseif ( $step == 0  ) {
+                    $messages[] = __( 'An unexpected process has been called.', IGNITOR );
                 } else {
                     $new_install_path = rtrim( $_SERVER['DOCUMENT_ROOT'] .'/'. $new_install_path, '/\\' );
                     $old_install_path = rtrim( $_SERVER['DOCUMENT_ROOT'] .'/'. $this->get_wp_install_dir(), '/\\' );
-                    if ( $this->moveto_new_install_path( $new_install_path ) ) {
+                    // Copy the files under the current installation path to the new path
+                    $is_moved = $this->moveto_new_install_path( $new_install_path );
+                    if ( $is_moved ) {
+                        $messages[] = __( 'Copied the files under the current installation path to the new path.', IGNITOR );
                         // Update install path in the WordPress DB
                         $protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443 ) ? 'https' : 'http';
                         $new_siteurl = str_replace( $_SERVER['DOCUMENT_ROOT'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
                         update_option( 'siteurl', $new_siteurl, true );// get at site_url() as install root i.e. https://example.wordpress.com/example
+                        $_proc_res = __( 'Updated site URL in the DataBase.', IGNITOR );
                         if ( $without_subdir ) {
                             update_option( 'home', "{$protocol}://{$_SERVER['HTTP_HOST']}", true );// get at home_url() as application root i.e. https://example.wordpress.com
+                            $_proc_res = __( 'Updated site and home URL in the DataBase.', IGNITOR );
                         }
-
+                        $messages[] = $_proc_res;
                         // Optimize .htaccess then save
                         if ( $optimize_htaccess ) {
-                            $rules = $this->generate_htaccess( basedir( $new_install_path ) . '/' );
+                            $last_dir = end( explode( '/', str_replace( '\\', '/', $new_install_path ) ) );
+                            $rules = $this->generate_htaccess( $last_dir . '/' );
                             $moved_htaccess = $new_install_path . '/.htaccess';
                             $docroot_htaccess = $_SERVER['DOCUMENT_ROOT'] . '/.htaccess';
                             if ( file_exists( $docroot_htaccess ) ) {
                                 $messages[] = __( "I didn't update it because \".htaccess\" already exists in the document root.", IGNITOR );
-                            } else
-                            if ( file_exists( $moved_htaccess ) && is_writable( $moved_htaccess ) ) {
+                            } elseif ( file_exists( $moved_htaccess ) && is_writable( $moved_htaccess ) ) {
                                 @rename( $moved_htaccess, $docroot_htaccess );
                             }
                             if ( is_writable( $_SERVER['DOCUMENT_ROOT'] ) ) {
                                 $is_saved = $this->wpignitor_insert_with_markers( $docroot_htaccess, 'WP Ignitor Rules', $rules );
+                            } else {
+                                $is_saved = false;
                             }
-                            if ( ! $is_saved ) {
+                            if ( $is_saved ) {
+                                $messages[] = __( 'Saved the optimized ".htaccess".', IGNITOR );
+                            } else {
                                 $messages[] = __( 'Failed to update ".htaccess".', IGNITOR );
                             }
                         }
-
                         // Remove the origin source files after moved
+                        $response['remove_files'] = $this->compress_file_map;
                         if ( ! empty( $this->compress_file_map ) ) {
                             $failures = [];
                             foreach ( $this->compress_file_map as $_path ) {
@@ -109,18 +250,22 @@ trait actions {
                             } else {
                                 $messages[] = __( 'The files move completed successfully.', IGNITOR );
                                 $result = true;
+                                $new_siteurl = str_replace( $_SERVER['DOCUMENT_ROOT'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
+                                $response['redirect_to'] = isset( $new_siteurl ) ? $new_siteurl . '/wp-admin/options-general.php?page=wpignitor-settings' : '';
                             }
                         }
-                    } elseif ( is_wp_error( $this->errors ) ) {
-                        $messages[] = $this->errors->get_error_message();
+                        $response['button_text'] = $result ? __( 'Re-login', IGNITOR ) : __( 'Close' );
+                        $response['auth_cookies'] = [ AUTH_COOKIE, SECURE_AUTH_COOKIE, LOGGED_IN_COOKIE ];
+                        // Finally log out
+                        wp_destroy_current_session();
+                        wp_clear_auth_cookie();
+                        wp_set_current_user( 0 );
+                    } else {
+                        $messages[] = __( 'Failed to move the files. It may not have sufficient permissions to operate the source files or directories.', IGNITOR );
                     }
                 }
-                $response = [
-                    'result' => $result,
-                    'message' => implode( "\n", $messages ),
-                    'button_text' => $result ? __( 'Re-login', IGNITOR ) : __( 'Close' ),
-                    'redirect_to' => isset( $new_siteurl ) ? $new_siteurl . '/wp-admin/options-general.php?page=wpignitor-settings' : '',
-                ];
+                $response['result']  = $result;
+                $response['message'] = end( $messages );// implode( "<br>\n", $messages );
                 break;
             case 'move-wp-config':
                 $from_path = $this->get_wp_config_path();
@@ -145,6 +290,42 @@ trait actions {
                     'message' => $message,
                 ];
                 break;
+            case 'reload-preview-htaccess':
+                $allow_sources = [
+                    'hosts'    => array_values( filter_input( INPUT_POST, 'allow_hosts', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [] ),
+                    'addrs'    => array_values( filter_input( INPUT_POST, 'allow_addrs', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [] ),
+                    'referers' => array_values( filter_input( INPUT_POST, 'allow_referers', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [] ),
+                ];
+                $this->options['allow_sources'] = $allow_sources;
+                $advanced_htaccess = filter_input( INPUT_POST, 'advanced_htaccess', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [];
+                $advanced_htaccess = array_map( function( $item ) { return boolval( $item ); }, $advanced_htaccess );
+                $this->options['advanced_htaccess'] = $advanced_htaccess;
+                $this->save_options();
+                $response = [
+                    'result' => true,
+                    'htaccess' => $this->generate_htaccess(),
+                    //'allow_sources' => $allow_sources,
+                    'post' => $_POST,
+                    'advanced_htaccess' => $advanced_htaccess,
+                ];
+                break;
+            case 'cleanup-html':
+                $target_path  = filter_input( INPUT_POST, 'target_page_path', FILTER_SANITIZE_STRING ) ?? '/';
+                $cleanup_opts = filter_input( INPUT_POST, 'cleanup', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+                if ( ! empty( $cleanup_opts ) ) {
+                    foreach ( $cleanup_opts as $_k => $_v ) {
+                        $cleanup_opts[$_k] = filter_var( $_v, FILTER_VALIDATE_BOOLEAN );
+                    }
+                    $this->options['cleanup_html'] = $cleanup_opts;
+                } else {
+                    $this->options['cleanup_html'] = [];
+                }
+                $this->save_options();
+                $response = [
+                    'result' => true,
+                    'html' => $this->get_frontend_html( $target_path, 'head', true ),
+                ];
+                break;
         }
         wp_die( json_encode( $response ) );
     }
@@ -153,6 +334,8 @@ trait actions {
      * Ajax for frontend
      *
      * @access public
+     * @access public
+     * @package WpIgnitor
      */
     public function nopriv_wpignitor_ajax() {
         $token = filter_input( INPUT_GET, 'token', FILTER_SANITIZE_STRING );
@@ -164,9 +347,38 @@ trait actions {
         $method = filter_input( INPUT_GET, 'method', FILTER_SANITIZE_STRING );
         switch ( $method ) {
             case 'get_globals':
+                $response = [ 'dummy' => true ];
                 break;
         }
         wp_die( json_encode( $response ) );
+    }
+
+    /**
+     * Prints scripts or data before the closing body tag on the front end.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 1.5.1
+     */
+    public function wp_footer() {
+        $cleanup_options = $this->get_option( 'cleanup_html' );
+        if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
+            // Remove oEmbeds
+            wp_deregister_script( 'wp-embed' );
+        }
+    }
+
+    /**
+     * Fires just before PHP shuts down execution.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 1.2.0
+     */
+    public function shutdown() {
+        if ( ob_get_contents() || ob_get_length() ) {
+            ob_end_flush();
+        }
     }
 
 }

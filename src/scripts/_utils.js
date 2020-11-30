@@ -1,9 +1,92 @@
 /**
  * Await until next process at specific millisec
- * @param {number} [msec=1] - Milliseconds
+ * @param {number} [msec=1000] - Milliseconds
+ * @usage `sleep(2000).then(() => { Next Process })`
  */
-function sleep( msec = 1 ) {
-    return new Promise( (resolve) => setTimeout( resolve, msec ) )
+function sleep( msec = 1000 ) {
+    return new Promise((resolve) => { setTimeout(() => { resolve() }, msec) })
+}
+
+/**
+ * Determine whether variable is an Object
+ * @param {!(number|string|Object|boolean)} item - Variable you want to check
+ * @return {boolean}
+ */
+function isObject( o ) {
+    return typeof o === 'object' && o !== null && o.constructor && o.constructor === Object
+}
+
+/**
+ * Determine whether variable is an Element
+ * @param {!(number|string|Object|boolean)} node - Variable you want to check
+ * @return {boolean}
+ */
+function isElement( node ) {
+    try {
+        return node instanceof HTMLElement
+    } catch( e ) {
+        if ( ( typeof node === 'object' ) && ( node.nodeType === 1 ) && ( typeof node.style === 'object' ) && ( typeof node.ownerDocument === 'object' ) ) {
+            return true
+        } else {
+            return !!( node && ( node.nodeName || ( node.prop && node.attr && node.find ) ) )
+        }
+    }
+}
+
+/**
+ * Merge multiple objects given as arguments, maintaining a deep hierarchy
+ * @param {!Object} args[0] - Object to merge from
+ * @param {!Object} args[n] - Any objects to merge
+ * @return {Object}
+ */
+function extend( ...args ) {
+    const to = Object( args[0] )
+    for ( let i = 1; i < args.length; i += 1 ) {
+        const nextSource = args[i]
+        if ( nextSource !== undefined && nextSource !== null ) {
+            const keysArray = Object.keys( Object( nextSource ) )
+            for ( let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1 ) {
+                const nextKey = keysArray[nextIndex]
+                const desc = Object.getOwnPropertyDescriptor( nextSource, nextKey )
+                if ( desc !== undefined && desc.enumerable ) {
+                    if ( isObject( to[nextKey] ) && isObject( nextSource[nextKey] ) ) {
+                        extend( to[nextKey], nextSource[nextKey] )
+                    } else if ( ! isObject( to[nextKey] ) && isObject( nextSource[nextKey] ) ) {
+                        to[nextKey] = {}
+                        extend( to[nextKey], nextSource[nextKey] )
+                    } else {
+                        to[nextKey] = nextSource[nextKey]
+                    }
+                }
+            }
+        }
+    }
+    return to
+}
+
+/**
+ * Check property in an object as same `Object.prototype.hasOwnProperty.call()`
+ * @param {!string} prop - Check property name
+ * @param {!Object} obj - Target object
+ * @return {boolean}
+ */
+function hasProp( prop, obj ) {
+    return !!(obj) && Object.prototype.hasOwnProperty.call( obj, prop )
+}
+
+/**
+ * Custom exception logging
+ *
+ * @param {!string} message - Message body to notify
+ * @param {string} [type="error"] - Notification type
+ * @return {void}
+ */
+function logger( message, type = 'error' ) {
+    if ( 'error' === type ) {
+        throw new Error( message )
+    } else {
+        console[type]( message )
+    }
 }
 
 /**
@@ -46,18 +129,6 @@ function parseObject( str ) {
         newObj = _tmp ? Object.assign(newObj, _tmp) : newObj
     }
     return newObj
-}
-
-function isElement( node ) {
-    try {
-        return node instanceof HTMLElement
-    } catch( e ) {
-        if ( ( typeof node === 'object' ) && ( node.nodeType === 1 ) && ( typeof node.style === 'object' ) && ( typeof node.ownerDocument === 'object' ) ) {
-            return true
-        } else {
-            return !!( node && ( node.nodeName || ( node.prop && node.attr && node.find ) ) )
-        }
-    }
 }
 
 function triggerEvent( element, event ) {
@@ -127,4 +198,30 @@ function renderLoader( id=null, color='#ccc', width=100, height=100, dots=4 ) {
     return container
 }
 
-export { sleep, parseObject, isElement, triggerEvent, countElements, getLastItemId, renderLoader }
+function createNotice( message, before=null, after=null ) {
+    let wrapper = document.createElement('div'),
+        paragraph = document.createElement('p')
+
+    if ( before ) {
+        wrapper.appendChild( before )
+    }
+    paragraph.classList.add( 'notice-message' )
+    paragraph.textContent = message
+    paragraph.style.textAlign = 'center'
+    wrapper.appendChild( paragraph )
+    if ( after ) {
+        wrapper.appendChild( after )
+    }
+    return wrapper
+}
+
+function modifyNotice( message ) {
+    let targetElm = document.querySelector('.notice-message')
+
+    if ( targetElm ) {
+        targetElm.textContent = message
+    }
+}
+
+
+export { sleep, isObject, isElement, extend, hasProp, logger, parseObject, triggerEvent, countElements, getLastItemId, renderLoader, createNotice, modifyNotice }

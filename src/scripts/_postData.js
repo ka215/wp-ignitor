@@ -2,10 +2,15 @@
  * Asynchronously post as a wrapper for the Fetch API
  * @param  {string} [url='']  - URL of the request destination
  * @param  {Object} [data={}] - The key-value type object of data to send
+ * @param  {string} [datatype='json'] - Response data type (defaults to JSON)
+ * @param  {number} [timeout=15000] - Set timeout in fetching (defaults to after 15 sec)
  * @return {Object} The response of fetch request is returned as a promise object
  */
-async function postData( url = '', data = {} ) {
-    let params = new URLSearchParams()
+async function postData( url = '', data = {}, datatype = 'json', timeout = 15000 ) {
+    const controller = new AbortController(),
+          timeoutId  = setTimeout(() => { controller.abort() }, timeout )
+    let params  = new URLSearchParams()
+
     params.append( 'action', 'wpignitor_ajax' )
     params.append( 'nonce', document.getElementById( '_wpnonce' ).value )
     if ( data ) {
@@ -15,18 +20,30 @@ async function postData( url = '', data = {} ) {
             }
         }
     }
-    const response = await fetch( url, {
-        method: 'POST',
-        mode: 'cors',
-        cache: 'default',
-        credentials: 'same-origin',
-        //headers: { 'Content-Type': 'application/json' },
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer-when-downgrade',
-        //body: JSON.stringify( data )
-        body: params
-    } )
-    return response.json()
+    try {
+        const response = await fetch( url, {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'default',
+            credentials: 'same-origin',
+            //headers: { 'Content-Type': 'application/json' },
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer-when-downgrade',
+            signal: controller.signal,
+            //body: JSON.stringify( data ),
+            body: params,
+        })
+        /* .catch( (error) => {
+            console.error('Failure to fetch:', error)
+        }) */
+        if ( ! response.ok ) {
+            const desc = `status code: ${response.status}, text: ${response.statusText}`
+            throw new Error(desc)
+        }
+        return datatype === 'json' ? await response.json() : await response.text()
+    } finally {
+        clearTimeout( timeoutId )
+    }
 }
 
 /**

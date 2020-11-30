@@ -61,6 +61,14 @@ button {
   padding: 0;
 }
 
+.flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.items-start {
+  align-items: start;
+}
+
 .ma { margin: auto !important; }
 .m0 { margin: 0 !important; }
 .mh { margin: 0.5rem !important; }

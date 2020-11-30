@@ -21,6 +21,8 @@ trait admin {
     
     protected $help_sidebars;
     
+    protected $rest_namespaces;
+    
     // For seeding
     protected $seeder;
     protected $faker;
@@ -28,12 +30,13 @@ trait admin {
     /* -------------------- Actions Section -------------------- */
     
     /**
-     * Calling from "admin_menu" action
+     * Fires before the administration menu loads in the admin.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 1.5.0
      */
-    public function admin_menu() {
+    public function admin_menu( string $context ) {
         if ( current_user_can( 'manage_options' ) ) {
             $remove_menu = [
                 //'index.php', ...
@@ -48,10 +51,11 @@ trait admin {
     }
 
     /**
-     * Calling from "admin_init" action
+     * Fires as an admin screen or script is being initialized.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.5.0
      */
     public function admin_init() {
         
@@ -59,6 +63,9 @@ trait admin {
         
         $this->help_tabs = [];
         $this->help_sidebars = [];
+        
+        $this->rest_namespaces = rest_get_server()->get_namespaces();
+        $this->rest_namespaces[] = '/';
         
         // Prepare seeding
         $this->seeder = defined( 'SALON_SEEDER' ) ? SALON_SEEDER : false;
@@ -69,20 +76,22 @@ trait admin {
     }
 
     /**
-     * Calling from "current_screen" action
+     * Fires after the current screen has been set.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 3.0.0
      */
     public function current_screen( \WP_Screen $screen ) {
         //
     }
 
     /**
-     * Calling from "wp_dashboard_setup" action
+     * Fires after core widgets for the admin dashboard have been registered.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.5.0
      */
     public function wp_dashboard_setup() {
         // Dashboard widgets that does not want to display
@@ -94,12 +103,13 @@ trait admin {
     }
 
     /**
-     * Calling from "admin_enqueue_scripts" action
+     * Enqueue scripts for all admin pages.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
      */
-    public function admin_enqueue_scripts() {
+    public function admin_enqueue_scripts( string $hook_suffix ) {
         global $pagenow;
         $_page = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : null;
         if ( $pagenow === 'options-general.php' && $_page === 'wpignitor-settings' ) {
@@ -126,10 +136,11 @@ trait admin {
     }
 
     /**
-     * Calling from "admin_print_styles" action
+     * Fires when styles are printed for all admin pages.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.6.0
      */
     public function admin_print_styles() {
         global $pagenow;
@@ -146,10 +157,11 @@ EOS;
     }
 
     /**
-     * Calling from "admin_head" action
+     * Fires in head section for all admin pages.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.1.0
      */
     public function admin_head() {
         $current_screen = get_current_screen();
@@ -200,12 +212,13 @@ EOS;
     /* -------------------- Filters Section -------------------- */
 
     /**
-     * Calling from "user_contactmethods" filter
+     * Filters the user contact methods.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.9.0
      */
-    public function user_contactmethods( $user_contact ) {
+    public function user_contactmethods( array $methods, $user ): array {
         global $pagenow;
         if ( current_user_can( 'manage_options' ) && 'profile.php' === $pagenow ) {
             // Add to admin user's profile only
@@ -214,23 +227,26 @@ EOS;
     }
 
     /**
-     * Calling from "admin_footer_text" filter
+     * Filters the "Thank you" text displayed in the admin footer.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
      */
-    public function admin_footer_text( $text ) {
-        $text = '';
+    public function admin_footer_text( string $text ): string {
+        //$text = '';
         return $text;
     }
 
     /**
-     * Calling from "set-screen-option" filter
+     * Filters a screen option value before it is set.
+     * (filter named "set-screen-option" in core)
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.8.0 -> 5.4.2
      */
-    public function set_screen_option( $screen_option, $option, $value ) {
+    public function set_screen_option( $screen_option, string $option, int $value ) {
         var_dump( __METHOD__, $screen_option, $option, $value  );
         $user = wp_get_current_user();
         update_user_meta( $user->ID, $option, $value );
@@ -238,51 +254,56 @@ EOS;
     }
 
     /**
-     * Calling from "dashboard_recent_posts_query_args" filter
+     * Filters the query arguments used for the Recent Posts widget.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 4.2.0
      */
-    public function dashboard_recent_posts_query_args( $query_args ) {
+    public function dashboard_recent_posts_query_args( array $query_args ): array {
         //$query_args['post_type'] = [ 'post', 'page' ];
         return $query_args;
     }
 
     /**
-     * Calling from "plugin_action_links" filter
+     * Filters the action links displayed for each plugin in the Plugins list table.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.5.0 -> 2.6.0 -> 4.9.0
      */
-    public function plugin_action_links( $links, $file ) {
+    public function plugin_action_links( array $actions, string $plugin_file, array $plugin_data, string $context ): array {
         /*
-        if ( $file == plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ) ) {
-            var_dump( __METHOD__, $links, $file );
-            array_unshift( $links, '<a href="' . esc_url( self::get_page_url() ) . '">'.esc_html__( 'Settings' ).'</a>' );
+        if ( $plugin_file == plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ) ) {
+            var_dump( __METHOD__, $actions, $plugin_file );
+            array_unshift( $actions, '<a href="' . esc_url( self::get_page_url() ) . '">'.esc_html__( 'Settings' ).'</a>' );
         }*/
-        return $links;
+        return $actions;
     }
 
     /**
-     * Calling from "plugin_action_links_{plugin_name}" filter
+     * Filters the list of action links displayed for a specific plugin in the Plugins list table.
+     * (filter named "plugin_action_links_{$plugin_file}" in core)
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 2.7.0 -> 4.9.0
      */
-    public function plugin_action_links_self( $links ) {
+    public function plugin_action_links_self( array $actions, string $plugin_file, array $plugin_data, string $context ): array {
         $_link = esc_url( self::get_page_url() );
         $settings_link = '<a href="'. $_link .'">'. __( 'Settings' ) .'</a>';
-        array_unshift( $links, $settings_link ); 
-        return $links; 
+        array_unshift( $actions, $settings_link ); 
+        return $actions; 
     }
 
     /**
-     * Calling from "all_plugins" filter
+     * Filters the full array of plugins to list in the Plugins list table.
      *
-     * @since 1.0.0
      * @access public
+     * @package WordPress(core)
+     * @since 3.0.0
      */
-    public function all_plugins( $all_plugins ) {
+    public function all_plugins( array $all_plugins ): array {
         $self_plugin = plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' );
         //var_dump( __METHOD__, $all_plugins, $self_plugin );
         if ( isset( $all_plugins[$self_plugin] ) ) {
@@ -301,6 +322,9 @@ EOS;
     /**
      * Retrieve the configuration page URL of this plugin
      *
+     * @package WpIgnitor
+     * @since 1.0.0
+     *
      * @param  string   $tab    
      * @return string
      */
@@ -314,6 +338,9 @@ EOS;
 
     /**
      * Move WordPress core files to the new installation path specified
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
      *
      * @param  string   $new_install_path   The new installation path to move to
      * @return bool
@@ -358,11 +385,81 @@ EOS;
         return true;
     }
 
+    /**
+     * Get editable constant list
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     *
+     * @see https://ja.wordpress.org/support/article/editing-wp-config-php/
+     * 
+     * @return array
+     */
+    public function get_editable_constants(): array {
+        $constants = [
+            // '' => [ 'label' => __( '', IGNITOR ), 'type' => '', 'value' => , 'class' => '', 'placeholder' => __( 'Undefined', IGNITOR ) ],
+            // '' => [ 'label' => __( '', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' =>  ],
+            'wp_content_dir'       => [ 'label' => __( 'Move wp-content directory', IGNITOR ), 'type' => 'text', 'value' => WP_CONTENT_DIR, 'class' => 'medium-text code', 'placeholder' => WP_CONTENT_DIR, 'pair' => 'WP_CONTENT_URL' ],
+            'wp_plugin_dir'        => [ 'label' => __( 'Move plugin directory', IGNITOR ), 'type' => 'text', 'value' => WP_PLUGIN_DIR, 'class' => 'medium-text code', 'placeholder' => WP_PLUGIN_DIR, 'pair' => 'WP_PLUGIN_URL' ],
+            'uploads'              => [ 'label' => __( 'Move upload directory', IGNITOR ), 'type' => 'text', 'value' => defined( 'UPLOADS' ) ? UPLOAD : '', 'class' => 'regular-text code', 'placeholder' => __( 'Undefined', IGNITOR ) ],
+            'autosave_interval'    => [ 'label' => __( 'Change auto save interval', IGNITOR ), 'type' => 'number', 'value' => AUTOSAVE_INTERVAL, 'class' => 'small-text', 'placeholder' => AUTOSAVE_INTERVAL, 'unit' => 'Sec.' ],
+            'wp_post_revisions'    => [ 'label' => __( 'Disable post revisions', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_POST_REVISIONS ],
+            'cookie_domain'        => [ 'label' => __( 'Cookie domain', IGNITOR ), 'type' => 'text', 'value' => COOKIE_DOMAIN, 'class' => 'regular-text code', 'placeholder' => COOKIE_DOMAIN ],
+            'wp_allow_multisite'   => [ 'label' => __( 'Enable multi-site', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_ALLOW_MULTISITE' ) ? WP_ALLOW_MULTISITE : false ],
+            'noblogredirect'       => [ 'label' => __( 'Redirect non-existent blogs', IGNITOR ), 'type' => 'text', 'value' => defined( 'NOBLOGREDIRECT' ) ? NOBLOGREDIRECT : '', 'class' => 'medium-text code', 'placeholder' => __( 'Undefined', IGNITOR ) ],
+            'wp_disable_fatal_error_handler' => [ 'label' => __( 'Disable recovery mode (>= WP 5.2)', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_DISABLE_FATAL_ERROR_HANDLER' ) ? WP_DISABLE_FATAL_ERROR_HANDLER : false ],
+            'wp_debug'             => [ 'label' => __( 'Enable debug mode', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG ],
+            'wp_debug_log'         => [ 'label' => __( 'Enable debug log output', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG_LOG ],
+            'wp_debug_display'     => [ 'label' => __( 'Enable PHP error display', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG_DISPLAY ],
+            'script_debug'         => [ 'label' => __( 'Enable script debug (for *.js and *.css)', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => SCRIPT_DEBUG ],
+            'concatenate_scripts'  => [ 'label' => __( 'Disable JavaScript concatenation', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'CONCATENATE_SCRIPTS' ) ? CONCATENATE_SCRIPTS : false ],
+            'wp_memory_limit'      => [ 'label' => __( 'Change PHP allocated memory limit', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MEMORY_LIMIT, 'unit' => 'MB' ],
+            'wp_max_memory_limit'  => [ 'label' => __( 'Change max memory limit for admin pages', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MAX_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MAX_MEMORY_LIMIT, 'unit' => 'MB' ],
+            'disable_wp_cron'      => [ 'label' => __( 'Disable Cron', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'DISABLE_WP_CRON' ) ? DISABLE_WP_CRON : false ],
+            'wp_cron_lock_timeout' => [ 'label' => __( 'Change cron timeout time', IGNITOR ), 'type' => 'number', 'value' => defined( 'WP_CRON_LOCK_TIMEOUT' ) ? WP_CRON_LOCK_TIMEOUT : '', 'class' => 'small-text', 'placeholder' => 60, 'unit' => 'Sec.' ],
+            'empty_trash_days'     => [ 'label' => __( 'Change period until trash emptied', IGNITOR ), 'type' => 'number', 'value' => EMPTY_TRASH_DAYS, 'class' => 'small-text', 'placeholder' => EMPTY_TRASH_DAYS, 'unit' => 'Day' ],
+            'disallow_file_edit'   => [ 'label' => __( 'Disallow plugin/theme editor', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'DISALLOW_FILE_EDIT' ) ? DISALLOW_FILE_EDIT : false ],
+            'force_ssl_admin'      => [ 'label' => __( 'Force SSL on admin and login pages', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => FORCE_SSL_ADMIN ],
+        ];
+        return $constants;
+    }
+
+    /**
+     * Get cleanup HTML items
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     *
+     * @return array
+     */
+    public function get_cleanup_items(): array {
+        $current_cleanup_options = $this->get_option( 'cleanup_html' ) ?: [];
+        $items = [
+            'prefetch'     => [ 'label' => __( 'Remove tags for prefetch as resource hint.', IGNITOR ), 'checked' => isset( $current_cleanup_options['prefetch'] ) ? $current_cleanup_options['prefetch'] : false ],
+            'feedlinks'    => [ 'label' => __( 'Prevent output all feed links.', IGNITOR ), 'checked' => isset( $current_cleanup_options['feedlinks'] ) ? $current_cleanup_options['feedlinks'] : false ],
+            'comments'     => [ 'label' => __( 'Disable comment.', IGNITOR ), 'checked' => isset( $current_cleanup_options['comments'] ) ? $current_cleanup_options['comments'] : false ],
+            'emoji'        => [ 'label' => __( 'Stop the import of emoji-related resources.', IGNITOR ), 'checked' => isset( $current_cleanup_options['emoji'] ) ? $current_cleanup_options['emoji'] : false ],
+            'rsd_link'     => [ 'label' => __( 'Remove RSD link for remote posting.', IGNITOR ), 'checked' => isset( $current_cleanup_options['rsd_link'] ) ? $current_cleanup_options['rsd_link'] : false ],
+            'wlwmanifest'  => [ 'label' => __( 'Remove wlwmanifest link.', IGNITOR ), 'checked' => isset( $current_cleanup_options['wlwmanifest'] ) ? $current_cleanup_options['wlwmanifest'] : false ],
+            'canonical'    => [ 'label' => __( 'Remove canonical link.', IGNITOR ), 'checked' => isset( $current_cleanup_options['canonical'] ) ? $current_cleanup_options['canonical'] : false ],
+            'oembeds'      => [ 'label' => __( 'Stop providing oEmbed for media embedding.', IGNITOR ), 'checked' => isset( $current_cleanup_options['oembeds'] ) ? $current_cleanup_options['oembeds'] : false ],
+            'rest_api'     => [ 'label' => __( 'Remove the REST API link tag (REST API will be not disabled).', IGNITOR ), 'checked' => isset( $current_cleanup_options['rest_api'] ) ? $current_cleanup_options['rest_api'] : false ],
+            'block_editor' => [ 'label' => __( 'Remove the library of block editor on the frontend.', IGNITOR ), 'checked' => isset( $current_cleanup_options['block_editor'] ) ? $current_cleanup_options['block_editor'] : false ],
+            'others'       => [ 'label' => __( 'Remove several outputs, such as generator meta tag.', IGNITOR ), 'checked' => isset( $current_cleanup_options['others'] ) ? $current_cleanup_options['others'] : false ],
+        ];
+        return $items;
+    }
 
 
-    /* -------------------- Settings Page Section -------------------- */
 
-    // Page Controller
+    /* -------------------- Plugin Configuration Pages -------------------- */
+
+    /**
+     * Controller of the plugin configuration pages.
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     */
     public function plugin_settings_page() {
         // Execute update action
         global $pagenow;
@@ -375,8 +472,8 @@ EOS;
             'current_tab' => isset( $_REQUEST['tab'] ) && ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'globals',
             'tabs' => [
                 'globals' => [ 'label' => __( 'Globals', IGNITOR ), 'icon' => 'mdi-alert-octagram-outline' ],
-                'conceal' => [ 'label' => __( 'Conceal Being WordPress', IGNITOR ), 'icon' => 'mdi-incognito' ],
-                'login'   => [ 'label' => __( 'Customize Authorization Pages', IGNITOR ), 'icon' => 'mdi-shield-key-outline' ],
+                'conceal' => [ 'label' => __( 'Conceals', IGNITOR ), 'icon' => 'mdi-incognito' ],
+                'login'   => [ 'label' => __( 'Authorizations', IGNITOR ), 'icon' => 'mdi-shield-key-outline' ],
                 'helth'   => [ 'label' => __( 'Helth Check', IGNITOR ), 'icon' => 'mdi-check-circle-outline' ],
             ],
             'nonce_key'   => '',
@@ -390,6 +487,12 @@ EOS;
         $this->get_plugin_template( 'settings', $page_args );
     }
 
+    /**
+     * Perform each process by handling the POST values on the plugin configuration page.
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     */
     public function execute_plugin_settings() {
         $is_success  = false;
         $messages    = [];
@@ -413,12 +516,17 @@ EOS;
                     $params[$_k] = empty( $_POST[$_k] ) ? null : filter_input( INPUT_POST, $_k, FILTER_VALIDATE_FLOAT );
                     break;
                 case 'array':
+                case 'wp_config':
+                case 'namespaces':
+                case 'http_code':
                     // For array
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
                     if ( ! empty( $params[$_k] ) ) {
                         foreach ( $params[$_k] as $_idx => $_elm ) {
                             if ( is_numeric( $_elm ) ) {
                                 $params[$_k][$_idx] = (int) $_elm;
+                            } elseif ( is_string( $_elm ) && in_array( strtolower( $_elm ), [ 'true', 'false' ], true ) ) {
+                                $params[$_k][$_idx] = filter_var( $_elm, FILTER_VALIDATE_BOOLEAN );
                             }
                         }
                     }
@@ -438,18 +546,33 @@ EOS;
                 default:
                     // For string
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
+                    // Cast to boolean
+                    if ( in_array( strtolower( $params[$_k] ), [ 'true', 'false' ], true ) ) {
+                        $params[$_k] = filter_var( $params[$_k], FILTER_VALIDATE_BOOLEAN );
+                    }
                     break;
             }
         }
         // Set the default value if the value is missing as like when checkbox is unchecked.
         if ( ! isset( $params['bool'] ) ) {
-            $params['bool'] = false;
+            // e.g. $params['bool'] = false;
         }
         // Individual processing by the specified method
         switch( $params['method'] ) {
             case 'update-wp-config':
+                unset( $params['htaccess'] );
+                $this->options['wp_config_options'] = isset( $params['wp_config'] ) ? $params['wp_config'] : [];
+                $this->save_options();
+                $wp_config_file = $this->get_wp_config_path();
+                if ( is_writable( $wp_config_file ) ) {
+                    $is_success = $this->wpconfig_insert_with_markers( $wp_config_file, 'WP Ignitor', $params['add_config_fulltext'] );
+                }
+                if ( ! $is_success ) {
+                    $messages[] = __( 'Failed to update "wp-config.php".', IGNITOR );
+                }
                 break;
             case 'update-htaccess':
+                unset( $params['wp_config'] );
                 // Ensure get_home_path() is declared.
                 require_once ABSPATH . 'wp-admin/includes/file.php';
                 $htaccess_file = $this->get_htaccess_path();
@@ -467,6 +590,19 @@ EOS;
                 if ( ! $is_success ) {
                     $messages[] = __( 'Failed to update ".htaccess".', IGNITOR );
                 }
+                break;
+            case 'rest-behavior':
+                $rest_opts = [];
+                foreach ( $params['namespaces'] as $_ns => $_val ) {
+                    $http_code = 200;
+                    if ( isset( $params['http_code'] ) && array_key_exists( $_ns, $params['http_code'] ) ) {
+                        $http_code = $params['http_code'][$_ns];
+                    }
+                    $rest_opts[$_ns] = [ 'todo' => $_val, 'state' => $http_code ];
+                }
+                $this->options['rest_behavior'] = $rest_opts;
+                $this->save_options();
+                $is_success = true;
                 break;
         }
         
@@ -487,191 +623,12 @@ EOS;
         return $response;
     }
 
-    public function upsert_items() {
-        $is_success = false;
-        $messages = [];
-        $nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-        $referer = filter_input( INPUT_POST, '_wp_http_referer', FILTER_SANITIZE_STRING );
-        if ( ! wp_verify_nonce( $nonce, 'edit-items@acs' ) && check_admin_referer() !== true ) {
-            // Invalid access
-            return [ 'state' => 'error', 'message' => '不正なアクセスです。' ];
-        }
-        // Get params
-        $params = [];
-        foreach ( $_POST as $_k => $_v ) {
-            switch ( $_k ) {
-                case 'area_id':
-                case 'measure_id':
-                    // For integer
-                    $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_VALIDATE_INT );
-                    break;
-                case 'area_station':
-                case 'measure_detail':
-                case 'treatment':
-                case 'spec':
-                case 'payment':
-                    // For array
-                    $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-                    if ( ! empty( $params[$_k] ) ) {
-                        $params[$_k] = array_unique( $params[$_k] );
-                        foreach ( $params[$_k] as $_idx => $_elm ) {
-                            if ( is_numeric( $_elm ) ) {
-                                $params[$_k][$_idx] = (int) $_elm;
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    // For string
-                    $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
-                    break;
-            }
-        }
-        //var_dump( $params );
-        switch ( $params['action'] ) {
-            case 'create_area':
-                if ( ! empty( $params['area_id'] ) ) {
-                    $params['area_id'] = null;
-                }
-                $result = $this->upsert_area( $params );
-                $messages[] = $result ? 'エリアが新たに追加されました。' : 'エリアの追加に失敗しました。';
-                break;
-            case 'update_area':
-                $result = $this->upsert_area( $params );
-                $messages[] = $result ? 'エリアの設定を変更しました。' : 'エリアの設定変更に失敗しました。';
-                break;
-            case 'delete_area':
-                if ( ! empty( $params['area_id'] ) ) {
-                    $result = $this->delete_area( $params['area_id'] );
-                } else {
-                    $result = false;
-                }
-                $messages[] = $result ? 'エリアを削除しました。' : 'エリアの削除に失敗しました。';
-                break;
-            case 'create_measure':
-                $measure_name = wp_strip_all_tags( $params['measure_name'] );
-                $result = wp_insert_term( $measure_name, 'measure' /*, [ 'parent' => $parent_term_id ] */ );
-                //var_dump( $measure_name, $result );
-                if ( is_wp_error( $result ) ) {
-                    $this->errors->add( 'insert_term_failure', "コロナ対策（大項目）に「{$measure_name}」を追加できませんでした。" );
-                } else {
-                    foreach ( $params['measure_detail'] as $_detail ) {
-                        $_detail = wp_strip_all_tags( $_detail );
-                        if ( is_wp_error( wp_insert_term( $_detail, 'measure', [ 'parent' => $result['term_id'] ] ) ) ) {
-                            $this->errors->add( 'insert_term_failure', "コロナ対策（小項目）に「{$_detail}」を追加できませんでした。" );
-                        }
-                    }
-                }
-                if ( is_wp_error( $this->errors ) && ! empty( $this->errors->get_error_code() ) ) {
-                    $result = false;
-                } else {
-                    $messages[] = 'コロナ対策が新たに追加されました。';
-                    $result = true;
-                }
-                break;
-            case 'update_measure':
-                $measure_name = wp_strip_all_tags( $params['measure_name'] );
-                $term = term_exists( $measure_name, 'measure' );
-                if ( $term == null || $term == 0 ) {
-                    $_res = wp_update_term( $params['measure_id'], 'measure', [ 'name' => $measure_name ] );
-                    if ( is_wp_error( $_res ) ) {
-                        $this->errors->add( 'update_term_failure', "コロナ対策（大項目）を「{$measure_name}」に変更できませんでした。" );
-                    } else {
-                        $parent_term_id = $_res['term_id'];
-                    }
-                } else {
-                    $parent_term_id = $term['term_id'];
-                }
-                $children_term = get_terms( 'measure', [ 'orderby' => 'id', 'order' => 'ASC', 'hide_empty' => false, 'fields' => 'id=>name', 'parent' => $parent_term_id ] );
-                $modified_ids = [];
-                foreach ( $params['measure_detail'] as $_id => $_val ) {
-                    if ( array_key_exists( $_id, $children_term ) ) {
-                        if ( $_val !== $children_term[$_id] ) {
-                            //var_dump( "Update detail: {$children_term[$_id]} -> {$_val} <br>" );
-                            if ( is_wp_error( wp_update_term( $_id, 'measure', [ 'name' => $_val ] ) ) ) {
-                                $this->errors->add( 'update_term_failure', "コロナ対策詳細（小項目）「{$_val}」の変更に失敗しました。" );
-                            }
-                        }
-                        $modified_ids[] = $_id;
-                    } else {
-                        //var_dump( "Insert detail: new -> {$_val}　<br>" );
-                        if ( is_wp_error( wp_insert_term( $_val, 'measure', [ 'parent' => $parent_term_id ] ) ) ) {
-                            $this->errors->add( 'insert_term_failure', "コロナ対策詳細（小項目）に「{$_val}」を追加できませんでした。" );
-                        }
-                    }
-                }
-                $remove_terms = array_diff_key( $children_term, $params['measure_detail'] );
-                if ( ! empty( $remove_terms ) ) {
-                    foreach ( $remove_terms as $_id => $_val ) {
-                        $_val = wp_strip_all_tags( $_val );
-                        //var_dump( "Remove detail: [{$_id}]{$_val} <br>" );
-                        if ( is_wp_error( wp_delete_term( $_id, 'measure', [ 'parent' => $parent_term_id ] ) ) ) {
-                            $this->errors->add( 'delete_term_failure', "コロナ対策詳細（小項目）「{$_val}」の削除に失敗しました。" );
-                        }
-                    }
-                }
-                if ( is_wp_error( $this->errors ) && ! empty( $this->errors->get_error_code() ) ) {
-                    $result = false;
-                } else {
-                    $messages[] = 'コロナ対策と対策詳細を更新しました。';
-                    $result = true;
-                }
-                break;
-            case 'delete_measure':
-                if ( empty( $params['measure_id'] ) ) {
-                    $result = false;
-                }
-                $children_term = get_terms( 'measure', [ 'orderby' => 'id', 'order' => 'ASC', 'hide_empty' => false, 'fields' => 'id=>name', 'parent' => $params['measure_id'] ] );
-                if ( ! empty( $children_term ) ) {
-                    foreach ( $children_term as $_id => $_name ) {
-                        if ( is_wp_error( wp_delete_term( $_id, 'measure', [ 'parent' => $params['measure_id'] ] ) ) ) {
-                            $this->errors->add( 'delete_term_failure', "コロナ対策詳細（小項目）「{$_val}」の削除に失敗しました。" );
-                        }
-                    }
-                }
-                if ( is_wp_error( $this->errors ) && ! empty( $this->errors->get_error_code() ) ) {
-                    $this->errors->add( 'delete_term_failure', "コロナ対策（大項目）「{$_val}」の削除を中止しました。" );
-                    $result = false;
-                } else {
-                    if ( is_wp_error( wp_delete_term( $params['measure_id'], 'measure' ) ) ) {
-                        $this->errors->add( 'delete_term_failure', "コロナ対策（大項目）「{$_val}」の削除に失敗しました。" );
-                        $result = false;
-                    } else {
-                        $messages[] = 'コロナ対策と対策詳細を削除しました。';
-                        $result = true;
-                    }
-                }
-                break;
-            case 'upsert_treatment':
-            case 'upsert_spec':
-            case 'upsert_payment':
-                $item_type = str_replace( 'upsert_', '', $params['action'] );
-                if ( ! empty( $params[$item_type] ) ) {
-                    $item_labels = [
-                        'treatment' => '施術内容',
-                        'spec'      => '店舗スペック',
-                        'payment'   => '決済方法',
-                    ];
-                    $result = $this->edit_term( $params[$item_type], $item_type, $item_labels[$item_type] );
-                } else {
-                    $result = false;
-                }
-                break;
-        }
-        $is_success = $result;
-        
-        if ( is_wp_error( $this->errors ) && ! empty( $this->errors->get_error_code() ) ) {
-            $messages = array_merge( $messages, $this->errors->get_error_messages() );
-            $is_success = false;
-        }
-        
-        $default_message = $is_success ? '正常に処理しました。' : '処理に失敗しました。';
-        return [
-            'state' => $is_success ? 'success' : 'error',
-            'message' => empty( $messages ) ? $default_message : implode( "<br>\n", $messages ),
-        ];
-    }
-
+    /**
+     * Actual processing of dashboard widget dedicated to plugin.
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     */
     public function recent_salons_widget() {
         $content_template = '<div id="registered-salons" class="activity-block">%s<ul>%s</ul></div>';
         $interval = 14;

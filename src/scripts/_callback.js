@@ -1,31 +1,16 @@
-import { renderLoader } from './_utils'
-
-function createNotify( message, before=null, after=null ) {
-    let wrapper = document.createElement('div'),
-        paragraph = document.createElement('p')
-
-    if ( before ) {
-        wrapper.appendChild( before )
-    }
-    paragraph.textContent = message
-    paragraph.style.textAlign = 'center'
-    wrapper.appendChild( paragraph )
-    if ( after ) {
-        wrapper.appendChild( after )
-    }
-    return wrapper
-}
+import { renderLoader, createNotice, triggerEvent } from './_utils'
+//import { postData } from './_postData'
 
 const callback = {
     moveInstallPath: () => {
         let message = 'Currently being processed, please wait.',
             loader  = renderLoader( 'move-install-path', '#c0c0c0', 120, 60, 5 )
-        return createNotify( message, loader )
+        return createNotice( message, loader )
     },
     moveWpConfig: () => {
         let message = 'Currently being processed, please wait.',
             loader  = renderLoader( 'move-wp-config', '#c0c0c0', 120, 60, 5 )
-        return createNotify( message, null, loader )
+        return createNotice( message, null, loader )
     },
     selfRedirect: () => {
         
@@ -36,9 +21,8 @@ const callback = {
     disableButton: () => {
         document.querySelector('.wpignitor-dialog .dialog-footer button').disabled = true
     },
-
-    test: () => {
-        //console.log( ...arguments )
+    reloadPreviewHtaccess: () => {
+        triggerEvent(document.getElementById('btn-reload-preview-htaccess'), 'click')
     },
 
 }

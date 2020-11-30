@@ -66,6 +66,33 @@ trait utils {
     }
 
     /**
+     * Check if the rest namespace exists.
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     */
+    public function rest_namespace_exists( string $namespace ): bool {
+        return in_array( $namespace, $this->rest_namespaces, true );
+    }
+
+    /**
+     * Get remote hosts
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public static function get_remote_hosts(): array {
+        $remote_hosts = [ php_uname( 'n' ), 'localhost' ];
+        if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
+            $remote_hosts[] = $_SERVER['HTTP_HOST'];
+        }
+        if ( ! empty( $_SERVER['REMOTE_HOST'] ) ) {
+            $remote_hosts[] = $_SERVER['REMOTE_HOST'];
+        }
+        return array_unique( $remote_hosts, SORT_STRING );
+    }
+
+    /**
      * Get remote IP address
      *
      * @since 1.0.0
@@ -146,9 +173,16 @@ trait utils {
      * @since 1.0.0
      * @access public
      */
-    public function get_frontend_html( string $element = '', bool $to_string = false ): string {
+    public function get_frontend_html( string $path = '/', string $element = '', bool $to_string = false ): string {
+        $get_uri = home_url( $path );
         $result = '';
-        $raw_html = @file_get_contents( 'http://test.ka2.org/' );// home_url( '/' )
+        $options = stream_context_create([
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ]
+        ]);
+        $raw_html = @file_get_contents( $get_uri, false, $options );
         $doc = new \DOMDocument();
         libxml_use_internal_errors( true );
         $doc->loadHTML( $raw_html );
@@ -280,84 +314,121 @@ trait utils {
      * @access public
      */
     public function generate_htaccess( string $subdir = '' ): string {
-        $_host = preg_quote( php_uname( 'n' ), '/' );
-        $_remote_addr = preg_quote( $this->get_remote_addr(), '/' );
-        $_fqdn = preg_quote( $this->get_fqdn(), '/' );
+        $allowed_sources = $this->get_option( 'allow_sources' ) ?? [];
+        $allowed_hosts = $this->get_remote_hosts();
+        if ( array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
+            $allowed_hosts = array_merge( $allowed_hosts, $allowed_sources['hosts'] );
+        }
+        $allowed_addrs = [ $this->get_remote_addr() ];
+        if ( array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
+            $allowed_addrs = array_merge( $allowed_addrs, $allowed_sources['addrs'] );
+        }
+        $allowed_referers = [ 'https?://' . $this->get_fqdn() ];
+        if ( array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
+            $allowed_referers = array_merge( $allowed_referers, $allowed_sources['referers'] );
+        }
         $_install_dir = preg_quote( empty( $subdir ) ? $this->get_wp_install_dir() : $subdir, '/' );
+        $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' );
+        //var_dump( $allowed_hosts, $allowed_addrs, $allowed_referers, $_install_dir, $subdir, $advanced_htaccess_options );
+
+        $_section_number = 1;
         $_stack = [];
         array_unshift( $_stack, '# BEGIN WP Ignitor Rules', '<IfModule mod_rewrite.c>', 'RewriteEngine On' );
+        // Set Environment Section
         $_stack[] = '# Environment';
         $_stack[] = '# - Definition of connection sources to allow.';
         $_stack[] = '# - Set "is_allow" to IP and host that allow access:';
-        $_stack[] = 'SetEnvIf Remote_Host "^'. $_fqdn .'$" is_allow=true';
-        $_stack[] = 'SetEnvIf Remote_Host "^'. $_host .'$" is_allow=true';
-        if ( $_host !== 'localhost' ) {
-            $_stack[] = 'SetEnvIf Remote_Host ^localhost$ is_allow=true';
+        foreach ( $allowed_hosts as $_host ) {
+            $_stack[] = 'SetEnvIf Remote_Host "^'. preg_quote( $_host, '/' ) .'$" is_allow=true';
         }
-        $_stack[] = 'SetEnvIf Remote_Addr "^'. $_remote_addr .'" is_allow=true';
+        foreach ( $allowed_addrs as $_addr ) {
+            $_stack[] = 'SetEnvIf Remote_Addr "^'. preg_quote( $_addr ) .'" is_allow=true';
+        }
         $_stack[] = '# - Set "is_allow_referer" to referer URL that allow access:';
-        $_stack[] = 'SetEnvIf Referer "^https?://'. $_fqdn .'/" is_allow_referer=true';
-        $_num = 1;
-        $_stack[] = "# {$_num}.";
+        foreach ( $allowed_referers as $_referer ) {
+            $_stack[] = 'SetEnvIf Referer "^'. str_replace( '\?', '?', preg_quote( $_referer, '/' ) ) .'" is_allow_referer=true';
+        }
+        // Static resources rule
+        $_stack[] = "# {$_section_number}.";
         $_stack[] = '# - Static resources return a fixed 404 response regardless of the connection source.';
-        $_stack[] = 'RewriteRule "^(license\.txt|readme\.html)$" - [R=404,L]';
-        $_num++;
-        $_stack[] = "# {$_num}.";
-        $_stack[] = '# - "wp-admin/" and "wp-login.php" under the document root do not redirect and return';
-        $_stack[] = '# - 404 response.';
-        $_stack[] = 'RewriteRule "^wp-admin\/(.*)$" - [R=404,L]';
-        $_stack[] = 'RewriteRule "^wp-login\.php(.*)$" - [R=404,L]';
-        $_num++;
-        $_stack[] = "# {$_num}.";
+        $_stack[] = 'RewriteRule "(license\.txt|readme\.html)" - [R=404,L]';
+        $_section_number++;
+        if ( false ) {
+            // Protects "wp-admin/" directory
+            $_stack[] = "# {$_section_number}.";
+            $_stack[] = '# - "wp-admin/" and "wp-login.php" under the document root do not redirect and return';
+            $_stack[] = '# - 404 response.';
+            $_stack[] = 'RewriteRule "^wp-admin\/(.*)$" - [R=404,L]';
+            $_stack[] = 'RewriteRule "^wp-login\.php(.*)$" - [R=404,L]';
+            $_section_number++;
+        }
+        // Protects "wp-config.php" and "wp-cron.php"
+        $_stack[] = "# {$_section_number}.";
         $_stack[] = '# - "wp-config.php" and "wp-cron.php" returns 404 response if the connection source is';
-        $_stack[] = '# - not an allowed host.';
+        $_stack[] = '# - not the allowed hosts and addresses.';
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteRule "wp-(config|cron)\.php$" - [R=404,L]';
-        $_num++;
-        $_stack[] = "# {$_num}.";
+        $_section_number++;
+        // Protects "wp-login.php" and "wp-admin/" etc.
+        $_stack[] = "# {$_section_number}.";
         $_stack[] = '# - Access to the .php files (exclude the specific files such as "wp-login.php" or';
         $_stack[] = '# - "xmlrpc.php") directly under the installation directory returns 404 response if the';
-        $_stack[] = '# - connection source is other than the allowed host or referrer.';
+        $_stack[] = '# - connection source is other than the allowed hosts, addresses or referers.';
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -f';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!(wp-login|xmlrpc)\.php$"';
+        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-login\.php$"';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-admin/(options(|-general)|profile)\.php$"';
         $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?\.php$" - [R=404,L]';
-        $_num++;
-        $_stack[] = "# {$_num}.";
+        $_section_number++;
+        // Protects directories under the installed path
+        $_stack[] = "# {$_section_number}.";
         $_stack[] = '# - Access to each directory directly under the installation directory returns 404';
-        $_stack[] = '# - response if the connection source is other than the allowed host and referrer.';
+        $_stack[] = '# - response if the connection source is other than the allowed hosts, addresses or';
+        $_stack[] = '# - referers.';
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -d';
         $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?/?(.*)$" - [R=404,L]';
-        $_num++;
-        $_stack[] = "# {$_num}.";
-        $_stack[] = '# - An access to "xmlrpc.php" only allow access that has user agent of "Jetpack", and';
-        $_stack[] = '# - other accesses redirect to "0.0.0.0" to avoid load.';
-        $_stack[] = 'RewriteCond %{HTTP_USER_AGENT} !jetpack';
-        $_stack[] = 'RewriteRule "^xmlrpc\.php$" "\/\/0\.0\.0\.0\/" [R=301,L]';
-        //$_stack[] = 'RewriteRule "^xmlrpc\.php$" - [R=403,L]';
-        $_num++;
-        if ( false ) {
-            $_stack[] = "# {$_num}.";
+        $_section_number++;
+        if ( isset( $advanced_htaccess_options['prevent_xmlrpc'] ) && $advanced_htaccess_options['prevent_xmlrpc'] ) {
+            // Allows access to "xmlrpc.php" from jetpack only
+            $_stack[] = "# {$_section_number}.";
+            $_stack[] = '# - An access to "xmlrpc.php" only allow access that has user agent of "Jetpack", and';
+            $_stack[] = '# - other accesses redirect to "0.0.0.0" to avoid load.';
+            $_stack[] = 'RewriteCond %{HTTP_USER_AGENT} !jetpack';
+            $_stack[] = 'RewriteRule "^xmlrpc\.php$" "\/\/0\.0\.0\.0\/" [R=301,L]';
+            $_section_number++;
+        }
+        if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ) {
+            // Prevents access to "wp-login.php"
+            $_stack[] = "# {$_section_number}.";
             $_stack[] = '# - Access to "wp-login.php" returns a uniform 404 response regardless of the connection';
             $_stack[] = '# - source.';
             $_stack[] = 'RewriteRule "wp-login\.php(.*)$" - [R=404,L]';
-            $_num++;
+            $_section_number++;
         }
-        $_stack[] = "# {$_num}.";
-        $_stack[] = "# - Avoid the discovery of an author's ID.";
-        $_stack[] = 'RewriteCond %{QUERY_STRING} ^author=([0-9]*)';
-        $_stack[] = 'RewriteRule .* - [F]';
-        $_num++;
+        if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ) {
+            // 
+            $_stack[] = "# {$_section_number}.";
+            
+            $_section_number++;
+        }
+        if ( isset( $advanced_htaccess_options['avoid_author'] ) && $advanced_htaccess_options['avoid_author'] ) {
+            // Avoid the discovery of an author's ID
+            $_stack[] = "# {$_section_number}.";
+            $_stack[] = "# - Avoid the discovery of an author's ID.";
+            $_stack[] = 'RewriteCond %{QUERY_STRING} ^author=([0-9]*) [OR]';
+            $_stack[] = 'RewriteCond %{REQUEST_URI} ^/author/';
+            $_stack[] = 'RewriteRule .* - [F]';
+            $_section_number++;
+        }
         if ( ! empty( $_install_dir ) && $_install_dir !== '\\/' ) {
+            // Make WordPress installed in the subdirectory follow the document root
             global $wp_rewrite;
             if ( got_mod_rewrite() ) {
-                // $origin_rr = explode( "\n", $wp_rewrite->mod_rewrite_rules() );
-                $_stack[] = "# {$_num}.";
+                $_stack[] = "# {$_section_number}.";
                 $_stack[] = '# - Override WordPress rewrite settings if the installation path is a subdirectory';
                 $_stack[] = '# - under the document root.';
                 //$_stack[] = '# - See: https://wordpress.org/support/article/giving-wordpress-its-own-directory/';
@@ -374,6 +445,12 @@ trait utils {
                 $_stack[] = 'RewriteRule ^(.*)$ /'. $_install_dir .'$1';
                 $_stack[] = 'RewriteCond %{HTTP_HOST} ^'. $_SERVER['HTTP_HOST'] .'$';
                 $_stack[] = 'RewriteRule ^(/)?$ '. $_install_dir .'index.php [L]';
+                $_stack[] = '# - Enable routes of WP REST API.';
+                $_stack[] = 'RewriteBase /'. $_install_dir;
+                $_stack[] = 'RewriteRule ^index\.php$ - [L]';
+                $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+                $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
+                $_stack[] = 'RewriteRule . /'. $_install_dir .'index.php [L]';
             }
         }
         array_push( $_stack, '', '</IfModule>', '# END WP Ignitor Rules' );
@@ -490,13 +567,18 @@ trait utils {
             return true;
         }
         // Generate the new file data.
+        if ( empty( $existing_lines ) ) {
+            $end_markers = [ $end_marker, '' ];
+        } else {
+            $end_markers = [ $end_marker ];
+        }
         $new_file_data = implode(
             "\n",
             array_merge(
                 $pre_lines,
-                array( $start_marker ),
+                [ $start_marker ],
                 $insertion,
-                array( $end_marker, '' ),
+                $end_markers,
                 $post_lines
             )
         );
@@ -511,6 +593,135 @@ trait utils {
         fclose( $fp );
         return (bool) $bytes;
     }
+
+    /**
+     * Inserts an array of strings into a file (wp-config.php), placing it between BEGIN and END markers.
+     * Replaces existing marked info. Retains surrounding data.
+     *
+     * @since 1.0.0
+     *
+     * @param string       $filepath  Filename to alter.
+     * @param string       $marker    The marker to alter.
+     * @param array|string $insertion The new content to insert.
+     * @return bool True on write success, false on failure.
+     */
+    function wpconfig_insert_with_markers( string $filepath, string $marker, $insertion ): bool {
+        if ( ! file_exists( $filepath ) || ! is_writable( $filepath ) ) {
+            return false;
+        }
+        if ( ! is_array( $insertion ) ) {
+            $insertion = explode( "\n", $insertion );
+        }
+        $start_marker  = "# BEGIN {$marker}";
+        $end_marker    = "# END {$marker}";
+        $wp_markers    = [ "/* That's all, stop editing! Happy publishing. */", '/** Absolute path to the WordPress directory.', "if ( ! defined( 'ABSPATH' ) ) {", "'ABSPATH'" ];
+        foreach ( $insertion as $i => $line ) {
+            if ( false !== strpos( $line, $start_marker ) || false !== strpos( $line, $end_marker ) ) {
+                unset( $insertion[$i] );
+            }
+        }
+        $fp = fopen( $filepath, 'r+' );
+        if ( ! $fp ) {
+            return false;
+        }
+        // Attempt to get a lock. If the filesystem supports locking, this will block until the lock is acquired.
+        flock( $fp, LOCK_EX );
+        $lines = [];
+        while ( ! feof( $fp ) ) {
+            $lines[] = rtrim( fgets( $fp ), "\r\n" );
+        }
+        // Split out the existing file into the preceding lines, and those that appear after the marker.
+        $pre_lines           = [];
+        $post_lines          = [];
+        $existing_lines      = [];
+        $before_wp_lines     = [];
+        $hereafter_wp_lines  = [];
+        $found_marker        = false;
+        $found_end_marker    = false;
+        $found_wp_marker     = false;
+        foreach ( $lines as $line ) {
+            if ( ! $found_marker && false !== strpos( $line, $start_marker ) ) {
+                $found_marker = true;
+                continue;
+            } elseif ( ! $found_end_marker && false !== strpos( $line, $end_marker ) ) {
+                $found_end_marker = true;
+                continue;
+            }
+            if ( ! $found_marker ) {
+                if ( ! $found_wp_marker ) {
+                    foreach ( $wp_markers as $wp_marker ) {
+                        if ( false !== strpos( $line, $wp_marker ) ) {
+                            $found_wp_marker = true;
+                            break;
+                        }
+                    }
+                }
+                $pre_lines[] = $line;
+            } elseif ( $found_marker && $found_end_marker ) {
+                $post_lines[] = $line;
+            } else {
+                $existing_lines[] = $line;
+            }
+        }
+        if ( $found_wp_marker ) {
+            $found_wp_marker     = false;
+            foreach ( $pre_lines as $line ) {
+                if ( ! $found_wp_marker ) {
+                    foreach ( $wp_markers as $wp_marker ) {
+                        if ( false !== strpos( $line, $wp_marker ) ) {
+                            $found_wp_marker = true;
+                            break;
+                        }
+                    }
+                }
+                if ( $found_wp_marker ) {
+                    $hereafter_wp_lines[] = $line;
+                } else {
+                    $before_wp_lines[] = $line;
+                }
+            }
+        }
+        if ( ! empty( $before_wp_lines ) ) {
+            $pre_lines = $before_wp_lines;
+        }
+        if ( ! empty( $hereafter_wp_lines ) ) {
+            $post_lines = array_merge( $hereafter_wp_lines, $post_lines );
+        }
+        // Check to see if there was a change.
+        if ( $existing_lines === $insertion ) {
+            flock( $fp, LOCK_UN );
+            fclose( $fp );
+            return true;
+        }
+        // Generate the new file data.
+        if ( empty( $existing_lines ) ) {
+            $end_markers = [ $end_marker, '' ];
+        } else {
+            $end_markers = [ $end_marker ];
+        }
+        $new_file_data = implode(
+            "\n",
+            array_merge(
+                $pre_lines,
+                [ $start_marker ],
+                $insertion,
+                $end_markers,
+                $post_lines
+            )
+        );
+        // Write to the start of the file, and truncate it to that length.
+        fseek( $fp, 0 );
+        $bytes = fwrite( $fp, $new_file_data );
+        if ( $bytes ) {
+            ftruncate( $fp, ftell( $fp ) );
+        }
+        fflush( $fp );
+        flock( $fp, LOCK_UN );
+        fclose( $fp );
+        return (bool) $bytes;
+    }
+
+
 
     /**
      * Logger for this plugin only

@@ -17,7 +17,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds plugin version
      *
-     * @since 1.0.0
      * @const string
      */
     const VERSION = IGNITOR_PLUGIN_VERSION;
@@ -25,7 +24,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds options key
      *
-     * @since 1.0.0
      * @access protected
      * @var string
      */
@@ -34,7 +32,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds errors object
      *
-     * @since 1.0.0
      * @access public
      * @var object
      */
@@ -43,7 +40,6 @@ class wpIgnitor extends abstractClass {
     /**
      * [Deprecated] Holds notification object
      *
-     * @since 1.0.0
      * @access public
      * @var object
      */
@@ -52,7 +48,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds current page being requested
      *
-     * @since 1.0.0
      * @access public
      * @var string
      */
@@ -61,7 +56,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds current action being requested
      *
-     * @since 1.0.0
      * @access public
      * @var string
      */
@@ -70,7 +64,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds current instance being requested
      *
-     * @since 1.0.0
      * @access public
      * @var int
      */
@@ -79,7 +72,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds max upload filesize from running php environment requested
      *
-     * @since 1.0.0
      * @access public
      * @var int (bytes unit)
      */
@@ -88,7 +80,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds various paths for using in this plugin
      *
-     * @since 1.0.0
      * @access public
      * @var array
      */
@@ -97,7 +88,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds user's accept language
      *
-     * @since 1.0.0
      * @access public
      * @var string
      */
@@ -106,7 +96,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds database handler
      *
-     * @since 1.0.0
      * @access protected
      * @var array
      */
@@ -115,7 +104,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Holds loaded instances
      *
-     * @since 1.0.0
      * @access protected
      * @var array
      */
@@ -124,7 +112,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Returns singleton instance
      *
-     * @since 1.0.0
      * @access public
      *
      * @param string $class Class to instantiate
@@ -137,7 +124,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Returns default options
      *
-     * @since 1.0.0
      * @access public
      *
      * @return array Default options
@@ -153,7 +139,6 @@ class wpIgnitor extends abstractClass {
     /**
      * loads the plugin
      *
-     * @since 1.0.0
      * @access protected
      */
     protected function load() {
@@ -168,22 +153,27 @@ class wpIgnitor extends abstractClass {
         // Initialize the errors object for this plugin
         $this->errors = new \WP_Error();
 
-        //$this->connect_db();
-        //$this->areas = $this->get_area();
-
         add_filter( 'auto_update_plugin', '__return_false' );
 
         // Action hooks: refer definition in "actions" trait
         add_action( 'registered_taxonomy', [ $this, 'registered_taxonomy' ], 10, 3 );
         add_action( 'registered_post_type', [ $this, 'registered_post_type' ], 10, 2 );
         //add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ] );
+        add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ] );
         add_action( 'init', [ $this, 'init' ] );
+        add_action( 'widgets_init', [ $this, 'widgets_init' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'wp_enqueue_scripts' ] );
         add_action( 'wp_ajax_wpignitor_ajax', [ $this, 'wpignitor_ajax' ] );
         add_action( 'wp_ajax_nopriv_wpignitor_ajax', [ $this, 'nopriv_wpignitor_ajax' ] );
+        add_action( 'wp_footer', [ $this, 'wp_footer' ] );
+        add_action( 'shutdown', [ $this, 'shutdown' ] );
 
         // Filter hooks: refer definition in "filters" trait
-        add_filter( 'upload_dir', [ $this, 'upload_dir' ] );// Reference: filters
-        add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );// Reference: filters
+        //add_filter( 'upload_dir', [ $this, 'upload_dir' ] );// Reference: filters
+        add_filter( 'wp_resource_hints', [ $this, 'wp_resource_hints' ], 10, 2 );
+        add_filter( 'rest_authentication_errors', [ $this, 'rest_authentication_errors' ] );
+        add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
+        add_filter( 'rest_endpoints', [ $this, 'rest_endpoints' ] );
 
         // For admin screen controls: refer definition in "admin" trait
         if ( is_admin() ) :
@@ -199,9 +189,8 @@ class wpIgnitor extends abstractClass {
         add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
         add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
         add_filter( 'dashboard_recent_posts_query_args', [ $this, 'dashboard_recent_posts_query_args' ] );
-        //add_filter( 'set_screen_option_' )
-        add_filter( 'plugin_action_links', [ $this, 'plugin_action_links' ], 10 , 2 );
-        add_filter( 'plugin_action_links_'.plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ), [ $this, 'plugin_action_links_self' ] );
+        add_filter( 'plugin_action_links', [ $this, 'plugin_action_links' ], 10 , 4 );
+        add_filter( 'plugin_action_links_'.plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ), [ $this, 'plugin_action_links_self' ], 10, 4 );
         add_filter( 'all_plugins', [ $this, 'all_plugins' ] );
 
         endif;
@@ -246,7 +235,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Callback that fires when the plugin is activated
      *
-     * @since 1.0.0
      * @access public
      */
     public static function plugin_activation() {
@@ -270,7 +258,6 @@ class wpIgnitor extends abstractClass {
     /**
      * Callback that fires when the plugin is deactivated
      *
-     * @since 1.0.0
      * @access public
      */
     public static function plugin_deactivation() {
