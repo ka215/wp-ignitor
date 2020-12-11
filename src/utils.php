@@ -179,13 +179,35 @@ trait utils {
     public function get_frontend_html( string $path = '/', string $element = '', bool $to_string = false ): string {
         $get_uri = home_url( $path );
         $result = '';
-        $options = stream_context_create([
-            'ssl' => [
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-            ]
-        ]);
-        $raw_html = @file_get_contents( $get_uri, false, $options );
+        if ( preg_match( '@^https://@', $get_uri ) == 1 ) {
+            $options = stream_context_create([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ]
+            ]);
+            $raw_html = file_get_contents( $get_uri, false, $options );
+        } else {
+            $raw_html = file_get_contents( $get_uri, false );
+        }
+        if ( ! $raw_html ) {
+            $ch = curl_init();
+            curl_setopt( $ch, CURLOPT_URL, $get_uri );
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+            curl_setopt( $ch, CURLOPT_BINARYTRANSFER, true );
+            $raw_html = curl_exec( $ch );
+            if ( ! curl_errno( $ch ) ) {
+                switch ( $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE ) ) {
+                    case 200:
+                        break;
+                    default:
+                        self::logger( sprintf( __( 'get_frontend_html() failed with unexpected HTTP code: %d', IGNITOR ), $http_code ) );
+                        curl_close( $ch );
+                        return $raw_html;
+                }
+            }
+            curl_close( $ch );
+        }
         $doc = new \DOMDocument();
         libxml_use_internal_errors( true );
         $doc->loadHTML( $raw_html );
