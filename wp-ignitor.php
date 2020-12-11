@@ -13,7 +13,7 @@
  * Description:       Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
  * Version:           1.0.0
  * Requires at least: 5.4.2
- * Requires PHP:      7.4
+ * Requires PHP:      7.2
  * Author:            Ka2
  * Author URI:        https://ka2.org
  * Text Domain:       wp-ignitor
