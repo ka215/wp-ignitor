@@ -70,7 +70,7 @@ function _increaseItem( elementId, value, options ) {
         button.classList.add( 'button', 'button-secondary' )
         button.setAttribute('aria-label', 'Remove Item')
         button.setAttribute('data-callback', options.callback)
-        button.innerHTML = '<i class="mdi mdi-close-thick"></i>'
+        button.innerHTML = '<i class="mdi mdi-close"></i>'
         button.addEventListener('click', (evt) => {
             _decreaseItem( evt.target )
         }, false)

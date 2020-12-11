@@ -1,19 +1,22 @@
 <?php
-//var_dump( get_defined_vars() );
+/**
+ * Content body of the conceals tab of the plugin settings page.
+ *
+ * @package WpIgnitor
+ * @since 1.0.0
+ */
 $front_index_html = $this->get_frontend_html( '/', 'head', true );
 $cleanup_items = $this->get_cleanup_items();
 $rest_behavior_options = $this->get_option( 'rest_behavior' );
 ?>
 <p>
   <?= __( 'In this setting section, you can remove the elements that is assumed this site is built by WordPress from the outputting HTML source to keep the site confidential.', IGNITOR ) ?>
-  <?= __( 'Concealing that your site is built by WordPress is very important in protecting your site from attackers.', IGNITOR ) ?>
-  <?= __( "In addition, by eliminating unnecessary output elements it will improve your site's performance.", IGNITOR ) ?>
 </p>
 <table class="form-table" role="presentation">
   <tbody>
-    <!-- Update HTML Header -->
+    <!-- Cleanup Frontend HTML -->
     <tr>
-      <th scope="row"><label for="target-page-path"><?= __( 'Cleanup frontend HTML', IGNITOR ) ?></label></th>
+      <th scope="row"><label for="target-page-path"><?= __( 'Cleanup Frontend HTML', IGNITOR ) ?></label></th>
       <td>
         <div>
           <label for="target-page-path" class="fw600"><?= __( 'Target page path to view:', IGNITOR ) ?></label>
@@ -34,13 +37,17 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
           </li>
 <?php endforeach; ?>
         </ul>
-        <button type="button" id="btn-commit-to-cleanup" class="button button-secondary"><?= __( 'Commit Settings', IGNITOR ) ?></button>
+        <button
+          type="button"
+          id="btn-commit-to-cleanup"
+          class="button button-primary"><i class="mdi mdi-cog-sync"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Their committed settings will be reflected immediately in the front end.', IGNITOR ) ?>
         </p>
       </td>
     </tr>
+    <!-- REST API Routes -->
     <tr>
       <th scope="row"><label for=""><?= __( 'REST API Routes', IGNITOR ) ?></label></th>
       <td>
@@ -78,7 +85,10 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
           </li>
 <?php endforeach; ?>
         </ul>
-        <button type="button" id="btn-save-rest-behavior" class="button button-secondary"><?= __( 'Save Behavior', IGNITOR ) ?></button>
+        <button
+          type="button"
+          id="btn-save-rest-behavior"
+          class="button button-primary"><i class="mdi mdi-routes"></i> <?= __( 'Save Behavior', IGNITOR ) ?></button>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Control the behavior of "wp-json/", which is the root of the REST route, in the "/" only namespace.', IGNITOR ) ?>

@@ -7,9 +7,7 @@
  */
 namespace wpIgnitor;
 
-use wpIgnitor\{
-    listTable,
-};
+// use wpIgnitor\{ listTable, };
 
 if ( ! class_exists( 'wpIgnitor' ) ) :
 
@@ -30,20 +28,20 @@ class wpIgnitor extends abstractClass {
     protected $options_key = IGNITOR;
 
     /**
+     * Holds debug mode of this plugin
+     *
+     * @access public
+     * @var boolean
+     */
+    protected $debug = IGNITOR_DEBUG;
+
+    /**
      * Holds errors object
      *
      * @access public
      * @var object
      */
     public $errors;
-
-    /**
-     * [Deprecated] Holds notification object
-     *
-     * @access public
-     * @var object
-     */
-    public $notifications;
 
     /**
      * Holds current page being requested
@@ -112,6 +110,7 @@ class wpIgnitor extends abstractClass {
     /**
      * Returns singleton instance
      *
+     * @since  1.0.0
      * @access public
      *
      * @param string $class Class to instantiate
@@ -124,6 +123,7 @@ class wpIgnitor extends abstractClass {
     /**
      * Returns default options
      *
+     * @since  1.0.0
      * @access public
      *
      * @return array Default options
@@ -139,15 +139,18 @@ class wpIgnitor extends abstractClass {
     /**
      * loads the plugin
      *
+     * @since  1.0.0
      * @access protected
      */
     protected function load() {
         // Various global settings for this plugin
         $this->paths = [
-            'plugin_dir' => IGNITOR_PLUGIN_DIR,
-            'views_dir'  => IGNITOR_PLUGIN_DIR . 'views/',
-            'assets_dir' => IGNITOR_PLUGIN_DIR . 'assets/',
+            'plugin_dir'     => IGNITOR_PLUGIN_DIR,
+            'views_dir'      => IGNITOR_PLUGIN_DIR . 'views/',
+            'assets_dir'     => IGNITOR_PLUGIN_DIR . 'assets/',
             'assets_dir_url' => str_replace( $_SERVER['DOCUMENT_ROOT'], '', IGNITOR_PLUGIN_DIR . 'assets/' ),// Relative path
+            'docroot'        => str_replace( DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT'] ),
+            'install_path'   => str_replace( DIRECTORY_SEPARATOR, '/', ABSPATH ),
         ];
 
         // Initialize the errors object for this plugin
@@ -167,6 +170,8 @@ class wpIgnitor extends abstractClass {
         add_action( 'wp_ajax_nopriv_wpignitor_ajax', [ $this, 'nopriv_wpignitor_ajax' ] );
         add_action( 'wp_footer', [ $this, 'wp_footer' ] );
         add_action( 'shutdown', [ $this, 'shutdown' ] );
+        // For New Login
+        add_action( 'login_init', [ $this, 'login_init' ] );
 
         // Filter hooks: refer definition in "filters" trait
         //add_filter( 'upload_dir', [ $this, 'upload_dir' ] );// Reference: filters
@@ -174,38 +179,45 @@ class wpIgnitor extends abstractClass {
         add_filter( 'rest_authentication_errors', [ $this, 'rest_authentication_errors' ] );
         add_filter( 'rest_pre_dispatch', [ $this, 'rest_pre_dispatch' ], 10, 3 );
         add_filter( 'rest_endpoints', [ $this, 'rest_endpoints' ] );
+        add_filter( 'auth_redirect_scheme', [ $this, 'auth_redirect_scheme' ], PHP_INT_MAX );
+        // For New Login
+        add_filter( 'login_url', [ $this, 'login_url' ], 10, 3 );
+        add_filter( 'logout_url', [ $this, 'logout_url' ], 10, 2 );
+        add_filter( 'register_url', [ $this, 'register_url' ], 10 );
+        add_filter( 'lostpassword_url', [ $this, 'lostpassword_url' ], 10, 2 );
+        add_filter( 'site_url', [ $this, 'site_url' ], 10, 4 );
+        add_filter( 'admin_url', [ $this, 'admin_url' ], 10, 3 );
+        add_filter( 'wp_redirect', [ $this, 'wp_redirect' ], 10, 2 );
 
-        // For admin screen controls: refer definition in "admin" trait
-        if ( is_admin() ) :
-
-        add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-        add_action( 'admin_init', [ $this, 'admin_init' ] );
-        add_action( 'current_screen', [ $this, 'current_screen' ] );
-        add_action( 'wp_dashboard_setup', [ $this, 'wp_dashboard_setup' ] );
-        add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
-        add_action( 'admin_print_styles', [ $this, 'admin_print_styles' ] );
-        add_action( 'admin_head', [ $this, 'admin_head' ] );
-        add_filter( 'user_contactmethods', [ $this, 'user_contactmethods' ] );
-        add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
-        add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
-        add_filter( 'dashboard_recent_posts_query_args', [ $this, 'dashboard_recent_posts_query_args' ] );
-        add_filter( 'plugin_action_links', [ $this, 'plugin_action_links' ], 10 , 4 );
-        add_filter( 'plugin_action_links_'.plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ), [ $this, 'plugin_action_links_self' ], 10, 4 );
-        add_filter( 'all_plugins', [ $this, 'all_plugins' ] );
-
-        endif;
+        if ( is_admin() ) {
+            // For admin screen controls: refer definition in "admin" trait
+            add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+            add_action( 'admin_init', [ $this, 'admin_init' ] );
+            add_action( 'current_screen', [ $this, 'current_screen' ] );
+            add_action( 'wp_dashboard_setup', [ $this, 'wp_dashboard_setup' ] );
+            add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+            add_action( 'admin_print_styles', [ $this, 'admin_print_styles' ] );
+            add_action( 'admin_head', [ $this, 'admin_head' ] );
+            add_filter( 'user_contactmethods', [ $this, 'user_contactmethods' ] );
+            add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
+            add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
+            add_filter( 'dashboard_recent_posts_query_args', [ $this, 'dashboard_recent_posts_query_args' ] );
+            add_filter( 'plugin_action_links', [ $this, 'plugin_action_links' ], 10 , 4 );
+            add_filter( 'plugin_action_links_'.plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ), [ $this, 'plugin_action_links_self' ], 10, 4 );
+            add_filter( 'all_plugins', [ $this, 'all_plugins' ] );
+        }
 
         // For frontend screen controls: refer definition in "frontend" trait
 
         // Bind shortcodes
         //add_shortcode( 'shortcode_handler',         [ $this, 'shortcode_method' ] );// Reference: shortcodes
 
+        // For debug
+        if ( $this->debug ) {
+            add_action( 'all', [ $this, 'debug_all_actions' ] );
+            add_filter( 'all', [ $this, 'debug_all_filters' ] );
+        }
     }
-
-    /**
-     * Database: including trait for database handler
-     */
-    //use database;
 
     /**
      * Actions: including trait for action hooks
@@ -228,13 +240,9 @@ class wpIgnitor extends abstractClass {
     use utils;
 
     /**
-     * Salons: including trait as salons model
-     */
-    //use salons;
-
-    /**
      * Callback that fires when the plugin is activated
      *
+     * @since  1.0.0
      * @access public
      */
     public static function plugin_activation() {
@@ -250,14 +258,15 @@ class wpIgnitor extends abstractClass {
             ob_get_clean();
             $logs[] = $buffer;
         }
-
-        self::logger( $logs );
-        //error_log( implode( "\n", $logs ), 3, IGNITOR_PLUGIN_DIR . 'wp-ignitor.log' );
+        if ( IGNITOR_DEBUG ) {
+            self::logger( $logs );
+        }
     }
 
     /**
      * Callback that fires when the plugin is deactivated
      *
+     * @since  1.0.0
      * @access public
      */
     public static function plugin_deactivation() {
@@ -273,9 +282,25 @@ class wpIgnitor extends abstractClass {
             $logs[] = $buffer;
             delete_option( $plugin_option_key );
         }
+        if ( IGNITOR_DEBUG ) {
+            self::logger( $logs );
+        }
+    }
 
-        self::logger( $logs );
-        //error_log( implode( "\n", $logs ), 3, IGNITOR_PLUGIN_DIR . 'wp-ignitor.log' );
+    /**
+     * Callback that fires when the plugin is uninstalled
+     *
+     * @since  1.0.0
+     * @access public
+     */
+    public static function plugin_uninstall() {
+        // Delete all options saved by this plugin.
+        // A primary option key: 'wpignitor' ($this->options_key i.e. IGNITOR)
+        delete_option( self::options_key );
+        // Update a "wp-config.php" with removing the section written by this plugin.
+        self::restore_wp_config();
+        // Update a ".htaccess" with removing the section written by this plugin.
+        self::restore_htaccess();
     }
 
 }

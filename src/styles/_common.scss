@@ -1,5 +1,7 @@
 [hidden],
-.hidden { display: none !important; }
+.hidden:not(.screen-meta-toggle > button) {
+  display: none !important;
+}
 
 [data-standby=shown] {
   visibility: visible !important;

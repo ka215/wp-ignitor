@@ -6,7 +6,7 @@
 import { hasProp, logger, triggerEvent } from './_utils'
 import { postData, addPostField } from './_postData'
 import { callback } from './_callback'
-import { initDialog } from './_dialog'
+import { initDialog, showDialog } from './_dialog'
 import { initFluctuation } from './_fluctuation'
 
 function init() {
@@ -156,6 +156,7 @@ function init() {
                     })
                     break
                 case 'btn-update-wp-config':
+                    document.getElementById('htaccess').setAttribute('disabled', true)
                     document.querySelector('input[name=method]').setAttribute('value', self.id.replace('btn-', ''))
                     Array.prototype.forEach.call(document.querySelectorAll('input[name^="wp_config["]'), (elm) => {
                         if ( document.getElementById(`chk-${elm.id}`).checked ) {
@@ -171,6 +172,12 @@ function init() {
                     })
                     form.submit()
                     break
+                case 'btn-restore-wp-config':
+                    document.getElementById('preview-wp-config').setAttribute('disabled', true)
+                    document.getElementById('htaccess').setAttribute('disabled', true)
+                    document.querySelector('input[name=method]').setAttribute('value', self.id.replace('btn-', ''))
+                    form.submit()
+                    break
                 case 'btn-reload-preview-htaccess':
                     data.method = 'reload-preview-htaccess'
                     for ( let _k in data ) {
@@ -181,7 +188,6 @@ function init() {
                         }
                     }
                     postData( AJAX_URL, data ).then((response) => {
-//console.log(response)
                         if (response.result) {
                             document.getElementById('htaccess').textContent = response.htaccess
                         }
@@ -190,10 +196,18 @@ function init() {
                     })
                     break
                 case 'btn-update-htaccess':
+                    document.getElementById('preview-wp-config').setAttribute('disabled', true)
                     document.querySelector('input[name=method]').setAttribute('value', self.id.replace('btn-', ''))
                     form.submit()
                     break
-                // Conceal Tab
+                case 'btn-restore-htaccess':
+                case 'btn-clear-all-settings':
+                    document.getElementById('preview-wp-config').setAttribute('disabled', true)
+                    document.getElementById('htaccess').setAttribute('disabled', true)
+                    document.querySelector('input[name=method]').setAttribute('value', self.id.replace('btn-', ''))
+                    form.submit()
+                    break
+                // Conceals Tab
                 case 'btn-commit-to-cleanup':
                     data.method = 'cleanup-html'
                     Array.prototype.forEach.call(document.querySelectorAll('[name^="cleanup["]'), (elm) => {
@@ -211,10 +225,35 @@ function init() {
                     document.querySelector('input[name=method]').setAttribute('value', 'rest-behavior')
                     form.submit()
                     break
-                // Authorization Tab
-                //case '':
+                // Authorizations Tab
+                case 'btn-commit-login-settings':
+                    if ( parseInt( data.new_login_on ) == 1 ) {
+                        if ( ! data.new_login_path ) {
+                            let errField = document.getElementById('new-login-path'),
+                                dialogOpts = {
+                                    title: `<label class="fw600 text-alert myh">${errField.dataset.errorTitle}</label>`,
+                                    content: `<div class="text-alert align-center">${errField.dataset.blankError}</div>`,
+                                    reinit: false,
+                                    size: 'medium',
+                                }
+
+                            errField.style.borderColor = '#bb2124'
+                            errField.addEventListener('focus', (evt) => {
+                                evt.target.removeAttribute('style')
+                            }, false)
+                            showDialog( dialogOpts )
+                            evt.preventDefault()
+                            return false
+                        }
+                    }
+                    document.querySelector('input[name=method]').setAttribute('value', 'login-setting')
+                    form.submit()
+                    break
                 // Helth Check Tab
-                //case '':
+                case 'btn-unlock-core-updater':
+                    document.querySelector('input[name=method]').setAttribute('value', self.id.replace('btn-', ''))
+                    form.submit()
+                    break
                 default:
                     return false
             }

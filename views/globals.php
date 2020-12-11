@@ -1,13 +1,18 @@
 <?php
-//var_dump( get_defined_vars() );
+/**
+ * Content body of the globals tab of the plugin settings page.
+ *
+ * @package WpIgnitor
+ * @since 1.0.0
+ */
 $add_htaccess = $this->generate_htaccess();
-$current_wp_config_path = $this->get_wp_config_path();
-$can_move_wp_config = strpos( $current_wp_config_path, ABSPATH ) !== false;
+$checked_wp_config_path = $this->is_best_wp_config_path();
 $editable_constant_list = $this->get_editable_constants();
 $current_wp_config_options = $this->get_option( 'wp_config_options' ) ?? [];
 $default_allowed_hosts = $this->get_remote_hosts();
 $allowed_sources = $this->get_option( 'allow_sources' ) ?? [];
 $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
+$current_new_login = $this->get_option( 'new_login' );
 ?>
 <p><?= __( "This settings section contains settings that have a destructive impact on the entire website. It's risky to do, so it's a good idea to do it before you bring in the content.", IGNITOR ) ?></p>
 <table class="form-table" role="presentation">
@@ -23,12 +28,12 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
           <li>
             <span class="mdi mdi-<?php if ( is_writable( $_SERVER['DOCUMENT_ROOT'] ) ) : ?>check-bold text-success<?php else : ?>close-thick text-denger<?php endif; ?>"></span>
             <span class="mxh fw600"><?= __( 'DOCUMENT_ROOT:', IGNITOR ) ?></span>
-            <code><?= $_SERVER['DOCUMENT_ROOT'] ?></code>
+            <code><?= $this->paths['docroot'] ?></code>
           </li>
           <li>
             <span class="mdi mdi-<?php if ( is_writable( ABSPATH ) ) : ?>check-bold text-success<?php else : ?>close-thick text-denger<?php endif; ?>"></span>
             <span class="mxh fw600"><?= __( 'Install Directory:', IGNITOR ) ?></span>
-            <code><?= ABSPATH ?></code>
+            <code><?= $this->paths['install_path'] ?></code>
           </li>
           <li>
             <span class="mdi mdi-<?php if ( is_writable( $this->get_wp_config_path() ) ) : ?>check-bold text-success<?php else : ?>close-thick text-denger<?php endif; ?>"></span>
@@ -64,7 +69,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
             __data-shown="disableButton"
             __data-before-hide="test"
             __data-hidden="selfRedirect"
-            class="button button-secondary"><?= __( 'Move To', IGNITOR ) ?></button>
+            class="button button-primary"><span class="mdi mdi-folder-move-outline"></span> <?= __( 'Move To', IGNITOR ) ?></button>
         </div>
         <div class="d-flex-row myh">
           <label for="without-subdir">
@@ -80,6 +85,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Cannot move to the path of directory that already exists, or to the path of directly document root.', IGNITOR ) ?><br>
           <?= __( 'WP-Ignitor make a new directory before moving.', IGNITOR ) ?><br>
+          <?= __( 'When moving, the "wp-config.php" will be forcibly placed directly under the installation directory.', IGNITOR ) ?><br>
           <?= __( 'Files in the "node_modules", ".cache", and ".git" directories are excluded from the move.', IGNITOR ) ?><br>
           <?= __( 'Also cannot move to the path that is two or more levels deep.', IGNITOR ) ?><br>
           <?= __( 'If you do not have enough permission to operate the file, you cannot move it.', IGNITOR ) ?>
@@ -92,7 +98,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
       <td>
         <div class="d-flex-row">
           <input type="text" id="current-wp-config-path" value="<?= $this->get_wp_config_path() ?>" class="medium-text code" readonly>
-<?php if ( $can_move_wp_config ): ?>
+<?php if ( 'no-secure' === $checked_wp_config_path ): ?>
           <span class="gap"><i class="mdi mdi-arrow-right"></i></span>
           <button
             type="button"
@@ -102,13 +108,27 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
             __data-foot="dismiss-outside"
             data-content="moveWpConfig"
             data-hidden="selfReload"
-            class="button button-secondary"><?= __( 'Move To One Upper Level Path', IGNITOR ) ?></button>
+            class="button button-primary"><span class="mdi mdi-file-replace-outline"></span> <?= __( 'Move To One Upper Level Path', IGNITOR ) ?></button>
+<?php endif;
+      switch( $checked_wp_config_path ) {
+        case 'no-secure':
+            $_type = 'alert';
+            $_icon = 'alert-rhombus-outline';
+            $_msg  = __( "No secure because it's same the installed path. Recommend that you move the file up one level for better security.", IGNITOR );
+            break;
+        case 'better':
+            $_type = 'warn';
+            $_icon = 'alert-outline';
+            $_msg  = __( "It's more appropriate because upper the installed path. However, please note that it is installed under the document root that can be accessed by everyone.", IGNITOR );
+            break;
+        case 'best':
+            $_type = 'success';
+            $_icon = 'check-circle-outline';
+            $_msg  = __( "It's already in the correct position recommended for security. You will also be better off by paying attention to directory traversal attacks.", IGNITOR );
+            break;
+      } ?>
+          <p class="description text-<?= $_type ?>"><span class="mdi mdi-<?= $_icon ?>"></span> <?= $_msg ?></p>
         </div>
-        <p class="description text-warn"><span class="mdi mdi-alert-rhombus"></span> <?= __( 'Recommend that you move the file up one level for better security.', IGNITOR ) ?></p>
-<?php else : ?>
-          <p class="description text-success"><span class="mdi mdi-check-circle-outline"></span> <?= __( 'It has already been placed in the correct position recommended for security.', IGNITOR ) ?></p>
-        </div>
-<?php endif; ?>
       </td>
     </tr>
     <!-- Update "wp-config.php" -->
@@ -120,7 +140,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
         </p>
         <ul id="wp-option-list">
 <?php foreach ( $editable_constant_list as $const_name => $items ): 
-        $is_checked_item = array_key_exists( strtoupper( $const_name ), $current_wp_config_options );
+        $is_checked_item = $current_wp_config_options ? array_key_exists( strtoupper( $const_name ), $current_wp_config_options ) : false;
 ?>
           <li class="d-flex-row mbh">
             <label class="mr1"><input type="checkbox" id="chk-<?= $const_name ?>" class="toggle-option mrh"<?php if ( $is_checked_item ): ?> checked="checked"<?php endif; ?>><?= $items['label'] ?>:</label>
@@ -148,7 +168,11 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
         <button
           type="button"
           id="btn-update-wp-config"
-          class="button button-secondary"><?= __( 'Update wp-config.php', IGNITOR ) ?></button>
+          class="button button-primary mrh"><span class="mdi mdi-file-plus-outline"></span> <?= __( 'Update wp-config.php', IGNITOR ) ?></button>
+        <button
+          type="button"
+          id="btn-restore-wp-config"
+          class="button button-secondary"><span class="mdi mdi-file-undo-outline"></span> <?= __( 'Restore wp-config.php', IGNITOR ) ?></button>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The above settings will be inserted into marker (rows) from "BEGIN WP Ignitor" to "END WP Ignitor".', IGNITOR ) ?><br>
@@ -174,11 +198,16 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
 <?php endforeach;
-      if ( array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
+      if ( $allowed_sources && array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
           foreach( $allowed_sources['hosts'] as $_i => $_host ): ?>
               <li>
                 <input type="text" id="allow-host-<?= $_i ?>" name="allow_hosts[<?= $_i ?>]" value="<?= $_host ?>" class="regular-text core" readonly
-                ><button type="button" id="remove-fluctuation-allow-host-<?= $_i ?>" data-callback="reloadPreviewHtaccess" class="button button-secondary" aria-label="<?= __( 'Remove Host', IGNITOR ) ?>"><i class="mdi mdi-close-thick"></i></button>
+                ><button
+                  type="button"
+                  id="remove-fluctuation-allow-host-<?= $_i ?>"
+                  data-callback="reloadPreviewHtaccess"
+                  class="button button-secondary"
+                  aria-label="<?= __( 'Remove Host', IGNITOR ) ?>"><i class="mdi mdi-close"></i></button>
               </li>
 <?php     endforeach;
       } ?>
@@ -195,7 +224,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 data-insert-classes="regular-text core"
                 data-callback="reloadPreviewHtaccess"
                 class="button button-secondary fluctuation"
-                aria-label="<?= __( 'Add New Hostname', IGNITOR ) ?>"><i class="mdi mdi-plus-thick"></i></button>
+                aria-label="<?= __( 'Add New Hostname', IGNITOR ) ?>"><i class="mdi mdi-plus"></i></button>
             </div>
           </div>
         </div>
@@ -207,11 +236,16 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 <input type="text" value="<?= $this->get_remote_addr() ?>" class="normal-text core" readonly
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
-<?php if ( array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
+<?php if ( $allowed_sources && array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
           foreach( $allowed_sources['addrs'] as $_i => $_addr ): ?>
               <li>
                 <input type="text" id="allow-addr-<?= $_i ?>" name="allow_addrs[<?= $_i ?>]" value="<?= $_addr ?>" class="normal-text core" readonly
-                ><button type="button" id="remove-fluctuation-allow-addr-<?= $_i ?>" data-callback="reloadPreviewHtaccess" class="button button-secondary" aria-label="<?= __( 'Remove Address', IGNITOR ) ?>"><i class="mdi mdi-close-thick"></i></button>
+                ><button
+                  type="button"
+                  id="remove-fluctuation-allow-addr-<?= $_i ?>"
+                  data-callback="reloadPreviewHtaccess"
+                  class="button button-secondary"
+                  aria-label="<?= __( 'Remove Address', IGNITOR ) ?>"><i class="mdi mdi-close"></i></button>
               </li>
 <?php     endforeach;
       } ?>
@@ -228,7 +262,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 data-insert-classes="normal-text core"
                 data-callback="reloadPreviewHtaccess"
                 class="button button-secondary fluctuation"
-                aria-label="<?= __( 'Add New Address', IGNITOR ) ?>"><i class="mdi mdi-plus-thick"></i></button>
+                aria-label="<?= __( 'Add New Address', IGNITOR ) ?>"><i class="mdi mdi-plus"></i></button>
             </div>
           </div>
         </div>
@@ -240,11 +274,16 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 <input type="text" value="https?://<?= $this->get_fqdn() ?>" class="medium-text core" readonly
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
-<?php if ( array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
+<?php if ( $allowed_sources && array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
           foreach( $allowed_sources['referers'] as $_i => $_referer ): ?>
               <li>
                 <input type="text" id="allow-referer-<?= $_i ?>" name="allow_referers[<?= $_i ?>]" value="<?= $_referer ?>" class="medium-text core" readonly
-                ><button type="button" id="remove-fluctuation-allow-referer-<?= $_i ?>" data-callback="reloadPreviewHtaccess" class="button button-secondary" aria-label="<?= __( 'Remove Referer', IGNITOR ) ?>"><i class="mdi mdi-close-thick"></i></button>
+                ><button
+                  type="button"
+                  id="remove-fluctuation-allow-referer-<?= $_i ?>"
+                  data-callback="reloadPreviewHtaccess"
+                  class="button button-secondary"
+                  aria-label="<?= __( 'Remove Referer', IGNITOR ) ?>"><i class="mdi mdi-close"></i></button>
               </li>
 <?php     endforeach;
       } ?>
@@ -261,7 +300,7 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
                 data-insert-classes="medium-text core"
                 data-callback="reloadPreviewHtaccess"
                 class="button button-secondary fluctuation"
-                aria-label="<?= __( 'Add New Referer', IGNITOR ) ?>"><i class="mdi mdi-plus-thick"></i></button>
+                aria-label="<?= __( 'Add New Referer', IGNITOR ) ?>"><i class="mdi mdi-plus"></i></button>
             </div>
           </div>
         </div>
@@ -281,23 +320,24 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
               <input type="hidden" name="advanced_htaccess[uniform_login]" value="0">
               <input type="checkbox" id="advanced-option-2" name="advanced_htaccess[uniform_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ): ?> checked="checked"<?php endif; ?>
-<?php if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ): ?> readonly disabled<?php endif; ?>
               ><label for="advanced-option-2" class="plh">
                 <?= __( 'Access to "wp-login.php" returns a uniform 404 response regardless of the connection source.', IGNITOR ) ?>
               </label>
            </li>
+<?php if ( ! empty( $current_new_login ) ): ?>
            <li class="d-flex-row flex-nowrap items-start mbh">
               <input type="hidden" name="advanced_htaccess[new_login]" value="0">
               <input type="checkbox" id="advanced-option-3" name="advanced_htaccess[new_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ): ?> checked="checked"<?php endif; ?>
-<?php if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ): ?> readonly disabled<?php endif; ?>
-              ><label for="advanced-option-3" class="plh muted"
-<?php if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ): ?> disabled<?php endif; ?>>
-                <?= sprintf( __( 'Close direct access to "wp-login.php" and set up a new login URL (%s).', IGNITOR ), '<code>'. home_url( 'entrance/' ) .'</code>') ?>
+              ><label for="advanced-option-3" class="plh">
+                <?= sprintf( __( 'Close direct access to "wp-login.php" and set up a new login URL (%s).', IGNITOR ), '<code>'. home_url( $current_new_login['path'] ) .'</code>') ?>
                 <?= sprintf( __( 'Detailed settings for the new login URL can be made in the relevant section of the "%sAuthorizations%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=login">', '</a>' ) ?>
               </label>
            </li>
-           <li class="d-flex-row flex-nowrap items-start mbh">
+<?php else: ?>
+           <input type="hidden" name="advanced_htaccess[new_login]" value="0">
+<?php endif; ?>
+            <li class="d-flex-row flex-nowrap items-start mbh">
               <input type="hidden" name="advanced_htaccess[avoid_author]" value="0">
               <input type="checkbox" id="advanced-option-4" name="advanced_htaccess[avoid_author]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['avoid_author'] ) && $advanced_htaccess_options['avoid_author'] ): ?> checked="checked"<?php endif; ?>
@@ -316,12 +356,31 @@ $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' ) ?? [];
           <button
             type="button"
             id="btn-update-htaccess"
-            class="button button-secondary"><?= __( 'Insert above configure to .htaccess', IGNITOR ) ?></button>
-          <a href="https://timmehosting.de/htaccess-converter" target="_blank" class="ml2"><i class="mdi mdi-dock-window"></i> <?= __( 'Please convert to the config for Nginx here.', IGNITOR ) ?></a>
+            class="button button-primary mr1"><i class="mdi mdi-text-box-plus-outline"></i> <?= __( 'Insert Above Settings', IGNITOR ) ?></button>
+          <button
+            type="button"
+            id="btn-restore-htaccess"
+            class="button button-secondary"><i class="mdi mdi-text-box-remove-outline"></i> <?= __( 'Withdraw Above Settings', IGNITOR ) ?></button>
+          <a href="https://timmehosting.de/htaccess-converter" target="_blank" class="ml2"><i class="mdi mdi-dock-window"></i> <?= __( 'Refer to configure for Nginx', IGNITOR ) ?></a>
         </div>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The directive (lines) from "BEGIN WP Ignitor Rules" to "END WP Ignitor Rules" are inserted before the directive (lines) from "BEGIN WordPress" to "END WordPress".', IGNITOR ) ?><br>
+        </p>
+      </td>
+    </tr>
+    <!-- Clear saved all settings -->
+    <tr>
+      <th scope="row"><label for="htaccess"><?= __( 'Clear All Settings', IGNITOR ) ?></label></th>
+      <td>
+        <button
+          type="button"
+          id="btn-clear-all-settings"
+          class="button button-secondary"
+        ><i class="mdi mdi-redo-variant"></i> <?= __( 'Clear All Saved Settings Of This Plugin', IGNITOR ) ?></button>
+        <p class="description mt1">
+          <span class="mdi mdi-alert-circle-outline text-info"></span>
+          <?= __( 'Clearing all saved settings will reset all options for this plugin. However, moved files and updated files will not be restored to the state before such executing.', IGNITOR ) ?><br>
         </p>
       </td>
     </tr>

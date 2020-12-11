@@ -12,20 +12,11 @@ trait admin {
      * Member vars for admin screen only
      */
     protected $compress_file_map;
-    
     protected $list_table;
-    
     protected $http_post;
-    
     protected $help_tabs;
-    
     protected $help_sidebars;
-    
     protected $rest_namespaces;
-    
-    // For seeding
-    protected $seeder;
-    protected $faker;
     
     /* -------------------- Actions Section -------------------- */
     
@@ -66,13 +57,6 @@ trait admin {
         
         $this->rest_namespaces = rest_get_server()->get_namespaces();
         $this->rest_namespaces[] = '/';
-        
-        // Prepare seeding
-        $this->seeder = defined( 'SALON_SEEDER' ) ? SALON_SEEDER : false;
-        if ( $this->seeder ) {
-            require_once __DIR__ . '/../vendor/autoload.php';
-            $this->faker = \Faker\Factory::create( 'ja_JP' );
-        }
     }
 
     /**
@@ -144,14 +128,15 @@ trait admin {
      */
     public function admin_print_styles() {
         global $pagenow;
-        $internal_css = null;
-        if ( ( $pagenow === 'profile.php' || $pagenow === 'edit-profile.php' ) && ! current_user_can( 'manage_options' ) ) {
-            $internal_css = <<<EOS
-<style id="wpignitor-internal-css">
-</style>
-EOS;
-        }
+        /**
+         * Filter the internal CSS to insert before minifying.
+         *
+         * @since 1.0.0
+         * @hook  filter
+         */
+        $internal_css = apply_filters( 'wpignitor_admin_internal_css', '', $pagenow );
         if ( ! empty( $internal_css ) ) {
+            $internal_css = '<style id="'. IGNITOR .'-internal-css">'. $internal_css .'</style>';
             echo $this->minify_css( $internal_css );
         }
     }
@@ -167,45 +152,45 @@ EOS;
         $current_screen = get_current_screen();
         if ( $current_screen->id === 'settings_page_wpignitor-settings' ) {
             $helps = [
-                'salon-list-help' => [
-                    'title'    => '店舗一覧',
-                    'content'  => '<p>この画面からすべての店舗へアクセスできます。ワークフローに合うようにこの画面の表示をカスタマイズできます。</p>',
+                'globals-tab-help' => [
+                    'title'    => __( 'Globals', IGNITOR ),
+                    'content'  => $this->get_tab_help_content( 'globals' ),
                     'callback' => false,
                 ],
-                'salon-edit-help' => [
-                    'title'    => '店舗の新規登録／編集',
-                    'content'  => '<p>この画面では、店舗の新規登録や編集を行うことができます。</p>',
+                'conceal-tab-help' => [
+                    'title'    => __( 'Conceals', IGNITOR ),
+                    'content'  => $this->get_tab_help_content( 'conceal' ),
                     'callback' => false,
                 ],
-                'items-edit-help' => [
-                    'title'    => '項目管理',
-                    'content'  => '<p>この画面では、店舗編集時に設定できる各種項目の追加や編集などを行うことができます。</p>',
+                'login-tab-help' => [
+                    'title'    => __( 'Authorizations', IGNITOR ),
+                    'content'  => $this->get_tab_help_content( 'login' ),
+                    'callback' => false,
+                ],
+                'utils-tab-help' => [
+                    'title'    => __( 'Utilities', IGNITOR ),
+                    'content'  => $this->get_tab_help_content( 'utils' ),
                     'callback' => false,
                 ],
             ];
             foreach ( $helps as $help_id => $data ) {
                 $this->help_tabs[] = array_merge( [ 'id' => $help_id ], $data );
                 $this->help_sidebars[$help_id] = [
-                    '<p><strong>詳細情報:</strong></p>',
-                    '<p><a href="https://live-r.crossrink.co.jp/after-corona-salon/salon-management-plugin">Repository</a></p>',
+                    '<dt>'. __( 'More Information:', IGNITOR ) .'</dt>',
+                    '<dd><a href="#" target="_blank">'. __( 'Plugin Page', IGNITOR ) .'</a></dd>',
+                    '<dd><a href="#" target="_blank">'. __( 'Repository', IGNITOR ) .'</a></dd>',
+                    '<dt>'. __( 'Contribution:', IGNITOR ) .'</dt>',
+                    '<dd><a href="#" target="_blank"><i class="mdi mdi-heart-outline" style="color:#ff0099;"></i> '. __( 'Sponsor', IGNITOR ) .'</a></dd>',
                 ];
             }
             if ( ! empty( $this->help_tabs ) ) {
                 foreach ( $this->help_tabs as $_args ) {
                     $current_screen->add_help_tab( $_args );
                     if ( array_key_exists( $_args['id'], $this->help_sidebars ) ) {
-                        $current_screen->set_help_sidebar( implode( "\n", $this->help_sidebars[$_args['id']] ) );
+                        $current_screen->set_help_sidebar( '<dl>'. implode( "\n", $this->help_sidebars[$_args['id']] ) .'</dl>' );
                     }
                 }
             }
-            /*
-            if ( $this->is_salon_list ) {
-                $current_screen->add_option( 'per_page', [ 'default' => 10, 'option' => 'edit_salon_per_page' ] );
-            }
-            if ( $this->is_edit_salon ) {
-                $current_screen->add_option( 'use_seeder', [ 'default' => false, 'option' => 'edit_salon_use_seeder' ] );
-            }
-            */
         }
     }
 
@@ -247,7 +232,6 @@ EOS;
      * @since 2.8.0 -> 5.4.2
      */
     public function set_screen_option( $screen_option, string $option, int $value ) {
-        var_dump( __METHOD__, $screen_option, $option, $value  );
         $user = wp_get_current_user();
         update_user_meta( $user->ID, $option, $value );
         return $screen_option;
@@ -273,11 +257,6 @@ EOS;
      * @since 2.5.0 -> 2.6.0 -> 4.9.0
      */
     public function plugin_action_links( array $actions, string $plugin_file, array $plugin_data, string $context ): array {
-        /*
-        if ( $plugin_file == plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' ) ) {
-            var_dump( __METHOD__, $actions, $plugin_file );
-            array_unshift( $actions, '<a href="' . esc_url( self::get_page_url() ) . '">'.esc_html__( 'Settings' ).'</a>' );
-        }*/
         return $actions;
     }
 
@@ -334,6 +313,23 @@ EOS;
             $args['tab'] = $tab;
         }
         return add_query_arg( $args, admin_url( 'options-general.php' ) );
+    }
+
+    /**
+     * Get specific tab content in admin help.
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     *
+     * @param  string   $tab    
+     * @return string
+     */
+    public function get_tab_help_content( string $tab ): string {
+        ob_start();
+        $this->get_plugin_template( 'help-'. $tab );
+        $help = ob_get_contents();
+        ob_end_clean();
+        return $help;
     }
 
     /**
@@ -450,7 +446,26 @@ EOS;
         return $items;
     }
 
-
+    /**
+     * Clear all options saved for this plugin
+     *
+     * @package WpIgnitor
+     * @since 1.0.0
+     *
+     * @param  bool $complete_deletion  Whether to delete records from the wp_options table as well
+     * @return bool
+     */
+    public function clear_all_options( bool $complete_deletion = false ): bool {
+        foreach ( $this->options as $_optkey => $_optval ) {
+            $this->delete_option( $_optkey );
+        }
+        $this->save_options();
+        if ( $complete_deletion ) {
+            return delete_option( $this->options_key );
+        } else {
+            return empty( $this->options );
+        }
+    }
 
     /* -------------------- Plugin Configuration Pages -------------------- */
 
@@ -471,10 +486,11 @@ EOS;
             'query_args'  => $queries,
             'current_tab' => isset( $_REQUEST['tab'] ) && ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'globals',
             'tabs' => [
-                'globals' => [ 'label' => __( 'Globals', IGNITOR ), 'icon' => 'mdi-alert-octagram-outline' ],
+                'globals' => [ 'label' => __( 'Globals', IGNITOR ), 'icon' => 'mdi-rocket-launch-outline' ],
                 'conceal' => [ 'label' => __( 'Conceals', IGNITOR ), 'icon' => 'mdi-incognito' ],
                 'login'   => [ 'label' => __( 'Authorizations', IGNITOR ), 'icon' => 'mdi-shield-key-outline' ],
-                'helth'   => [ 'label' => __( 'Helth Check', IGNITOR ), 'icon' => 'mdi-check-circle-outline' ],
+                'utils'   => [ 'label' => __( 'Utilities', IGNITOR ), 'icon' => 'mdi-hammer-wrench' ],
+                //'helth'   => [ 'label' => __( 'Helth Check', IGNITOR ), 'icon' => 'mdi-check-circle-outline' ],
             ],
             'nonce_key'   => '',
         ];
@@ -508,6 +524,7 @@ EOS;
         foreach ( $_POST as $_k => $_v ) {
             switch ( $_k ) {
                 case 'int':
+                case 'origin_login_behavior':
                     // For integer
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_VALIDATE_INT );
                     break;
@@ -519,6 +536,7 @@ EOS;
                 case 'wp_config':
                 case 'namespaces':
                 case 'http_code':
+                case 'allow_login_ips':
                     // For array
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
                     if ( ! empty( $params[$_k] ) ) {
@@ -536,6 +554,7 @@ EOS;
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_VALIDATE_URL );
                     break;
                 case 'bool':
+                case 'new_login_on':
                     // For boolean
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_VALIDATE_BOOLEAN );
                     break;
@@ -571,6 +590,9 @@ EOS;
                     $messages[] = __( 'Failed to update "wp-config.php".', IGNITOR );
                 }
                 break;
+            case 'restore-wp-config':
+                $is_success = $this->restore_wpconfig();
+                break;
             case 'update-htaccess':
                 unset( $params['wp_config'] );
                 // Ensure get_home_path() is declared.
@@ -591,6 +613,12 @@ EOS;
                     $messages[] = __( 'Failed to update ".htaccess".', IGNITOR );
                 }
                 break;
+            case 'restore-htaccess':
+                $is_success = $this->restore_htaccess();
+                break;
+            case 'clear-all-settings':
+                $is_success = $this->clear_all_options();
+                break;
             case 'rest-behavior':
                 $rest_opts = [];
                 foreach ( $params['namespaces'] as $_ns => $_val ) {
@@ -603,6 +631,37 @@ EOS;
                 $this->options['rest_behavior'] = $rest_opts;
                 $this->save_options();
                 $is_success = true;
+                break;
+            case 'login-setting':
+                if ( $params['new_login_on'] && ! empty( $params['new_login_path'] ) ) {
+                    $this->options['new_login'] = [
+                        'path' => $params['new_login_path'],
+                        'orig' => $params['origin_login_behavior'],
+                    ];
+                } else {
+                    $this->delete_option( 'new_login' );
+                }
+                if ( array_key_exists( 'allow_login_ips', $params ) && ! empty( $params['allow_login_ips'] ) ) {
+                    $this->options['allow_login_ips'] = $params['allow_login_ips'];
+                    if ( array_key_exists( 'deny_login_redirect', $params ) && ! empty( $params['deny_login_redirect'] ) ) {
+                        $this->options['deny_login_redirect'] = (int) $params['deny_login_redirect'];
+                    } else {
+                        $this->options['deny_login_redirect'] = 401;
+                    }
+                } else {
+                    $this->delete_option( 'allow_login_ips' );
+                    $this->delete_option( 'deny_login_redirect' );
+                }
+                $this->save_options();
+                $is_success = true;
+                break;
+            case 'unlock-core-updater':
+                if ( get_option( 'core_updater.lock' ) ) {
+                    delete_option( 'core_updater.lock' );
+                } else {
+                    $messages[] = __( "It's not locked right now.", IGNITOR );
+                }
+                $is_success = empty( $messages );
                 break;
         }
         
@@ -621,36 +680,6 @@ EOS;
             $response['params'] = $params;
         }
         return $response;
-    }
-
-    /**
-     * Actual processing of dashboard widget dedicated to plugin.
-     *
-     * @package WpIgnitor
-     * @since 1.0.0
-     */
-    public function recent_salons_widget() {
-        $content_template = '<div id="registered-salons" class="activity-block">%s<ul>%s</ul></div>';
-        $interval = 14;
-        $max_salons = 5;
-        $title = sprintf( '<h3>直近 %d 日以内に登録された店舗（ %d 件まで）</h3>', $interval, $max_salons );
-        $salons = $this->get_recent_salons( $interval, $max_salons );
-        if ( ! empty( $salons ) ) {
-            $list = '';
-            foreach ( $salons as $salon ) {
-                $list .= sprintf( '<li><span>%s</span><div class="wrap"><a href="%s" aria-label="%s">%s</a></div><span class="state %s">%s</span></li>',
-                    implode( ' ', [ date_i18n( __( 'M jS' ), strtotime( $salon['created_at'] ) ), date_i18n( __( 'g:i A' ), strtotime( $salon['created_at'] ) ) ] ),
-                    admin_url( 'admin.php?page=edit_salon&salon_id=' . $salon['id'] ),
-                    '「'. $salon['name'] .'」を編集',
-                    $salon['name'],
-                    $salon['status'] ? 'published': 'private',
-                    $salon['status'] ? '公開中' : '未公開'
-                );
-            }
-        } else {
-            $list = '<li><span>該当する店舗がありません。</span></li>';
-        }
-        printf( $content_template, $title, $list );
     }
 
 }

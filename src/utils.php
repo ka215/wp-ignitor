@@ -129,8 +129,9 @@ trait utils {
      * @access public
      */
     public static function get_wp_install_dir(): string {
-        $absolute_path = str_replace( '\\', '/', ABSPATH );
-        return ltrim( str_replace( $_SERVER['DOCUMENT_ROOT'], '', $absolute_path ), '/' );
+        $absolute_path = str_replace( DIRECTORY_SEPARATOR, '/', ABSPATH );
+        $docroot_path = str_replace( DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT'] );
+        return ltrim( str_replace( $docroot_path, '', $absolute_path ), '/' );
     }
 
     /**
@@ -140,10 +141,11 @@ trait utils {
      * @access public
      */
     public static function get_wp_config_path() {
-        if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
-            return ABSPATH . 'wp-config.php';
-        } elseif ( file_exists( dirname( ABSPATH ) . '/wp-config.php' ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
-            return dirname( ABSPATH ) . '/wp-config.php';
+        $absolute_path = str_replace( DIRECTORY_SEPARATOR, '/', ABSPATH );
+        if ( file_exists( $absolute_path . 'wp-config.php' ) ) {
+            return $absolute_path . 'wp-config.php';
+        } elseif ( file_exists( dirname( $absolute_path ) . '/wp-config.php' ) && ! file_exists( dirname( $absolute_path ) . '/wp-settings.php' ) ) {
+            return dirname( $absolute_path ) . '/wp-config.php';
         } else {
             // Does not exist in a valid path.
             return false;
@@ -157,10 +159,11 @@ trait utils {
      * @access public
      */
     public static function get_htaccess_path() {
-        if ( file_exists( ABSPATH . '.htaccess' ) ) {
-            return ABSPATH . '.htaccess';
-        } elseif ( file_exists( dirname( ABSPATH ) . '/.htaccess' ) ) {
-            return dirname( ABSPATH ) . '/.htaccess';
+        $absolute_path = str_replace( DIRECTORY_SEPARATOR, '/', ABSPATH );
+        if ( file_exists( $absolute_path . '.htaccess' ) ) {
+            return $absolute_path . '.htaccess';
+        } elseif ( file_exists( dirname( $absolute_path ) . '/.htaccess' ) ) {
+            return dirname( $absolute_path ) . '/.htaccess';
         } else {
             // Does not exist in a valid path.
             return false;
@@ -198,7 +201,29 @@ trait utils {
     }
 
     /**
-     * Check if your PHP environment supports valid Phar class
+     * Check if wp-config.php is placed best path.
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public function is_best_wp_config_path(): string {
+        $current_path = $this->get_wp_config_path();
+        $check_path = $this->paths['docroot'] .'/'. $this->get_wp_install_dir();
+        if ( strpos( $current_path, $check_path ) !== false ) {
+            // No secure because it's same the installed path.
+            return 'no-secure';
+        } else
+        if ( strpos( $current_path, $this->paths['docroot'] ) !== false ) {
+            // Better because it's upper the installed path.
+            return 'better';
+        } else {
+            // Best because it's upper the document root.
+            return 'best';
+        }
+    }
+
+    /**
+     * Check if your PHP environment supports valid Phar class.
      *
      * @since 1.0.0
      * @access public
@@ -268,7 +293,7 @@ trait utils {
      */
     public function extractTarball( string $archive_path, string $target_pathto ): bool {
         $message = '';
-        if ( @file_exists( $archive_path ) ) {
+        if ( file_exists( $archive_path ) ) {
             try {
                 $phar = new \PharData( $archive_path );
                 $fp = fopen( $phar->getPath(), 'r' );
@@ -298,7 +323,7 @@ trait utils {
      */
     public static function remove_dir_recursive( string $base_dir, bool $forced = false ) {
         $base_dir = strpos( $base_dir, $_SERVER['DOCUMENT_ROOT'] ) !== 0 ? $_SERVER['DOCUMENT_ROOT'] .'/'. ltrim( $base_dir, '/\\' ) : $base_dir;
-        if ( @file_exists( $base_dir ) && is_dir( $base_dir ) && ! is_link( $base_dir ) ) {
+        if ( file_exists( $base_dir ) && is_dir( $base_dir ) && ! is_link( $base_dir ) ) {
             array_map( 'self::remove_dir_recursive', glob( $base_dir .'/*', GLOB_ONLYDIR ) );
             if ( $forced ) {
                 array_map( 'unlink', glob( $base_dir .'/*' ) );
@@ -314,20 +339,20 @@ trait utils {
      * @access public
      */
     public function generate_htaccess( string $subdir = '' ): string {
-        $allowed_sources = $this->get_option( 'allow_sources' ) ?? [];
+        $allowed_sources = $this->get_option( 'allow_sources' );
         $allowed_hosts = $this->get_remote_hosts();
-        if ( array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
+        if ( $allowed_sources && is_array( $allowed_sources ) && array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
             $allowed_hosts = array_merge( $allowed_hosts, $allowed_sources['hosts'] );
         }
         $allowed_addrs = [ $this->get_remote_addr() ];
-        if ( array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
+        if ( $allowed_sources && is_array( $allowed_sources ) && array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
             $allowed_addrs = array_merge( $allowed_addrs, $allowed_sources['addrs'] );
         }
         $allowed_referers = [ 'https?://' . $this->get_fqdn() ];
-        if ( array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
+        if ( $allowed_sources && is_array( $allowed_sources ) && array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
             $allowed_referers = array_merge( $allowed_referers, $allowed_sources['referers'] );
         }
-        $_install_dir = preg_quote( empty( $subdir ) ? $this->get_wp_install_dir() : $subdir, '/' );
+        $_install_dir = preg_quote( empty( $subdir ) ? $this->get_wp_install_dir() : $subdir );
         $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' );
         //var_dump( $allowed_hosts, $allowed_addrs, $allowed_referers, $_install_dir, $subdir, $advanced_htaccess_options );
 
@@ -339,7 +364,7 @@ trait utils {
         $_stack[] = '# - Definition of connection sources to allow.';
         $_stack[] = '# - Set "is_allow" to IP and host that allow access:';
         foreach ( $allowed_hosts as $_host ) {
-            $_stack[] = 'SetEnvIf Remote_Host "^'. preg_quote( $_host, '/' ) .'$" is_allow=true';
+            $_stack[] = 'SetEnvIf Remote_Host "^'. preg_quote( $_host ) .'$" is_allow=true';
         }
         foreach ( $allowed_addrs as $_addr ) {
             $_stack[] = 'SetEnvIf Remote_Addr "^'. preg_quote( $_addr ) .'" is_allow=true';
@@ -402,7 +427,7 @@ trait utils {
             $_section_number++;
         }
         if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ) {
-            // Prevents access to "wp-login.php"
+            // Uniformly prevents access to "wp-login.php"
             $_stack[] = "# {$_section_number}.";
             $_stack[] = '# - Access to "wp-login.php" returns a uniform 404 response regardless of the connection';
             $_stack[] = '# - source.';
@@ -410,10 +435,28 @@ trait utils {
             $_section_number++;
         }
         if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ) {
-            // 
-            $_stack[] = "# {$_section_number}.";
-            
-            $_section_number++;
+            // Rewrite access to wp-login.php to the new login path and apply the behavior that you are specified to an old login path.
+            $current_new_login = $this->get_option( 'new_login' );
+            if ( false !== $current_new_login ) {
+                $_stack[] = "# {$_section_number}.";
+                $_stack[] = '# - Rewrite access to wp-login.php to the new login path and apply the behavior that you';
+                $_stack[] = '# - are specified to an old login path.';
+                $_stack[] = 'RewriteCond %{REQUEST_URI} ^/'. $current_new_login['path'];
+                $_stack[] = 'RewriteRule ^'. $current_new_login['path'] .'(.*)$ /'. $_install_dir .'wp-content/plugins/wp-ignitor/views/entrance\.php$1 [L]';
+                switch ( $current_new_login['orig'] ) {
+                    case 301:
+                        $_stack[] = 'RewriteRule "wp-login\.php(.*)$" /'. $current_new_login['path'] .' [R=301,L]';
+                        break;
+                    case 200:
+                        //$_stack[] = 'RewriteRule "wp-login\.php(.*)$" /'. $_install_dir .'index.php [R=301,L]';
+                        $_stack[] = 'RewriteRule "wp-login\.php(.*)$" / [L]';
+                        break;
+                    default:
+                        $_stack[] = 'RewriteRule "wp-login\.php(.*)$" - [R='. $current_new_login['orig'] .',L]';
+                        break;
+                }
+                $_section_number++;
+            }
         }
         if ( isset( $advanced_htaccess_options['avoid_author'] ) && $advanced_htaccess_options['avoid_author'] ) {
             // Avoid the discovery of an author's ID
@@ -431,18 +474,22 @@ trait utils {
                 $_stack[] = "# {$_section_number}.";
                 $_stack[] = '# - Override WordPress rewrite settings if the installation path is a subdirectory';
                 $_stack[] = '# - under the document root.';
-                //$_stack[] = '# - See: https://wordpress.org/support/article/giving-wordpress-its-own-directory/';
-                //$_stack[] = 'RewriteRule ^(|/)$ /'. $_install_dir .'index\.php [L]';
-                //$_stack[] = 'RewriteBase /';
-                //$_stack[] = 'RewriteRule ^'. $_install_dir .'index\.php$ - [L]';
-                //$_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
-                //$_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
-                //$_stack[] = 'RewriteRule . /'. $_install_dir .'index.php [L]';
+                /*
+                $_stack[] = '# - See: https://wordpress.org/support/article/giving-wordpress-its-own-directory/';
+                $_stack[] = 'RewriteRule ^(|/)$ /'. $_install_dir .'index\.php [L]';
+                $_stack[] = 'RewriteBase /';
+                $_stack[] = 'RewriteRule ^'. $_install_dir .'index\.php$ - [L]';
+                $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+                $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
+                $_stack[] = 'RewriteRule . /'. $_install_dir .'index.php [L]';
+                */
+                /*
                 $_stack[] = 'RewriteCond %{HTTP_HOST} ^'. $_SERVER['HTTP_HOST'] .'$';
                 $_stack[] = 'RewriteCond %{REQUEST_URI} !^/'. $_install_dir;
                 $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
                 $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-d';
                 $_stack[] = 'RewriteRule ^(.*)$ /'. $_install_dir .'$1';
+                */
                 $_stack[] = 'RewriteCond %{HTTP_HOST} ^'. $_SERVER['HTTP_HOST'] .'$';
                 $_stack[] = 'RewriteRule ^(/)?$ '. $_install_dir .'index.php [L]';
                 $_stack[] = '# - Enable routes of WP REST API.';
@@ -462,6 +509,7 @@ trait utils {
      * Replaces existing marked info. Retains surrounding data. Creates file if none exists.
      *
      * @since 1.0.0
+     * @access public
      * @see /wp-admin/includes/misc.php: insert_with_markers()
      *
      * @param string       $filename  Filename to alter.
@@ -469,7 +517,7 @@ trait utils {
      * @param array|string $insertion The new content to insert.
      * @return bool True on write success, false on failure.
      */
-    function wpignitor_insert_with_markers( string $filename, string $marker, $insertion ): bool {
+    public static function wpignitor_insert_with_markers( string $filename, string $marker, $insertion ): bool {
         if ( ! file_exists( $filename ) ) {
             if ( ! is_writable( dirname( $filename ) ) ) {
                 return false;
@@ -496,8 +544,17 @@ trait utils {
             if ( false !== strpos( $line, $start_marker ) || false !== strpos( $line, $end_marker ) ) {
                 unset( $insertion[$i] );
             }
-            if ( preg_match( '/^# - .*/', $line ) === 1 ) {
-                unset( $insertion[$i] );
+            /**
+             * Filter for shortening by omitting detailed comments.
+             *
+             * @since 1.0.0
+             * @hook  filter
+             */
+            $omit_htaccess_comments = apply_filters( 'wpignitor_omit_comments', false );
+            if ( $omit_htaccess_comments ) {
+                if ( preg_match( '/^# - .*/', $line ) === 1 ) {
+                    unset( $insertion[$i] );
+                }
             }
         }
         $fp = fopen( $filename, 'r+' );
@@ -595,17 +652,29 @@ trait utils {
     }
 
     /**
+     * Remove only the rules added by this plugin from ".htaccess".
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public static function restore_htaccess(): bool {
+        $htaccess_file = self::get_htaccess_path();
+        return self::wpignitor_insert_with_markers( $htaccess_file, 'WP Ignitor Rules', '' );
+    }
+
+    /**
      * Inserts an array of strings into a file (wp-config.php), placing it between BEGIN and END markers.
      * Replaces existing marked info. Retains surrounding data.
      *
      * @since 1.0.0
+     * @access public
      *
      * @param string       $filepath  Filename to alter.
      * @param string       $marker    The marker to alter.
      * @param array|string $insertion The new content to insert.
      * @return bool True on write success, false on failure.
      */
-    function wpconfig_insert_with_markers( string $filepath, string $marker, $insertion ): bool {
+    public static function wpconfig_insert_with_markers( string $filepath, string $marker, $insertion ): bool {
         if ( ! file_exists( $filepath ) || ! is_writable( $filepath ) ) {
             return false;
         }
@@ -721,6 +790,17 @@ trait utils {
         return (bool) $bytes;
     }
 
+    /**
+     * Remove only the rules added by this plugin from "wp-config.php".
+     *
+     * @since 1.0.0
+     * @access public
+     */
+    public static function restore_wpconfig(): bool {
+        $wpconfig_path = self::get_wp_config_path();
+        return self::wpconfig_insert_with_markers( $wpconfig_path, 'WP Ignitor', '' );
+    }
+
 
 
     /**
@@ -730,9 +810,9 @@ trait utils {
      * @access public
      *
      * @param array|string  $logs      Array of log lines or string as one line
-     * @param string        $log_file  Log file name. Defaults to "wp-ignitor.log"
+     * @param string        $log_file  Log file name.
      */ 
-    public static function logger( $logs, string $log_file = 'wp-ignitor.log' ) {
+    public static function logger( $logs, string $log_file = '' ): void {
         if ( ! is_array( $logs ) ) 
             $logs = (array) $logs;
         if ( ! empty( $logs ) ) {
@@ -744,230 +824,17 @@ trait utils {
                     $logs[$_i] = str_repeat( ' ', strlen( $now_date ) ) . $_line;
                 }
             }
+            if ( empty( $log_file ) ) 
+                $log_file = IGNITOR_PLUGIN_DIR . 'wp-ignitor.log';
+            /**
+             * Filter the output path of the log file for this plugin.
+             *
+             * @since 1.0.0
+             * @hook  filter
+             */
+            $log_file = apply_filters( 'wpignitor_logfile_path', $log_file, $logs );
+            error_log( implode( "\n", $logs ) . "\n", 3, $log_file );
         }
-        error_log( implode( "\n", $logs ) . "\n", 3, IGNITOR_PLUGIN_DIR . $log_file );
-    }
-
-
-
-    /**
-     * Generate unique filename that has uploaded
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param string $dir     The directory path to place upload file.
-     * @param string $name    The file name of upload file.
-     * @param string $ext     An extension of upload file.
-     * @return string         The generated new file name.
-     */ 
-    public function unique_uploaded_filename( string $dir, string $name, string $ext ): string {
-        $_prefix = $this->current_salon_id . '_';
-        $_hash = md5( $dir .'/'. $name .':'. microtime( true ) );
-        return $_prefix.$_hash.$ext;
-    }
-
-    /**
-     * Delete unused salon images
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param int   $salon_id     
-     * @param array $salon_images 
-     * @return void
-     */
-    public function cleanup_images( $salon_id, $salon_images ) {
-        $upload_dir = wp_upload_dir();
-        $files = glob( $upload_dir['path'] . '/*' );
-        $salon_images_bn = array_map( function ( $elm ) { return basename( $elm ); }, $salon_images );
-        foreach ( $files as $_file ) {
-            $basefile = basename( $_file );
-            if ( strpos( $basefile, $salon_id . '_' ) === 0 ) {
-                if ( in_array( $basefile, $salon_images_bn, true ) ) {
-                    continue;
-                } else {
-                    @unlink( $upload_dir['path'] .'/'. $basefile );
-                }
-            }
-        }
-        
-    }
-
-
-    /**
-     * Edit term of private custom taxonomy
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param array  $data
-     * @param string $taxonomy
-     * @param string $taxonomy_label
-     * @return boolean
-     */ 
-    public function edit_term( $data, $taxonomy, $taxonomy_label ) {
-        if ( ! taxonomy_exists( $taxonomy ) ) {
-            $this->errors->add( 'taxonomy_not_found', "That '$taxonomy' taxonomy does not exist." );
-            return false;
-        }
-        $current_terms = get_terms( $taxonomy, [ 'orderby' => 'id', 'order' => 'ASC', 'hide_empty' => false, 'fields' => 'id=>name' ] );
-        //var_dump( '<br>Upsert or delete: ', $data, '<br>' );
-        foreach ( $data as $_id => $_value ) {
-            $_value = wp_strip_all_tags( $_value );
-            if ( array_key_exists( $_id, $current_terms ) ) {
-                if ( $_value !== $current_terms[$_id] ) {
-                    //var_dump( "Update: {$current_terms[$_id]} -> $_value <br>" );
-                    if ( is_wp_error( wp_update_term( $_id, $taxonomy, [ 'name' => $_value ] ) ) ) {
-                        $this->errors->add( 'update_term_failure', "{$taxonomy_label}「{$_value}」の変更に失敗しました。" );
-                    }
-                }
-            } else {
-                //var_dump( "Insert: new -> $_value <br>" );
-                if ( is_wp_error( wp_insert_term( $_value, $taxonomy ) ) ) {
-                    $this->errors->add( 'insert_term_failure', "{$taxonomy_label}に「{$_value}」を追加できませんでした。" );
-                }
-            }
-        }
-        $remove_terms = array_diff_key( $current_terms, $data );
-        if ( ! empty( $remove_terms ) ) {
-            foreach ( $remove_terms as $_id => $_value ) {
-                $_value = wp_strip_all_tags( $_value );
-                //var_dump( "Remove: [{$_id}]{$_value} <br>" );
-                if ( is_wp_error( wp_delete_term( $_id, $taxonomy ) ) ) {
-                    $this->errors->add( 'delete_term_failure', "{$taxonomy_label}「{$_value}」の削除に失敗しました。" );
-                }
-            }
-        }
-        return is_wp_error( $this->errors );
-    }
-
-    /**
-     * Check if the specified measure name exists
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param string $measure_name
-     * @return boolean
-     */ 
-    public function measure_name_exists( $measure_name ) {
-        $term = term_exists( $measure_name, 'measure' );
-        return ( $term !== 0 && $term !== null );
-    }
-
-    /**
-     * Set default value for seeds
-     *
-     * @since 1.0.0
-     * @access public
-     *
-     * @param array  $items (required)
-     * @return mixed
-     */
-    public function set_seed( $items ) {
-        $randNumber = function( $type = null ) {
-            switch( $type ) {
-                case 'zipcode':
-                    return sprintf( '%03d-%04d', mt_rand( 1, 999 ), mt_rand( 1, 9999 ) );
-                case 'phone_number':
-                    $pattern = [
-                        [ '0%d-%04d-%04d', 9, 9999, 9999 ],
-                        [ '0%02d-%03d-%04d', 99, 999, 9999 ],
-                        [ '0%03d-%02d-%04d', 999, 99, 9999 ],
-                    ];
-                    $tmpl = $pattern[array_rand( $pattern )];
-                    return sprintf( $tmpl[0], mt_rand( 1, $tmpl[1] ), mt_rand( 1, $tmpl[2] ), mt_rand( 1, $tmpl[3] ) );
-                default:
-                    return '';
-            }
-        };
-        $randString = function( $type, $with_empty = false, $percent_empty = 25, $memo = null ) {
-            if ( $with_empty && mt_rand( 1, 100 ) <= (int) $percent_empty ) {
-                return '';
-            } else {
-                switch ( $type ) {
-                    case 'name':
-                        $prefix = [ '', '', '', 'サロン', 'エステティック', 'メディカル', 'リラクゼーションサロン', 'RELAXATION SALON', 'スパ', 'ビューティサロン' ];
-                        $append = [ '', '家', '苑', '庵', '治療院', '診療所' ];
-                        $surfix = [ '', 'クリニック', 'サロン', '美容室', '専門店', 'Salon', 'ハウス', '%s店', '%s店', '%s店', '%s店', '%s店', '%s店' ];
-                        $name = [ $this->faker->randomElement( $prefix ) ];
-                        if ( mt_rand( 0, 1 ) == 1 ) {
-                            $_kana = mb_str_split( 'ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヲンヴ' );
-                            $_main = [ $this->faker->lastName, implode( '', $this->faker->randomElements( $_kana, mt_rand( 2, 6 ) ) ) ];
-                            $name[] = $this->faker->randomElement( $_main ) . $this->faker->randomElement( $append );
-                        } else {
-                            $name[] = mt_rand( 0, 1 ) == 1 ? strtoupper( $this->faker->word ) : ucfirst( $this->faker->word );
-                        }
-                        $_sf = $this->faker->randomElement( $surfix );
-                        if ( '%s店' === $_sf ) {
-                            $_sf = sprintf( $_sf, str_replace( '駅', '', $this->faker->randomElement( $memo ) ) );
-                        }
-                        $name[] = $_sf;
-                        return implode( ' ', $name );
-                    case 'city':
-                    case 'streetAddress':
-                    case 'url':
-                        return (string) $this->faker->{$type};
-                    case 'latitude':
-                    case 'longitude':
-                        $value = (float) $this->faker->{$type};
-                        return $value == 0 ? '' : $value;
-                    case 'services':
-                        return $this->faker->sentences( mt_rand( 1, 6 ), false );
-                    default:
-                        return $this->faker->text( mt_rand( 100, 200 ) );
-                }
-            }
-        };
-        $randRating = function() {
-            $_arr = range( 0, 50, 5 );
-            return (float)($_arr[array_rand( $_arr )] / 10);
-        };
-        $randChoose = function( $_array, $values = false ) {
-            $choosen = [];
-            $_keys = array_rand( $_array, mt_rand( 1, count( $_array ) ) );
-            if ( $values ) {
-                foreach ( (array) $_keys as $_key ) {
-                    $choosen[] = $_array[$_key];
-                }
-                return $choosen;
-            } else {
-                return $_keys;
-            }
-        };
-        $_area = $items['areas'][array_rand( $items['areas'] )];
-        $_stations = $items['stations'][$_area];
-        return [
-            'id' => null,
-            'salon_image' => null,
-            'main_image' => null,
-            'name' => $randString( 'name', false, 25, $_stations ),
-            'area' => $_area,
-            'rating' => $randRating(),
-            'standard_price' => $randString( 'standard_price' ),
-            'business_hours' => $randString( 'business_hours' ),
-            'regular_holiday' => $randString( 'regular_holiday' ),
-            'note' => $randString( 'note' ),
-            'zipcode' => $randNumber( 'zipcode' ),
-            'prefecture' => 13,
-            'city' => $randString( 'city' ),
-            'address' => $randString( 'streetAddress' ),
-            'latitude' => $randString( 'latitude', true, 50 ),
-            'longitude' => $randString( 'longitude', true, 50 ),
-            'phone_number' => $randNumber( 'phone_number' ),
-            'reservation_url' => $randString( 'url', true, 33 ),
-            'movie' => $randString( 'url', true, 66 ),
-            'service_details' => $randString( 'services' ),
-            'guidance' => $randString( 'guidance' ),
-            'measure' => $randChoose( $items['measures'], true ),
-            'detail' => $randChoose( $items['details'], true ),
-            'station' => $randChoose( $_stations, true ),
-            'treatment' => $randChoose( $items['treatments'] ),
-            'spec' => $randChoose( $items['specs'] ),
-            'payment' => $randChoose( $items['payments'] ),
-            'status' => mt_rand( 0, 1 ) == 1 ? true : false,
-        ];
     }
 
 

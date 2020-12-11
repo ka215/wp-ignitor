@@ -1,13 +1,18 @@
 <?php
+/**
+ * Container template for plugin settings page.
+ *
+ * @package WpIgnitor
+ * @since 1.0.0
+ */
 $tab_content_path = __DIR__ .'/'. $current_tab .'.php';
 ?>
 <div class="wrap" data-fixed-backdrop="true">
-  <h1 class="wp-heading-inline"><?= __( 'WP Ignitor Settings', IGNITOR ) ?></h1>
+  <h1 class="wp-heading-inline"
+  ><img src="<?= $this->paths['assets_dir_url'] ?>../src/images/icon.svg" height="26" class="prefix-logo"
+  ><?= __( 'WP Ignitor Settings', IGNITOR ) ?></h1>
 <?php if ( isset( $message ) && isset( $state ) ) :
-    $_classes = [ 'notice', 'notice-' . esc_attr( $state ) ];
-    if ( $state === 'success' ) {
-        $_classes[] = 'is-dismissible';
-    }
+    $_classes = [ 'notice', 'notice-' . esc_attr( $state ), 'is-dismissible' ];
 ?>
   <div class="<?= implode( ' ', $_classes ) ?>" >
     <p><?= $message ?></p>

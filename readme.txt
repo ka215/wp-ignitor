@@ -1,24 +1,61 @@
 === WP Ignitor ===
 Contributors: Ka2
 Tags: management
-Requires at least: 5.5.0
-Tested up to: 5.5.0
+Requires at least: 5.4.2
+Tested up to: 5.6.0
 Stable tag: 1.0.0
-License: MIT
-License URI: http://opensource.org/licenses/mit-license.php
+License: GPL v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+Requires PHP: 7.4
+Donate link: 
 
-Now let's hide that we are WordPress and get starting with the strong defensive turn.
+Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
 
 == Description ==
+
+All sites created with WordPress have the same file and directory structure, and the database table structure is simple. So it's easy to imagine that it's a website that is fairly easy to attack from the attacker.
+This plugin doesn't easily make visitors aware that your site is written in WordPress and provides robust performance in terms of security. In addition, it retains the versatility of being able to track updates such as cores and plugins as usual.
+
+By using this plugin, we can easily perform troublesome server-side access restrictions and maintenance of various configuration files as likes above from the admin panel.
+
+**Main plugin features:**
+
+* Move WordPress installation directory
+* Update and move `wp-config.php`
+* `.htaccess` maintenance
+* Cleanup HTML that output by WordPress
+* Control behavior each route of WP REST API
+* Set up a new login page URL
+* Restricted access to login page
+
+Let's get rid of our tedious configuration work right away and ignite the launch of the site!
 
 
 == Installation ==
 
+1. From the WP admin panel, click ÅgPluginsÅh -> ÅgAdd newÅh.
+2. In the browser input box, type ÅgMy Custom Style Css ManagerÅh.
+3. Select the ÅgMy Custom Style Css ManagerÅh plugin and click ÅgInstallÅh.
+
 1, 2, 3: You're done!
+
+
+== Frequently asked questions ==
+
+
+
+== Screenshots ==
+
+
 
 == Changelog ==
 
 = 1.0.0 =
-* Release Date - 22 October 2020*
+Bump an initial version - December 11, 2020
 
-* This time is the initial release.
+
+
+== Upgrade notice ==
+
+
+

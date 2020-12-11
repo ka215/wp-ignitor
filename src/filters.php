@@ -9,28 +9,6 @@ namespace wpIgnitor;
 
 trait filters {
     /**
-     * Filters the uploads directory data.
-     *
-     * @access public
-     * @package WordPress(core)
-     * @since 2.0.0
-     * /
-    public function upload_dir( array $uploads ): array {
-        $override_uploads = [
-            'path'    => preg_replace( '/(uploads)(.*)$/', '$1/salons', $uploads['path'] ),
-            'url'     => preg_replace( '/(uploads)(.*)$/', '$1/salons', $uploads['url'] ),
-            'subdir'  => '/salons',
-            'basedir' => preg_replace( '/(uploads)(.*)$/', '$1', $uploads['basedir'] ),
-            'baseurl' => preg_replace( '/(uploads)(.*)$/', '$1', $uploads['baseurl'] ),
-            'error'   => $uploads['error'],
-        ];
-        return array_merge( $uploads, $override_uploads );
-    }
-    */
-
-
-
-    /**
      * Filters domains and URLs for resource hints of relation type.
      *
      * @access public
@@ -75,22 +53,19 @@ trait filters {
      */
     public function rest_pre_dispatch( $result, $server, $request ) {
         $rest_behavior = $this->get_option( 'rest_behavior' );
-        if ( ! empty( $rest_behavior ) ) {
+        if ( ! empty( $rest_behavior ) && ! is_admin() ) {
             $current_namespace = $request->get_route();
             $current_namespace = '/' === $current_namespace ? $current_namespace : trim( $current_namespace, '/' );
-            // var_dump( $rest_behavior, $current_namespace );
             if ( array_key_exists( $current_namespace, $rest_behavior ) ) {
                 switch ( $rest_behavior[$current_namespace]['todo'] ) {
                     case 'allow_all':
                         return $result;
                     case 'allow_self':
-                        //var_dump( $this->get_remote_addr(), $_SERVER['SERVER_ADDR'] );
                         if ( $this->get_remote_addr() === $_SERVER['SERVER_ADDR'] ) {
                             return $result;
                         }
                         break;
                     case 'allow_jetpack':
-                        //var_dump( $_SERVER['HTTP_USER_AGENT'] );
                         if ( strpos( strtolower( $_SERVER['HTTP_USER_AGENT'] ), 'jetpack' ) !== false ) {
                             return $result;
                         }
@@ -115,38 +90,14 @@ trait filters {
                         wp_safe_redirect( $redirect_to, $rest_behavior[$current_namespace]['state'] );
                         exit;
                     case 401:
-                        /*
-                        $err_code = 'unauthorized';
-                        $err_message = __( '401 Unauthorized', IGNITOR );
-                        $code = 401;
-                        if ( 'redirect' === $rest_behavior[$current_namespace]['todo'] ) {
-                        */
-                            header( 'HTTP/1.0 401 Unauthorized' );
-                            exit;
-                        //}
-                        break;
+                        header( 'HTTP/1.0 401 Unauthorized' );
+                        exit;
                     case 403:
-                        /*
-                        $err_code = 'forbidden';
-                        $err_message = __( '403 Forbidden', IGNITOR );
-                        $code = 403;
-                        if ( 'redirect' === $rest_behavior[$current_namespace]['todo'] ) {
-                        */
-                            header( 'HTTP/1.0 403 Forbidden' );
-                            exit;
-                        //}
-                        break;
+                        header( 'HTTP/1.0 403 Forbidden' );
+                        exit;
                     case 404:
-                        /*
-                        $err_code = 'not_found';
-                        $err_message = __( '404 Not Found', IGNITOR );
-                        $code = 404;
-                        if ( 'redirect' === $rest_behavior[$current_namespace]['todo'] ) {
-                        */
-                            header( 'HTTP/1.0 404 Not Found' );
-                            exit;
-                        //}
-                        break;
+                        header( 'HTTP/1.0 404 Not Found' );
+                        exit;
                     default:
                         $err_code = 'rest_no_route';
                         $err_message = __( 'No route matching URL and request method.', IGNITOR );
@@ -161,11 +112,184 @@ trait filters {
     }
 
     /**
+     * Filters the array of available endpoints.
      *
+     * @access public
+     * @package WordPress(core)
+     * @since 4.4.0
      */
     public function rest_endpoints( array $endpoints ): array {
-        //var_dump( __METHOD__, $endpoints );
         return $endpoints;
+    }
+
+    /**
+     * Filters the authentication redirect scheme.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.9.0
+     */
+    public function auth_redirect_scheme( string $scheme ): string {
+        //if ( $user_id = wp_validate_auth_cookie( '', $scheme ) ) {
+            return $scheme;
+        //}
+
+        /*
+        global $wp_query;
+        $wp_query->set_404();
+        get_template_part( 404 );
+        exit;
+        */
+    }
+
+    /**
+     * Filters the login URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0 -> 4.2.0
+     */
+    public function login_url( string $login_url, string $redirect, bool $force_reauth ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            $login_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $login_url );
+        }
+        return $login_url;
+    }
+
+    /**
+     * Filters the logout URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
+     */
+    public function logout_url( string $logout_url, string $redirect ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            $logout_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $logout_url );
+        }
+        return $logout_url;
+    }
+
+    /**
+     * Filters the user registration URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 3.6.0
+     */
+    public function register_url( string $register ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            $register = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $register );
+        }
+        return $register;
+    }
+
+    /**
+     * Filters the Lost Password URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
+     */
+    public function lostpassword_url( string $lostpassword_url, string $redirect ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            $lostpassword_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $lostpassword_url );
+        }
+        return $lostpassword_url;
+    }
+
+    /**
+     * Filters the redirect location.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.1.0
+     */
+    public function wp_redirect( string $location, int $status ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            if ( strpos( $_SERVER['REQUEST_URI'], $current_new_login['path'] ) !== false ) {
+                if ( ! is_user_logged_in() && $current_new_login['orig'] == 200 && strpos( $location, 'wp-login.php' ) !== false ) {
+                    $location = home_url();
+                }
+                $location = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $location );
+            }
+        }
+        return $location;
+    }
+
+    /**
+     * Filters the site URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.7.0
+     */
+    public function site_url( string $url, string $path, ?string $scheme, ?int $blog_id ): string {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            if ( $path === 'wp-login.php' ) {
+                if ( is_user_logged_in() || strpos( $_SERVER['REQUEST_URI'], $current_new_login['path'] ) !== false ) {
+                    $url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $url );
+                }
+            }
+        }
+        return $url;
+    }
+
+    /**
+     * Filters the admin area URL.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
+     */
+    public function admin_url( string $url, string $path, ?int $blog_id ): string {
+        /*
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            if ( strpos( $url, 'edit.php' ) !== false ) {
+                var_dump( $_SERVER['REQUEST_URI'], $url, $path );
+                exit;
+                $url = home_url( $_SERVER['REQUEST_URI'] );
+            }
+        }
+        */
+        return $url;
+    }
+
+    /**
+     * Do 'all' actions first during `apply_filters()`
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 0.71
+     */
+    public function debug_all_filters(): void {
+        //echo '<p style="color:orange;">'. current_filter() .'</p>';
+        /*
+        switch ( current_filter() ) {
+            //case 'replace_editor':
+            //case 'site_url':
+            //case 'secure_auth_redirect':
+            //case 'auth_redirect_scheme':
+            //case 'auth_redirect':
+            //case 'admin_url':
+            case 'wp_redirect':
+            //case 'login_url':
+            //default:
+                ob_start();
+                var_dump( $_SERVER['REQUEST_URI'], func_get_args() );
+                $buffer = ob_get_contents();
+                ob_get_clean();
+                self::logger( $buffer );
+                break;
+        }
+        */
     }
 
 }

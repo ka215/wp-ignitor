@@ -114,12 +114,7 @@ trait actions {
             remove_action( 'wp_head', 'rest_output_link_wp_head' );
             remove_action( 'template_redirect', 'rest_output_link_header', 11 );
         }
-        // Register private custom taxonomies
-        /*
-        register_taxonomy( 'payment', 'salon', [
-            'label' => '決済方法', 'public' => false, 'rewrite' => false, 'hierarchical' => false, 'capabilities' => [ 'assign_terms' ], 'sort' => true
-        ] );
-        */
+        remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
     }
 
     /**
@@ -180,25 +175,32 @@ trait actions {
                 $new_install_path  = filter_input( INPUT_POST, 'new_install_path', FILTER_SANITIZE_STRING );
                 $without_subdir    = filter_input( INPUT_POST, 'without_subdir', FILTER_VALIDATE_BOOLEAN ) ?? false;
                 $optimize_htaccess = filter_input( INPUT_POST, 'optimize_htaccess', FILTER_VALIDATE_BOOLEAN ) ?? false;
-                $step              = filter_input( INPUT_POST, 'step', FILTER_VALIDATE_INT ) ?? 0;
                 $messages          = [];
                 $result            = false;
                 $response          = [ 'button_text' => __( 'Close' ) ];
                 $is_moved          = false;
                 if ( empty( $new_install_path ) ) {
                     $messages[] = __( 'The new path to move to is not specified.', IGNITOR );
-                } elseif ( $step == 0  ) {
-                    $messages[] = __( 'An unexpected process has been called.', IGNITOR );
                 } else {
-                    $new_install_path = rtrim( $_SERVER['DOCUMENT_ROOT'] .'/'. $new_install_path, '/\\' );
-                    $old_install_path = rtrim( $_SERVER['DOCUMENT_ROOT'] .'/'. $this->get_wp_install_dir(), '/\\' );
+                    $new_install_path = rtrim( $this->paths['docroot'] .'/'. $new_install_path, '/\\' );
+                    $old_install_path = rtrim( $this->paths['docroot'] .'/'. $this->get_wp_install_dir(), '/\\' );
+                    // Relocate "wp-config.php" to its initial position
+                    if ( $this->get_wp_config_path() !== $this->paths['install_path'] . 'wp-config.php' ) {
+                        $from_path = $this->get_wp_config_path();
+                        $to_path = $this->paths['install_path'] . 'wp-config.php';
+                        if ( is_writable( $from_path ) && is_writable( $this->paths['install_path'] ) ) {
+                            if ( ! @file_exists( $to_path ) ) {
+                                rename( $from_path, $to_path );
+                            }
+                        }
+                    }
                     // Copy the files under the current installation path to the new path
                     $is_moved = $this->moveto_new_install_path( $new_install_path );
                     if ( $is_moved ) {
                         $messages[] = __( 'Copied the files under the current installation path to the new path.', IGNITOR );
                         // Update install path in the WordPress DB
                         $protocol = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443 ) ? 'https' : 'http';
-                        $new_siteurl = str_replace( $_SERVER['DOCUMENT_ROOT'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
+                        $new_siteurl = str_replace( $this->paths['docroot'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
                         update_option( 'siteurl', $new_siteurl, true );// get at site_url() as install root i.e. https://example.wordpress.com/example
                         $_proc_res = __( 'Updated site URL in the DataBase.', IGNITOR );
                         if ( $without_subdir ) {
@@ -211,13 +213,13 @@ trait actions {
                             $last_dir = end( explode( '/', str_replace( '\\', '/', $new_install_path ) ) );
                             $rules = $this->generate_htaccess( $last_dir . '/' );
                             $moved_htaccess = $new_install_path . '/.htaccess';
-                            $docroot_htaccess = $_SERVER['DOCUMENT_ROOT'] . '/.htaccess';
+                            $docroot_htaccess = $this->paths['docroot'] . '/.htaccess';
                             if ( file_exists( $docroot_htaccess ) ) {
                                 $messages[] = __( "I didn't update it because \".htaccess\" already exists in the document root.", IGNITOR );
                             } elseif ( file_exists( $moved_htaccess ) && is_writable( $moved_htaccess ) ) {
                                 @rename( $moved_htaccess, $docroot_htaccess );
                             }
-                            if ( is_writable( $_SERVER['DOCUMENT_ROOT'] ) ) {
+                            if ( is_writable( $this->paths['docroot'] ) ) {
                                 $is_saved = $this->wpignitor_insert_with_markers( $docroot_htaccess, 'WP Ignitor Rules', $rules );
                             } else {
                                 $is_saved = false;
@@ -237,7 +239,7 @@ trait actions {
                                     $failures[] = $_path;
                                 }
                             }
-                            if ( $old_install_path === $_SERVER['DOCUMENT_ROOT'] ) {
+                            if ( $old_install_path === $this->paths['docroot'] ) {
                                 $this->remove_dir_recursive( $old_install_path . '/wp-admin' );
                                 $this->remove_dir_recursive( $old_install_path . '/wp-content' );
                                 $this->remove_dir_recursive( $old_install_path . '/wp-includes' );
@@ -250,7 +252,7 @@ trait actions {
                             } else {
                                 $messages[] = __( 'The files move completed successfully.', IGNITOR );
                                 $result = true;
-                                $new_siteurl = str_replace( $_SERVER['DOCUMENT_ROOT'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
+                                $new_siteurl = str_replace( $this->paths['docroot'], "{$protocol}://{$_SERVER['HTTP_HOST']}", $new_install_path );
                                 $response['redirect_to'] = isset( $new_siteurl ) ? $new_siteurl . '/wp-admin/options-general.php?page=wpignitor-settings' : '';
                             }
                         }
@@ -323,7 +325,7 @@ trait actions {
                 $this->save_options();
                 $response = [
                     'result' => true,
-                    'html' => $this->get_frontend_html( $target_path, 'head', true ),
+                    'html'   => $this->get_frontend_html( $target_path, 'head', true ),
                 ];
                 break;
         }
@@ -334,8 +336,8 @@ trait actions {
      * Ajax for frontend
      *
      * @access public
-     * @access public
      * @package WpIgnitor
+     * @since 1.0.0
      */
     public function nopriv_wpignitor_ajax() {
         $token = filter_input( INPUT_GET, 'token', FILTER_SANITIZE_STRING );
@@ -346,7 +348,7 @@ trait actions {
         }
         $method = filter_input( INPUT_GET, 'method', FILTER_SANITIZE_STRING );
         switch ( $method ) {
-            case 'get_globals':
+            case 'get_test':
                 $response = [ 'dummy' => true ];
                 break;
         }
@@ -380,5 +382,71 @@ trait actions {
             ob_end_flush();
         }
     }
+
+    /**
+     * Fires when the login form is initialized.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 3.2.0
+     */
+    public function login_init() {
+        $current_new_login = $this->get_option( 'new_login' );
+        if ( ! empty( $current_new_login ) ) {
+            //var_dump( __METHOD__, WPIGNITOR_LOGIN_PAGE_DIR, WPIGNITOR_LOGIN_PAGE_FILE, WPIGNITOR_LOGIN_PAGE_URL, WPIGNITOR_LOGIN_CREDENTIAL );
+            $check_credential = hash( 'sha512', 'wp-ignitor@'. $_SERVER['HTTP_HOST'] .':'. $this->paths['views_dir'] .'entrance.php' );
+            if ( ! defined( 'WPIGNITOR_LOGIN_CREDENTIAL' ) || $check_credential !== WPIGNITOR_LOGIN_CREDENTIAL ) {
+                global $wp_query;
+                $wp_query->set_404();
+                status_header( '404' );
+                nocache_headers();
+                include( get_query_template( '404' ) );
+                exit;
+            }
+        }
+        $allowed_login_ips = $this->get_option( 'allow_login_ips' );
+        if ( $allowed_login_ips && ! empty( $allowed_login_ips ) ) {
+            $current_remote_ip = $this->get_remote_addr();
+            $is_allowed = false;
+            foreach ( $allowed_login_ips as $allowed_ip ) {
+                if ( preg_match( '/^'. preg_quote( $allowed_ip, '/' ) .'/', $current_remote_ip ) ) {
+                    $is_allowed = true;
+                    break;
+                }
+            }
+            if ( ! $is_allowed ) {
+                $to_status = $this->get_option( 'deny_login_redirect' ) ? (int) $this->get_option( 'deny_login_redirect' ) : 401;
+                status_header( $to_status );
+                nocache_headers();
+                switch ( $to_status ) {
+                    case 401:
+                        header( 'HTTP/1.0 401 Unauthorized' );
+                        exit;
+                    case 403:
+                        header( 'HTTP/1.0 403 Forbidden' );
+                        exit;
+                    case 404:
+                    default:
+                        header( 'HTTP/1.0 404 Not Found' );
+                        exit;
+                }
+            }
+        }
+    }
+
+    /**
+     * Do 'all' actions first during `do_action()`
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 1.2.0 -> 5.3.0
+     */
+    public function debug_all_actions(): void {
+        //echo '<p style="color:blue;">'. current_action() .'</p>';
+        //self::logger( __METHOD__ .':'. current_action() .'::['. func_get_arg(1) .']' );
+    }
+
+
+
 
 }

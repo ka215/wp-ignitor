@@ -1,42 +1,44 @@
 <?php
+/**
+ * WP Ignitor
+ *
+ * @package           WpIgnitor
+ * @author            Ka2
+ * @copyright         2020 Ka2
+ * @license           GPL-2.0-or-later
+ *
+ * @wordpress-plugin
+ * Plugin Name:       WP Ignitor
+ * Plugin URI:        https://ka2.org/wp-ignitor
+ * Description:       Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
+ * Version:           1.0.0
+ * Requires at least: 5.4.2
+ * Requires PHP:      7.4
+ * Author:            Ka2
+ * Author URI:        https://ka2.org
+ * Text Domain:       wp-ignitor
+ * License:           GPL v2 or later
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ */
 /*
-  Plugin Name: WP Ignitor
-  Plugin URI: 
-  Description: Now let's hide that we are WordPress and get starting with the strong defensive turn.
-  Version: 1.0.0
-  Author: Ka2 <ka2@ka2.org>
-  Author URI: https://ka2.org/
-  License: MIT - http://opensource.org/licenses/mit-license.php
-  Text Domain: wp-ignitor
-  Domain Path: /langs
-*/
-
-/*
-Copyright (c) 2020 ka2 (https://ka2.org/)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+WP Ignitor is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+any later version.
+ 
+WP Ignitor is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with WP Ignitor. If not, see http://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
 defined( 'IGNITOR_PLUGIN_VERSION' ) or define( 'IGNITOR_PLUGIN_VERSION', '1.0.0' );
-//defined( 'IGNITOR_DB_VERSION' ) or define( 'IGNITOR_DB_VERSION', '1.0.0' );
 defined( 'IGNITOR_PLUGIN_DIR' ) or define( 'IGNITOR_PLUGIN_DIR', str_replace( '\\', '/', plugin_dir_path( __FILE__ ) ) );
 defined( 'IGNITOR' ) or define( 'IGNITOR', 'wpignitor' );// This plugin domain name
+defined( 'IGNITOR_DEBUG' ) or define( 'IGNITOR_DEBUG', false );
 
 require_once( __DIR__ . '/autoloader.php' );
 
@@ -47,6 +49,7 @@ $class = 'wpIgnitor\wpIgnitor';
 if ( class_exists( $class ) ) {
     register_activation_hook( __FILE__, [ $class, 'plugin_activation' ] );
     register_deactivation_hook( __FILE__, [ $class, 'plugin_deactivation' ] );
+    register_uninstall_hook( __FILE__, [ $class, 'plugin_uninstall' ] );
     
     wpIgnitor::get_object();
 } else {
