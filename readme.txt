@@ -7,7 +7,7 @@ Stable tag: 1.0.0
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Requires PHP: 7.4
-Donate link: 
+Donate link: https://github.com/sponsors/ka215
 
 Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
 
@@ -33,18 +33,22 @@ Let's get rid of our tedious configuration work right away and ignite the launch
 
 == Installation ==
 
-1. From the WP admin panel, click ÅgPluginsÅh -> ÅgAdd newÅh.
-2. In the browser input box, type ÅgMy Custom Style Css ManagerÅh.
-3. Select the ÅgMy Custom Style Css ManagerÅh plugin and click ÅgInstallÅh.
+1. From the WP admin panel, click "Plugins" -> "Add new".
+2. In the browser input box, type "WP Ignitor".
+3. Select the "WP Ignitor" plugin and click ‚ÄúInstall‚Äù.
 
 1, 2, 3: You're done!
 
 
 == Frequently asked questions ==
 
+Not yet.
+
 
 
 == Screenshots ==
+
+1. Not yet.
 
 
 
@@ -57,5 +61,6 @@ Bump an initial version - December 11, 2020
 
 == Upgrade notice ==
 
+Not yet.
 
 
