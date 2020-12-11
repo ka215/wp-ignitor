@@ -199,6 +199,9 @@ trait utils {
             if ( ! curl_errno( $ch ) ) {
                 switch ( $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE ) ) {
                     case 200:
+                        if ( $this->debug ) {
+                            self::logger( __( 'Successfully obtained the html code using cUrl class', IGNITOR ) );
+                        }
                         break;
                     default:
                         self::logger( sprintf( __( 'get_frontend_html() failed with unexpected HTTP code: %d', IGNITOR ), $http_code ) );
@@ -207,6 +210,10 @@ trait utils {
                 }
             }
             curl_close( $ch );
+        } else {
+            if ( $this->debug ) {
+                self::logger( __( 'Successfully obtained the html code using file_get_content()', IGNITOR ) );
+            }
         }
         $doc = new \DOMDocument();
         libxml_use_internal_errors( true );
@@ -219,7 +226,14 @@ trait utils {
             }
         }
         
-        return $to_string ? preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $result ) : $result;
+        if ( $to_string ) {
+            $result = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $result );
+            $result = preg_replace( "/\r\n|\r|\n/", "\n", $result );
+            $result = preg_replace( '/(>)(<[^\/])/', "$1\n$2", $result );
+            $result = preg_replace( '/<\/(head|body|html)>/', "\n</$1>", $result );
+            $result = preg_replace( "/^\n/m", '', $result );
+        }
+        return $result;
     }
 
     /**
@@ -416,15 +430,15 @@ trait utils {
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteRule "wp-(config|cron)\.php$" - [R=404,L]';
         $_section_number++;
-        // Protects "wp-login.php" and "wp-admin/" etc.
+        // Protects .php files
         $_stack[] = "# {$_section_number}.";
-        $_stack[] = '# - Access to the .php files (exclude the specific files such as "wp-login.php" or';
-        $_stack[] = '# - "xmlrpc.php") directly under the installation directory returns 404 response if the';
-        $_stack[] = '# - connection source is other than the allowed hosts, addresses or referers.';
+        $_stack[] = '# - Returns 404 response when access to the .php files (exclude the specific files such as';
+        $_stack[] = '# - "wp-login.php" or "index.php" or several under "wp-admin/") under the installation';
+        $_stack[] = '# - directory if the disallowed connection sources.';
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -f';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-login\.php$"';
+        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!(wp-login|index)\.php$"';
         $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-admin/(options(|-general)|profile)\.php$"';
         $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?\.php$" - [R=404,L]';
         $_section_number++;
