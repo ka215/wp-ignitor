@@ -63,7 +63,7 @@ class abstractClass {
      * @param string $class Class to instantiate
      * @return object Instance of $class
      */
-    public static function get_object( string $class = null ): self {
+    public static function get_object( ?string $class = null ): object {
         if ( ! class_exists( $class ) ) {
             $class = get_called_class();
             //return null;
