@@ -178,9 +178,9 @@ trait admin {
                 $this->help_sidebars[$help_id] = [
                     '<dt>'. __( 'More Information:', IGNITOR ) .'</dt>',
                     '<dd><a href="#" target="_blank">'. __( 'Plugin Page', IGNITOR ) .'</a></dd>',
-                    '<dd><a href="#" target="_blank">'. __( 'Repository', IGNITOR ) .'</a></dd>',
+                    '<dd><a href="https://github.com/ka215/wp-ignitor" target="_blank">'. __( 'Repository', IGNITOR ) .'</a></dd>',
                     '<dt>'. __( 'Contribution:', IGNITOR ) .'</dt>',
-                    '<dd><a href="#" target="_blank"><i class="mdi mdi-heart-outline" style="color:#ff0099;"></i> '. __( 'Sponsor', IGNITOR ) .'</a></dd>',
+                    '<dd><a href="https://github.com/sponsors/ka215" target="_blank"><i class="mdi mdi-heart-outline" style="color:#ff0099;"></i> '. __( 'Sponsor', IGNITOR ) .'</a></dd>',
                 ];
             }
             if ( ! empty( $this->help_tabs ) ) {
