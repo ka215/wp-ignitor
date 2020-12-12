@@ -95,7 +95,7 @@ trait admin {
      */
     public function admin_enqueue_scripts( string $hook_suffix ) {
         global $pagenow;
-        $_page = isset( $_REQUEST['page'] ) ? $_REQUEST['page'] : null;
+        $_page = (string)filter_var( $_REQUEST['page'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_HIGH );
         if ( $pagenow === 'options-general.php' && $_page === 'wpignitor-settings' ) {
             // Fonts
             $font_cdn_url = 'https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css';
@@ -203,12 +203,11 @@ trait admin {
      * @package WordPress(core)
      * @since 2.9.0
      */
-    public function user_contactmethods( array $methods, $user ): array {
-        global $pagenow;
-        if ( current_user_can( 'manage_options' ) && 'profile.php' === $pagenow ) {
+    public function user_contactmethods( array $methods, object $user ): array {
+        if ( current_user_can( 'manage_options' ) ) {
             // Add to admin user's profile only
         }
-        return $user_contact;
+        return $methods;
     }
 
     /**
@@ -284,7 +283,6 @@ trait admin {
      */
     public function all_plugins( array $all_plugins ): array {
         $self_plugin = plugin_basename( $this->paths['plugin_dir'] . 'wp-ignitor.php' );
-        //var_dump( __METHOD__, $all_plugins, $self_plugin );
         if ( isset( $all_plugins[$self_plugin] ) ) {
             if ( is_plugin_active( $self_plugin ) ) {
                 $all_plugins[$self_plugin]['Description'] = __( "<strong>Thank you for using!</strong> Now let's hide that we are WordPress and get starting with the strong defensive turn." );
@@ -416,6 +414,7 @@ trait admin {
             'empty_trash_days'     => [ 'label' => __( 'Change period until trash emptied', IGNITOR ), 'type' => 'number', 'value' => EMPTY_TRASH_DAYS, 'class' => 'small-text', 'placeholder' => EMPTY_TRASH_DAYS, 'unit' => 'Day' ],
             'disallow_file_edit'   => [ 'label' => __( 'Disallow plugin/theme editor', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'DISALLOW_FILE_EDIT' ) ? DISALLOW_FILE_EDIT : false ],
             'force_ssl_admin'      => [ 'label' => __( 'Force SSL on admin and login pages', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => FORCE_SSL_ADMIN ],
+            'ignitor_debug'        => [ 'label' => __( 'Enable debug mode for WP-Ignitor plugin', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => IGNITOR_DEBUG ],
         ];
         return $constants;
     }
@@ -475,7 +474,7 @@ trait admin {
      * @package WpIgnitor
      * @since 1.0.0
      */
-    public function plugin_settings_page() {
+    public function plugin_settings_page(): void {
         // Execute update action
         global $pagenow;
         parse_str( $_SERVER['QUERY_STRING'], $queries );
@@ -484,7 +483,7 @@ trait admin {
             'assets_url'  => site_url( $this->paths['assets_dir_url'] ),
             'self_url'    => admin_url( basename( $_SERVER['REQUEST_URI'] ) ),
             'query_args'  => $queries,
-            'current_tab' => isset( $_REQUEST['tab'] ) && ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'globals',
+            'current_tab' => (string)filter_var( $_REQUEST['tab'] ?? 'globals', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_HIGH ),
             'tabs' => [
                 'globals' => [ 'label' => __( 'Globals', IGNITOR ), 'icon' => 'mdi-rocket-launch-outline' ],
                 'conceal' => [ 'label' => __( 'Conceals', IGNITOR ), 'icon' => 'mdi-incognito' ],
@@ -509,12 +508,11 @@ trait admin {
      * @package WpIgnitor
      * @since 1.0.0
      */
-    public function execute_plugin_settings() {
+    public function execute_plugin_settings(): array {
         $is_success  = false;
         $messages    = [];
         $nonce       = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
         $current_tab = filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING );
-        //var_dump( $current_tab, $nonce, wp_create_nonce( $current_tab .'@'. IGNITOR ) );
         if ( ! wp_verify_nonce( $nonce, $current_tab .'@'. IGNITOR ) ) {
             // Invalid access
             return [ 'state' => 'error', 'message' => __( 'Invalid access.', IGNITOR ) ];
