@@ -53,7 +53,7 @@ $current_new_login = $this->get_option( 'new_login' );
       <th scope="row"><label for="install-path"><?= __( 'Move Installation Path', IGNITOR ) ?></label></th>
       <td>
         <div class="d-flex-row">
-          <input type="text" id="install-path" value="{DOCUMENT_ROOT}/<?= $this->get_wp_install_dir() ?>" class="normal-text code" readonly>
+          <input type="text" id="install-path" value="{DOCUMENT_ROOT}/<?= esc_attr( $this->get_wp_install_dir() ) ?>" class="normal-text code" readonly>
           <span class="surfix"><i class="mdi mdi-arrow-right"></i></span>
           <span class="prefix"><code>{DOCUMENT_ROOT}/</code></span>
           <input type="text" id="new-install-path" name="new_install_path" value="" class="little-text" placeholder="<?= __( 'New Path', IGNITOR ) ?>">
@@ -65,10 +65,6 @@ $current_new_login = $this->get_option( 'new_login' );
             data-title="<?= __( 'Moving files to new install path', IGNITOR ) ?>"
             data-foot="none"
             data-content="moveInstallPath"
-            __data-before-show="disableButton"
-            __data-shown="disableButton"
-            __data-before-hide="test"
-            __data-hidden="selfRedirect"
             class="button button-primary"><span class="mdi mdi-folder-move-outline"></span> <?= __( 'Move To', IGNITOR ) ?></button>
         </div>
         <div class="d-flex-row myh">
@@ -97,7 +93,7 @@ $current_new_login = $this->get_option( 'new_login' );
       <th scope="row"><label for="current-wp-config-path"><?= __( 'Move "wp-config.php"', IGNITOR ) ?></label></th>
       <td>
         <div class="d-flex-row">
-          <input type="text" id="current-wp-config-path" value="<?= $this->get_wp_config_path() ?>" class="medium-text code" readonly>
+          <input type="text" id="current-wp-config-path" value="<?= esc_attr( $this->get_wp_config_path() ) ?>" class="medium-text code" readonly>
 <?php if ( 'no-secure' === $checked_wp_config_path ): ?>
           <span class="gap"><i class="mdi mdi-arrow-right"></i></span>
           <button
@@ -105,7 +101,6 @@ $current_new_login = $this->get_option( 'new_login' );
             id="btn-move-wp-config"
             data-bind="dialog"
             data-persistent="true"
-            __data-foot="dismiss-outside"
             data-content="moveWpConfig"
             data-hidden="selfReload"
             class="button button-primary"><span class="mdi mdi-file-replace-outline"></span> <?= __( 'Move To One Upper Level Path', IGNITOR ) ?></button>
@@ -127,13 +122,13 @@ $current_new_login = $this->get_option( 'new_login' );
             $_msg  = __( "It's already in the correct position recommended for security. You will also be better off by paying attention to directory traversal attacks.", IGNITOR );
             break;
       } ?>
-          <p class="description text-<?= $_type ?>"><span class="mdi mdi-<?= $_icon ?>"></span> <?= $_msg ?></p>
+          <p class="description text-<?= esc_attr( $_type ) ?>"><span class="mdi mdi-<?= esc_attr( $_icon ) ?>"></span> <?= $_msg ?></p>
         </div>
       </td>
     </tr>
     <!-- Update "wp-config.php" -->
     <tr>
-      <th scope="row"><label for=""><?= __( 'Update "wp-config.php"', IGNITOR ) ?></label></th>
+      <th scope="row"><label for="wp-option-list"><?= __( 'Update "wp-config.php"', IGNITOR ) ?></label></th>
       <td>
         <p class="description">
           <?= __( 'Enables or disables various functions by constants implemented in WordPress in advance. This settings will be written directly to "wp-config.php".', IGNITOR ) ?><br>
@@ -143,22 +138,22 @@ $current_new_login = $this->get_option( 'new_login' );
         $is_checked_item = $current_wp_config_options ? array_key_exists( strtoupper( $const_name ), $current_wp_config_options ) : false;
 ?>
           <li class="d-flex-row mbh">
-            <label class="mr1"><input type="checkbox" id="chk-<?= $const_name ?>" class="toggle-option mrh"<?php if ( $is_checked_item ): ?> checked="checked"<?php endif; ?>><?= $items['label'] ?>:</label>
+            <label class="mr1"><input type="checkbox" id="chk-<?= esc_attr( $const_name ) ?>" class="toggle-option mrh"<?php if ( $is_checked_item ): ?> checked="checked"<?php endif; ?>><?= $items['label'] ?>:</label>
 <?php   if ( 'toggle' === $items['class'] ): 
           $_checked = $is_checked_item ? $current_wp_config_options[strtoupper( $const_name )] : ( isset( $items['checked'] ) && $items['checked'] );
 ?>
             <label class="tgl">
-              <input type="<?= $items['type'] ?>" id="<?= $const_name ?>" name="wp_config[<?= strtoupper( $const_name ) ?>]" value="<?= $items['value'] ?>"
+              <input type="<?= esc_attr( $items['type'] ) ?>" id="<?= esc_attr( $const_name ) ?>" name="wp_config[<?= strtoupper( esc_attr( $const_name ) ) ?>]" value="<?= esc_attr( $items['value'] ) ?>"
                 <?php if ( $_checked ): ?> checked="checked"<?php endif; ?>
               ><span class="tgl-btn"></span>
             </label>
 <?php    else: 
           $_value = $is_checked_item ? $current_wp_config_options[strtoupper( $const_name )] : $items['value'];
 ?>
-            <input type="<?= $items['type'] ?>" id="<?= $const_name ?>" name="wp_config[<?= strtoupper( $const_name ) ?>]" value="<?= $_value ?>" class="<?= $items['class'] ?>"
-              <?php if ( isset( $items['placeholder'] ) ): ?> placeholder="<?= $items['placeholder'] ?>"<?php endif; ?>
-              <?php if ( isset( $items['pair'] ) ): ?> data-pair="<?= $items['pair'] ?>" data-docroot="<?= $_SERVER['DOCUMENT_ROOT'] ?>"<?php endif; ?>
-            ><?php if ( isset( $items['unit'] ) ): ?><span class="unit"><?= $items['unit'] ?></span><?php endif; ?>
+            <input type="<?= esc_attr( $items['type'] ) ?>" id="<?= esc_attr( $const_name ) ?>" name="wp_config[<?= strtoupper( esc_attr( $const_name ) ) ?>]" value="<?= esc_attr( $_value ) ?>" class="<?= esc_attr( $items['class'] ) ?>"
+              <?php if ( isset( $items['placeholder'] ) ): ?> placeholder="<?= esc_attr( $items['placeholder'] ) ?>"<?php endif; ?>
+              <?php if ( isset( $items['pair'] ) ): ?> data-pair="<?= esc_attr( $items['pair'] ) ?>" data-docroot="<?= esc_attr( $_SERVER['DOCUMENT_ROOT'] ) ?>"<?php endif; ?>
+            ><?php if ( isset( $items['unit'] ) ): ?><span class="unit"><?= esc_html( $items['unit'] ) ?></span><?php endif; ?>
 <?php   endif; ?>
           </li>
 <?php endforeach; ?>
@@ -194,14 +189,14 @@ $current_new_login = $this->get_option( 'new_login' );
             <ul id="allowed-hosts">
 <?php foreach( $default_allowed_hosts as $hostname ): ?>
               <li>
-                <input type="text" value="<?= $hostname ?>" class="regular-text core" readonly
+                <input type="text" value="<?= esc_attr( $hostname ) ?>" class="regular-text core" readonly
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
 <?php endforeach;
       if ( $allowed_sources && array_key_exists( 'hosts', $allowed_sources ) && ! empty( $allowed_sources['hosts'] ) ) {
           foreach( $allowed_sources['hosts'] as $_i => $_host ): ?>
               <li>
-                <input type="text" id="allow-host-<?= $_i ?>" name="allow_hosts[<?= $_i ?>]" value="<?= $_host ?>" class="regular-text core" readonly
+                <input type="text" id="allow-host-<?= $_i ?>" name="allow_hosts[<?= $_i ?>]" value="<?= esc_attr( $_host ) ?>" class="regular-text core" readonly
                 ><button
                   type="button"
                   id="remove-fluctuation-allow-host-<?= $_i ?>"
@@ -233,13 +228,13 @@ $current_new_login = $this->get_option( 'new_login' );
           <div>
             <ul id="allowed-addresses">
               <li>
-                <input type="text" value="<?= $this->get_remote_addr() ?>" class="normal-text core" readonly
+                <input type="text" value="<?= esc_attr( $this->get_remote_addr() ) ?>" class="normal-text core" readonly
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
 <?php if ( $allowed_sources && array_key_exists( 'addrs', $allowed_sources ) && ! empty( $allowed_sources['addrs'] ) ) {
           foreach( $allowed_sources['addrs'] as $_i => $_addr ): ?>
               <li>
-                <input type="text" id="allow-addr-<?= $_i ?>" name="allow_addrs[<?= $_i ?>]" value="<?= $_addr ?>" class="normal-text core" readonly
+                <input type="text" id="allow-addr-<?= $_i ?>" name="allow_addrs[<?= $_i ?>]" value="<?= esc_attr( $_addr ) ?>" class="normal-text core" readonly
                 ><button
                   type="button"
                   id="remove-fluctuation-allow-addr-<?= $_i ?>"
@@ -271,13 +266,13 @@ $current_new_login = $this->get_option( 'new_login' );
           <div>
             <ul id="allowed-referers">
               <li>
-                <input type="text" value="https?://<?= $this->get_fqdn() ?>" class="medium-text core" readonly
+                <input type="text" value="https?://<?= esc_attr( $this->get_fqdn() ) ?>" class="medium-text core" readonly
                 ><span class="surfix muted"><?= __( '(Auto Set by System)', IGNITOR ) ?></span>
               </li>
 <?php if ( $allowed_sources && array_key_exists( 'referers', $allowed_sources ) && ! empty( $allowed_sources['referers'] ) ) {
           foreach( $allowed_sources['referers'] as $_i => $_referer ): ?>
               <li>
-                <input type="text" id="allow-referer-<?= $_i ?>" name="allow_referers[<?= $_i ?>]" value="<?= $_referer ?>" class="medium-text core" readonly
+                <input type="text" id="allow-referer-<?= $_i ?>" name="allow_referers[<?= $_i ?>]" value="<?= esc_attr( $_referer ) ?>" class="medium-text core" readonly
                 ><button
                   type="button"
                   id="remove-fluctuation-allow-referer-<?= $_i ?>"
@@ -305,31 +300,39 @@ $current_new_login = $this->get_option( 'new_login' );
           </div>
         </div>
         <label for="preview-htaccess"><?= __( 'Preview:', IGNITOR ) ?></label>
-        <textarea name="htaccess" id="htaccess" class="large-text code myh" rows="20" readonly><?= $add_htaccess ?></textarea>
+        <textarea name="htaccess" id="htaccess" class="large-text code myh" rows="20" readonly><?= esc_textarea( $add_htaccess ) ?></textarea>
         <label class="fw600"><?= __( 'Advanced Settings:', IGNITOR ) ?></label>
         <ul id="advanced-htaccess-options">
            <li class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[prevent_xmlrpc]" value="0">
-              <input type="checkbox" id="advanced-option-1" name="advanced_htaccess[prevent_xmlrpc]" value="1" class="prefix-toggle"
-<?php if ( isset( $advanced_htaccess_options['prevent_xmlrpc'] ) && $advanced_htaccess_options['prevent_xmlrpc'] ): ?> checked="checked"<?php endif; ?>
+              <input type="hidden" name="advanced_htaccess[prevent_php_files]" value="0">
+              <input type="checkbox" id="advanced-option-1" name="advanced_htaccess[prevent_php_files]" value="1" class="prefix-toggle"
+<?php if ( isset( $advanced_htaccess_options['prevent_php_files'] ) && $advanced_htaccess_options['prevent_php_files'] ): ?> checked="checked"<?php endif; ?>
               ><label for="advanced-option-1" class="plh">
+                <?= __( 'Restrict access to core PHP files under the WordPress installation directory from anyone other than the allowed sources.', IGNITOR ) ?>
+              </label>
+           </li>
+           <li class="d-flex-row flex-nowrap items-start mbh">
+              <input type="hidden" name="advanced_htaccess[prevent_xmlrpc]" value="0">
+              <input type="checkbox" id="advanced-option-2" name="advanced_htaccess[prevent_xmlrpc]" value="1" class="prefix-toggle"
+<?php if ( isset( $advanced_htaccess_options['prevent_xmlrpc'] ) && $advanced_htaccess_options['prevent_xmlrpc'] ): ?> checked="checked"<?php endif; ?>
+              ><label for="advanced-option-2" class="plh">
                 <?= __( 'An access to "xmlrpc.php" only allow access that has user agent of "Jetpack", and other accesses redirect to "0.0.0.0" to avoid load.', IGNITOR ) ?>
               </label>
            </li>
            <li class="d-flex-row flex-nowrap items-start mbh">
               <input type="hidden" name="advanced_htaccess[uniform_login]" value="0">
-              <input type="checkbox" id="advanced-option-2" name="advanced_htaccess[uniform_login]" value="1" class="prefix-toggle"
+              <input type="checkbox" id="advanced-option-3" name="advanced_htaccess[uniform_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-2" class="plh">
+              ><label for="advanced-option-3" class="plh">
                 <?= __( 'Access to "wp-login.php" returns a uniform 404 response regardless of the connection source.', IGNITOR ) ?>
               </label>
            </li>
 <?php if ( ! empty( $current_new_login ) ): ?>
-           <li class="d-flex-row flex-nowrap items-start mbh">
+           <li id="option-for-new-login" class="d-flex-row flex-nowrap items-start mbh">
               <input type="hidden" name="advanced_htaccess[new_login]" value="0">
-              <input type="checkbox" id="advanced-option-3" name="advanced_htaccess[new_login]" value="1" class="prefix-toggle"
+              <input type="checkbox" id="advanced-option-4" name="advanced_htaccess[new_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-3" class="plh">
+              ><label for="advanced-option-4" class="plh">
                 <?= sprintf( __( 'Close direct access to "wp-login.php" and set up a new login URL (%s).', IGNITOR ), '<code>'. home_url( $current_new_login['path'] ) .'</code>') ?>
                 <?= sprintf( __( 'Detailed settings for the new login URL can be made in the relevant section of the "%sAuthorizations%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=login">', '</a>' ) ?>
               </label>

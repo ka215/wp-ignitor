@@ -26,7 +26,11 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
           </label>
           <label for="new-login-path" class="mxh"><?= __( 'New Login Path:', IGNITOR ) ?></label>
           <span class="prefix"><code><?= home_url( '/' ) ?></code></span>
-          <input type="text" id="new-login-path" name="new_login_path" value="<?php if ( isset( $current_new_login['path'] ) && ! empty( $current_new_login['path'] ) ) { echo esc_attr( $current_new_login['path'] ); } ?>" class="regular-text" placeholder='e.g. "entrance"' data-error-title="<?= __( 'Missing Parameters', IGNITOR ) ?>" data-blank-error="<?= __( 'New login path has not been entered.', IGNITOR ) ?>">
+          <input type="text" id="new-login-path" name="new_login_path"
+            value="<?php if ( isset( $current_new_login['path'] ) && ! empty( $current_new_login['path'] ) ) { echo esc_attr( $current_new_login['path'] ); } ?>"
+            class="regular-text" placeholder='e.g. "entrance"'
+            data-error-title="<?= __( 'Missing Parameters', IGNITOR ) ?>"
+            data-blank-error="<?= __( 'New login path has not been entered.', IGNITOR ) ?>">
         </div>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
@@ -81,7 +85,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
 <?php if ( $allowed_login_ips && ! empty( $allowed_login_ips ) ) {
         foreach ( $allowed_login_ips as $_i => $_allowed_ip ) : ?>
             <li>
-              <input type="text" id="allow-login-ip-<?= $_i ?>" name="allow_login_ips[<?= $_i ?>]" value="<?= $_allowed_ip ?>" class="normal-text core" readonly
+              <input type="text" id="allow-login-ip-<?= $_i ?>" name="allow_login_ips[<?= $_i ?>]" value="<?= esc_attr( $_allowed_ip ) ?>" class="normal-text core" readonly
               ><button
                 type="button"
                 id="remove-fluctuation-allow-login-ips-<?= $_i ?>"
@@ -124,6 +128,5 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
   </tbody>
 </table>
 <div class="inline-row btn-block">
-<?php /* submit_button( __( 'Commit Changes', IGNITOR ), 'primary', null, false ); */ ?>
   <button type="button" id="btn-commit-login-settings" class="button button-primary"><?= __( 'Commit Changes', IGNITOR ) ?></button>
 </div>

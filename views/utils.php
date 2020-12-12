@@ -10,7 +10,7 @@
   <tbody>
     <!-- Unlock Core Updater -->
     <tr>
-      <th scope="row"><label for=""><?= __( 'Unlock Core Updater', IGNITOR ) ?></label></th>
+      <th scope="row"><label for="btn-unlock-core-updater"><?= __( 'Unlock Core Updater', IGNITOR ) ?></label></th>
       <td>
         <p class="description myh">
           <?= __( 'If you are in a waiting state where the "Another update is currently in progress." is notified due likes to accidental page transition while updating WordPress, use this option to able to unlock before the waiting time of 15 minutes elapses.', IGNITOR ) ?><br>

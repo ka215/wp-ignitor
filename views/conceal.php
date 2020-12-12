@@ -26,12 +26,12 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
         <p class="description myh">
           <?= sprintf( __( 'Actual view of the %s tag for the specified page as follows:', IGNITOR ), '<code>&lt;HEAD&gt;</code>' ) ?>
         </p>
-        <textarea id="html" class="large-text code" rows="20" readonly><?= $front_index_html ?></textarea>
+        <textarea id="html" class="large-text code" rows="20" readonly><?= esc_textarea( $front_index_html ) ?></textarea>
         <ul id="cleanup-items">
 <?php foreach ( $cleanup_items as $name => $items ): ?>
           <li class="d-flex-row mbh">
             <label class="tgl" data-follow-color="inherit"><?= $items['label'] ?>
-              <input type="checkbox" id="<?= $name ?>" name="cleanup[<?= $name ?>]" value="1"<?php if ( $items['checked'] ): ?> checked="checked"<?php endif; ?>>
+              <input type="checkbox" id="<?= esc_attr( $name ) ?>" name="cleanup[<?= $name ?>]" value="1"<?php if ( $items['checked'] ): ?> checked="checked"<?php endif; ?>>
               <span class="tgl-btn"></span>
             </label>
           </li>
