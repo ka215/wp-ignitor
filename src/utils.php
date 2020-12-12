@@ -430,29 +430,33 @@ trait utils {
         $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
         $_stack[] = 'RewriteRule "wp-(config|cron)\.php$" - [R=404,L]';
         $_section_number++;
-        // Protects .php files
-        $_stack[] = "# {$_section_number}.";
-        $_stack[] = '# - Returns 404 response when access to the .php files (exclude the specific files such as';
-        $_stack[] = '# - "wp-login.php" or "index.php" or several under "wp-admin/") under the installation';
-        $_stack[] = '# - directory if the disallowed connection sources.';
-        $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
-        $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -f';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!(wp-login|index)\.php$"';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-admin/(options(|-general)|profile)\.php$"';
-        $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?\.php$" - [R=404,L]';
-        $_section_number++;
-        // Protects directories under the installed path
-        $_stack[] = "# {$_section_number}.";
-        $_stack[] = '# - Access to each directory directly under the installation directory returns 404';
-        $_stack[] = '# - response if the connection source is other than the allowed hosts, addresses or';
-        $_stack[] = '# - referers.';
-        $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
-        $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
-        $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -d';
-        $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?/?(.*)$" - [R=404,L]';
-        $_section_number++;
+        if ( isset( $advanced_htaccess_options['prevent_php_files'] ) && $advanced_htaccess_options['prevent_php_files'] ) {
+            // Restrict access to core PHP files
+            $_stack[] = "# {$_section_number}.";
+            $_stack[] = '# - Returns 404 response when access to the .php files (exclude the specific files such as';
+            $_stack[] = '# - "wp-login.php" or "index.php" or several under "wp-admin/") under the installation';
+            $_stack[] = '# - directory if the disallowed connection sources.';
+            $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
+            $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
+            $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -f';
+            $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!(wp-login|index)\.php$"';
+            $_stack[] = 'RewriteCond %{REQUEST_FILENAME} "!wp-admin/(options(|-general)|profile)\.php$"';
+            $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?\.php$" - [R=404,L]';
+            $_section_number++;
+        }
+        if ( false ) {
+            // Protects directories under the installed path
+            $_stack[] = "# {$_section_number}.";
+            $_stack[] = '# - Access to each directory directly under the installation directory returns 404';
+            $_stack[] = '# - response if the connection source is other than the allowed hosts, addresses or';
+            $_stack[] = '# - referers.';
+            $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
+            $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
+            $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
+            $_stack[] = 'RewriteCond %{REQUEST_FILENAME} -d';
+            $_stack[] = 'RewriteRule "^'. $_install_dir .'.*?/?(.*)$" - [R=404,L]';
+            $_section_number++;
+        }
         if ( isset( $advanced_htaccess_options['prevent_xmlrpc'] ) && $advanced_htaccess_options['prevent_xmlrpc'] ) {
             // Allows access to "xmlrpc.php" from jetpack only
             $_stack[] = "# {$_section_number}.";
