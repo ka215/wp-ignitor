@@ -273,7 +273,7 @@ trait actions {
                 $from_path = $this->get_wp_config_path();
                 $to_path = dirname( $this->get_wp_config_path(), 2 ) . '/wp-config.php';
                 if ( is_writable( $from_path ) && is_writable( dirname( $this->get_wp_config_path(), 2 ) ) ) {
-                    if ( @file_exists( $to_path ) ) {
+                    if ( file_exists( $to_path ) ) {
                         $message = __( 'The "wp-config.php" file already exists to the destination.', IGNITOR );
                     } else {
                         if ( rename( $from_path, $to_path ) ) {
@@ -306,8 +306,6 @@ trait actions {
                 $response = [
                     'result' => true,
                     'htaccess' => $this->generate_htaccess(),
-                    //'allow_sources' => $allow_sources,
-                    'post' => $_POST,
                     'advanced_htaccess' => $advanced_htaccess,
                 ];
                 break;
