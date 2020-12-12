@@ -10,8 +10,8 @@ import { initDialog, showDialog } from './_dialog'
 import { initFluctuation } from './_fluctuation'
 
 function init() {
-    const AJAX_URL = window.ajaxurl || null//,
-//NOW_PAGE = window.pagenow || null
+    const AJAX_URL  = window.ajaxurl || null,
+          parsedURL = new URL(window.location.href)
 
     window.callback = callback
 
@@ -97,6 +97,19 @@ function init() {
                 }
             }, false)
         })
+    }
+
+    // Auto-focus to specified hash of self URL
+    if ( parsedURL.hash !== '' ) {
+        let targetElm = document.getElementById(parsedURL.hash.replace('#', ''))
+
+        if (targetElm) {
+            targetElm.classList.add('focus', 'focus-active')
+            targetElm.addEventListener('mouseout', (evt) => {
+                evt.target.classList.remove('focus-active')
+            }, false)
+            setTimeout(() => { targetElm.classList.remove('focus-active') }, 5000)
+        }
     }
 
     Array.prototype.forEach.call(document.querySelectorAll('[id^="btn-"]'), (elm) => {

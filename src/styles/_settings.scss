@@ -218,6 +218,15 @@ dd {
   padding: 0.25em 0;
 }
 
+.focus {
+  transition: all 0.5s linear;
+  background-color: transparent;
+
+  &.focus-active {
+    background-color: $focused;
+  }
+}
+
 /*
  * Toggle button
  */

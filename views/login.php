@@ -35,7 +35,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The new login page will not work just by enabling this option.', IGNITOR ) ?>
-          <?= sprintf( __( 'You need to update the ".htaccess" file by checking to the corresponding advanced options in the "Update .htaccess" section in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals">', '</a>' ) ?>
+          <?= sprintf( __( 'You need to update the ".htaccess" file by checking to the corresponding advanced options in the "Update .htaccess" section in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals#option-for-new-login">', '</a>' ) ?>
         </p>
       </td>
     </tr>
@@ -67,7 +67,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'If it accesses "wp-admin/" when we are not logged in, an auto redirect to the login page will be the same behavior too.', IGNITOR ) ?>
-          <?= sprintf( __( 'As with the previous option, this setting will be applied after updating ".htaccess" in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals">', '</a>' ) ?>
+          <?= sprintf( __( 'As with the previous option, this setting will be applied after updating ".htaccess" in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals#option-for-new-login">', '</a>' ) ?>
         </p>
       </td>
     </tr>
