@@ -198,7 +198,7 @@ class wpIgnitor extends abstractClass {
             add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
             add_action( 'admin_print_styles', [ $this, 'admin_print_styles' ] );
             add_action( 'admin_head', [ $this, 'admin_head' ] );
-            add_filter( 'user_contactmethods', [ $this, 'user_contactmethods' ] );
+            add_filter( 'user_contactmethods', [ $this, 'user_contactmethods' ], 10, 2 );
             add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
             add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
             add_filter( 'dashboard_recent_posts_query_args', [ $this, 'dashboard_recent_posts_query_args' ] );
