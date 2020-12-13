@@ -272,16 +272,12 @@ class wpIgnitor extends abstractClass {
     public static function plugin_deactivation() {
         $logs = [];
         $logs[] = '"WP Ignitor" plugin deactivated!';
-        $plugin_option_key = IGNITOR;
-        $plugin_options = get_option( $plugin_option_key );
-        if ( $plugin_options ) {
-            ob_start();
-            var_dump( $plugin_options );
-            $buffer = ob_get_contents();
-            ob_get_clean();
-            $logs[] = $buffer;
-            delete_option( $plugin_option_key );
-        }
+        ob_start();
+        var_dump( $plugin_options );
+        $buffer = ob_get_contents();
+        ob_get_clean();
+        $logs[] = $buffer;
+        delete_option( $plugin_option_key );
         if ( IGNITOR_DEBUG ) {
             self::logger( $logs );
         }
@@ -296,11 +292,15 @@ class wpIgnitor extends abstractClass {
     public static function plugin_uninstall() {
         // Delete all options saved by this plugin.
         // A primary option key: 'wpignitor' ($this->options_key i.e. IGNITOR)
-        delete_option( self::options_key );
+        $plugin_option_key = IGNITOR;
+        $plugin_options = get_option( $plugin_option_key );
+        if ( $plugin_options ) {
+            delete_option( $plugin_option_key );
+        }
         // Update a "wp-config.php" with removing the section written by this plugin.
-        self::restore_wp_config();
+        // self::restore_wp_config();
         // Update a ".htaccess" with removing the section written by this plugin.
-        self::restore_htaccess();
+        // self::restore_htaccess();
     }
 
 }
