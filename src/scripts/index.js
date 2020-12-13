@@ -18,7 +18,17 @@ function init() {
     initDialog()
     initFluctuation()
 
-//console.log( AJAX_URL, NOW_PAGE, window.callback )
+    // Focus current help tab
+    if ( document.getElementById('contextual-help-wrap') ) {
+        Array.prototype.forEach.call(document.querySelectorAll('#contextual-help-columns ul li'), (elm) => {
+            let tabLinkName = elm.id.split('-')[2],
+                currentTab  = new URLSearchParams(parsedURL.searchParams).get('tab')
+
+            if ( tabLinkName === currentTab ) {
+                triggerEvent( elm.querySelector('a'), 'click' )
+            }
+        })
+    }
 
     // Update "wp-config.php" section
     Array.prototype.forEach.call(document.querySelectorAll('.toggle-option'), (elm) => {
@@ -78,12 +88,21 @@ function init() {
 
     if ( document.getElementById('target-page-path') ) {
         // Update frontend HTML section
+        document.getElementById('target-page-path').addEventListener('keydown', (evt) => {
+            let _key = window.event ? window.event.keyCode : evt.which
+
+            if ( _key == 13 ) {
+                evt.preventDefault()
+                triggerEvent( document.getElementById('btn-commit-to-cleanup'), 'click' )
+            }
+        }, false)
         document.getElementById('target-page-path').addEventListener('change', () => {
             triggerEvent( document.getElementById('btn-commit-to-cleanup'), 'click' )
         }, false)
     }
 
     if ( document.getElementById('rest-namespaces') ) {
+        // Handle when changed Rest API Namespace behavior
         Array.prototype.forEach.call(document.querySelectorAll('[name^="namespaces["]'), (elm) => {
             elm.addEventListener('change', (evt) => {
                 let slug_ns = evt.target.id.replace('rest-namespace-', ''),
@@ -112,6 +131,7 @@ function init() {
         }
     }
 
+    // Event handler for each button clicked
     Array.prototype.forEach.call(document.querySelectorAll('[id^="btn-"]'), (elm) => {
         elm.addEventListener('click', (evt) => {
             let self = evt.target,
