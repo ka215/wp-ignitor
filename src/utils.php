@@ -293,7 +293,7 @@ trait utils {
                  */
                 $filter_regex = apply_filters( 'wpignitor_filter_regex', '#^(?!.*(node_modules/|\.git/|\.cache/)).*$#', $target_path );
                 $phar_map = $phar->buildFromDirectory( $target_path, $filter_regex );
-            } else {
+            } elseif ( ! is_link( $target_path ) ) {
                 $phar->addFile( $target_path );
                 $phar_map = [ $target_path ];
             }

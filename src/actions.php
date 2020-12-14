@@ -39,6 +39,9 @@ trait actions {
      */
     public function after_setup_theme() {
         global $_wp_theme_features;
+        if ( ! is_array( $_wp_theme_features ) ) {
+            $_wp_theme_features = [];
+        }
         $cleanup_options = $this->get_option( 'cleanup_html' );
         if ( isset( $cleanup_options['feedlinks'] ) && $cleanup_options['feedlinks'] && array_key_exists( 'automatic-feed-links', $_wp_theme_features ) ) {
             // Prevent output all feed links
