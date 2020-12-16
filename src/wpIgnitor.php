@@ -246,8 +246,7 @@ class wpIgnitor extends abstractClass {
      * @access public
      */
     public static function plugin_activation() {
-        $logs = [];
-        $logs[] = '"WP Ignitor" plugin activated!';
+        $logs = [ '"WP Ignitor" plugin activated!' ];
         $plugin_option_key = IGNITOR;
         $plugin_options = get_option( $plugin_option_key );
         if ( $plugin_options ) {
@@ -270,14 +269,7 @@ class wpIgnitor extends abstractClass {
      * @access public
      */
     public static function plugin_deactivation() {
-        $logs = [];
-        $logs[] = '"WP Ignitor" plugin deactivated!';
-        ob_start();
-        var_dump( $plugin_options );
-        $buffer = ob_get_contents();
-        ob_get_clean();
-        $logs[] = $buffer;
-        delete_option( $plugin_option_key );
+        $logs = [ '"WP Ignitor" plugin deactivated!' ];
         if ( IGNITOR_DEBUG ) {
             self::logger( $logs );
         }

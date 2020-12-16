@@ -213,7 +213,8 @@ trait actions {
                         $messages[] = $_proc_res;
                         // Optimize .htaccess then save
                         if ( $optimize_htaccess ) {
-                            $last_dir = end( explode( '/', str_replace( '\\', '/', $new_install_path ) ) );
+                            $path_dirs = explode( '/', str_replace( '\\', '/', $new_install_path ) );
+                            $last_dir = end( $path_dirs );
                             $rules = $this->generate_htaccess( $last_dir . '/' );
                             $moved_htaccess = $new_install_path . '/.htaccess';
                             $docroot_htaccess = $this->paths['docroot'] . '/.htaccess';
