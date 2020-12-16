@@ -1,7 +1,7 @@
 === WP Ignitor ===
 Contributors: Ka2
 Tags: management
-Requires at least: 5.3.6
+Requires at least: 5.2.9
 Tested up to: 5.6.0
 Stable tag: 1.0.0
 License: GPL v2 or later
