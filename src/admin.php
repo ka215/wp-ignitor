@@ -95,7 +95,7 @@ trait admin {
      */
     public function admin_enqueue_scripts( string $hook_suffix ) {
         global $pagenow;
-        $_page = (string)filter_var( $_REQUEST['page'] ?? '', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_HIGH );
+        $_page = sanitize_text_field( $_REQUEST['page'] ?? '' );
         if ( $pagenow === 'options-general.php' && $_page === 'wpignitor-settings' ) {
             // Fonts
             $font_cdn_url = 'https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css';
@@ -485,7 +485,7 @@ trait admin {
             'assets_url'  => site_url( $this->paths['assets_dir_url'] ),
             'self_url'    => admin_url( basename( $_SERVER['REQUEST_URI'] ) ),
             'query_args'  => $queries,
-            'current_tab' => (string)filter_var( $_REQUEST['tab'] ?? 'globals', FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_HIGH ),
+            'current_tab' => sanitize_key( $_REQUEST['tab'] ?? 'globals' ),
             'tabs' => [
                 'globals' => [ 'label' => __( 'Globals', IGNITOR ), 'icon' => 'mdi-rocket-launch-outline' ],
                 'conceal' => [ 'label' => __( 'Conceals', IGNITOR ), 'icon' => 'mdi-incognito' ],
@@ -549,6 +549,7 @@ trait admin {
                         }
                     }
                     break;
+                case 'url':
                 case '_wp_http_referer':
                     // For url
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_VALIDATE_URL );
@@ -560,11 +561,16 @@ trait admin {
                     break;
                 case '_wpnonce':
                 case 'tab':
-                    // Skip
+                    // Skip because it has already been filtered
                     break;
                 default:
                     // For string
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
+                    if ( strpos( $params[$_k], PHP_EOL ) !== false ) {
+                        $params[$_k] = sanitize_textarea_field( $params[$_k] );
+                    } else {
+                        $params[$_k] = sanitize_text_field( $params[$_k] );
+                    }
                     // Cast to boolean
                     if ( in_array( strtolower( $params[$_k] ), [ 'true', 'false' ], true ) ) {
                         $params[$_k] = filter_var( $params[$_k], FILTER_VALIDATE_BOOLEAN );
