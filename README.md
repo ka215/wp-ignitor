@@ -1,14 +1,19 @@
 ![WP IGNITOR](https://raw.githubusercontent.com/ka215/wp-ignitor/main/.wordpress-org/banner-1554x500.png)
 
-* Contributors: Ka2
-* Donate link: https://github.com/sponsors/ka215
-* Tags: management
-* Requires at least: 5.2.9
-* Tested up to: 5.6.0
-* Stable tag: 1.0.0
-* License: GPLv2 or later
-* License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-* Requires PHP: 7.2
+<p align="center">
+  <img alt="WordPress Plugin: Requires at least" src="https://img.shields.io/wordpress/plugin/wp-version/wp-ignitor?style=flat-square">
+  <img alt="WordPress Plugin: Tested up to" src="https://img.shields.io/wordpress/plugin/tested/wp-ignitor?style=flat-square">
+  <img alt="WordPress Plugin Version" src="https://img.shields.io/wordpress/plugin/v/wp-ignitor?style=flat-square">
+  <img alt="GitHub" src="https://img.shields.io/github/license/ka215/wp-ignitor?style=flat-square">
+  <img alt="WordPress Plugin: Requires PHP" src="https://img.shields.io/wordpress/plugin/required-php/wp-ignitor?style=flat-square">
+</p>
+
+<p align="center">
+  <a href="#description">Description</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#contributors">Contributors</a> •
+  <a href="#copyright-and-license">License</a>
+</p>
 
 ## Description
 
@@ -37,3 +42,13 @@ Let's get rid of our tedious configuration work right away and ignite the launch
 
 1, 2, 3: You're done!
 
+## Contributors
+
+**Ka2 (Katsuhiko Maeno)**
+- <https://ka2.org/>
+
+If you liked using this app or it has helped you in any way, I'd like you send me an email at ka2@ka2.org about anything you'd want to say about this software. I'd really appreciate it!
+
+## Copyright and license
+
+Code and documentation copyright 2020 the [ka2](https://ka2.org/). Code released under the [GPL v2 or later](https://raw.githubusercontent.com/ka215/wp-ignitor/main/LICENSE).
