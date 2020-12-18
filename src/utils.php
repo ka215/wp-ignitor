@@ -179,61 +179,46 @@ trait utils {
     public function get_frontend_html( string $path = '/', string $element = '', bool $to_string = false ): string {
         $get_uri = home_url( $path );
         $result = '';
-        if ( preg_match( '@^https://@', $get_uri ) == 1 ) {
-            $options = stream_context_create([
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ]
-            ]);
-            $raw_html = file_get_contents( $get_uri, false, $options );
-        } else {
-            $raw_html = file_get_contents( $get_uri, false );
+        $raw_html = wp_remote_retrieve_body( wp_remote_request( $get_uri ) );
+        if ( ! $raw_html ) {
+            if ( preg_match( '@^https://@', $get_uri ) == 1 ) {
+                $options = stream_context_create([
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ]
+                ]);
+                $raw_html = file_get_contents( $get_uri, false, $options );
+            } else {
+                $raw_html = file_get_contents( $get_uri, false );
+            }
         }
         if ( ! $raw_html ) {
-            $ch = curl_init();
-            curl_setopt( $ch, CURLOPT_URL, $get_uri );
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-            curl_setopt( $ch, CURLOPT_BINARYTRANSFER, true );
-            $raw_html = curl_exec( $ch );
-            if ( ! curl_errno( $ch ) ) {
-                switch ( $http_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE ) ) {
-                    case 200:
-                        if ( $this->debug ) {
-                            self::logger( __( 'Successfully obtained the html code using cUrl class', IGNITOR ) );
-                        }
-                        break;
-                    default:
-                        self::logger( sprintf( __( 'get_frontend_html() failed with unexpected HTTP code: %d', IGNITOR ), $http_code ) );
-                        curl_close( $ch );
-                        return $raw_html;
-                }
-            }
-            curl_close( $ch );
-        } else {
             if ( $this->debug ) {
                 self::logger( __( 'Successfully obtained the html code using file_get_content()', IGNITOR ) );
             }
-        }
-        $doc = new \DOMDocument();
-        libxml_use_internal_errors( true );
-        $doc->loadHTML( $raw_html );
-        libxml_clear_errors();
-        if ( ! empty( $element ) ) {
-            $elem_html = $doc->getElementsByTagName( $element );
-            if ( $elem_html->length > 0 ) {
-                $result = $doc->saveHTML( $elem_html->item(0) );
+            return __( 'Could not get the HTML source.', IGNITOR );
+        } else {
+            $doc = new \DOMDocument();
+            libxml_use_internal_errors( true );
+            $doc->loadHTML( $raw_html );
+            libxml_clear_errors();
+            if ( ! empty( $element ) ) {
+                $elem_html = $doc->getElementsByTagName( $element );
+                if ( $elem_html->length > 0 ) {
+                    $result = $doc->saveHTML( $elem_html->item(0) );
+                }
             }
+            
+            if ( $to_string ) {
+                $result = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $result );
+                $result = preg_replace( "/\r\n|\r|\n/", "\n", $result );
+                $result = preg_replace( '/(>)(<[^\/])/', "$1\n$2", $result );
+                $result = preg_replace( '/<\/(head|body|html)>/', "\n</$1>", $result );
+                $result = preg_replace( "/^\n/m", '', $result );
+            }
+            return $result;
         }
-        
-        if ( $to_string ) {
-            $result = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $result );
-            $result = preg_replace( "/\r\n|\r|\n/", "\n", $result );
-            $result = preg_replace( '/(>)(<[^\/])/', "$1\n$2", $result );
-            $result = preg_replace( '/<\/(head|body|html)>/', "\n</$1>", $result );
-            $result = preg_replace( "/^\n/m", '', $result );
-        }
-        return $result;
     }
 
     /**
