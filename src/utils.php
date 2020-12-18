@@ -181,19 +181,6 @@ trait utils {
         $result = '';
         $raw_html = wp_remote_retrieve_body( wp_remote_request( $get_uri ) );
         if ( ! $raw_html ) {
-            if ( preg_match( '@^https://@', $get_uri ) == 1 ) {
-                $options = stream_context_create([
-                    'ssl' => [
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                    ]
-                ]);
-                $raw_html = file_get_contents( $get_uri, false, $options );
-            } else {
-                $raw_html = file_get_contents( $get_uri, false );
-            }
-        }
-        if ( ! $raw_html ) {
             if ( $this->debug ) {
                 self::logger( __( 'Successfully obtained the html code using file_get_content()', IGNITOR ) );
             }
