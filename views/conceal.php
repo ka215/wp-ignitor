@@ -40,7 +40,7 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
         <button
           type="button"
           id="btn-commit-to-cleanup"
-          class="button button-primary"><i class="mdi mdi-cog-sync"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
+          class="button button-primary"><i class="mdi mdi-broom"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
         <p class="description mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Their committed settings will be reflected immediately in the front end.', IGNITOR ) ?>
@@ -65,7 +65,7 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
         }
 ?>
           <li class="d-flex-row mbh">
-            <label for="rest-namespace-<?= $slug_ns ?>" class="mr-1 fw600 little-text"><i class="mdi mdi-chevron-right muted"></i> <?= $namespace ?></label>
+            <label for="rest-namespace-<?= $slug_ns ?>" class="mr-1 fw600 normal-text"><i class="mdi mdi-chevron-right muted"></i> <?= $namespace ?></label>
             <select id="rest-namespace-<?= $slug_ns ?>" name="namespaces[<?= $namespace ?>]" class="mr1">
               <option value="allow_all"<?php if ( 'allow_all' === $todo ): ?> selected<?php endif; ?>><?= __( 'Allow All', IGNITOR ) ?></option>
               <option value="allow_self"<?php if ( 'allow_self' === $todo ): ?> selected<?php endif; ?>><?= __( 'Allow Self Only', IGNITOR ) ?></option>

@@ -1,7 +1,9 @@
+const CopyPlugin = require('copy-webpack-plugin')
 const path = require('path')
 const glob = require('glob')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const autoprefixer = require('autoprefixer')
+const WritePlugin = require('write-file-webpack-plugin')
 
 const srcDir = './src'
 const entryObj = {
@@ -82,7 +84,16 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: './[name].css',
             chunkFilename: '[id].css'
-        })
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: '**/*', to: 'images', context: 'src/images' },
+            ],
+            options: {
+                concurrency: 100,
+            },
+        }),
+        new WritePlugin()
     ],
     watch: isDevelopment ? true : false,
     watchOptions: {

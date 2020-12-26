@@ -9,7 +9,7 @@ $tab_content_path = __DIR__ .'/'. $current_tab .'.php';
 ?>
 <div class="wrap" data-fixed-backdrop="true">
   <h1 class="wp-heading-inline"
-  ><img src="<?= esc_url( $this->paths['assets_dir_url'] ) ?>../src/images/icon.svg" height="26" class="prefix-logo"
+  ><img src="<?= esc_url( $this->paths['assets_dir_url'] ) ?>images/icon.svg" height="26" class="prefix-logo"
   ><?= __( 'WP Ignitor Settings', IGNITOR ) ?></h1>
 <?php if ( isset( $message ) && isset( $state ) ) :
     $_classes = [ 'notice', 'notice-' . esc_attr( $state ), 'is-dismissible' ];

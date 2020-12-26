@@ -1,6 +1,6 @@
 {
   "name": "wp-ignitor",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.1",
   "description": "WP-Ignitor is an ignition kit of WordPress. Let's hide that we are WordPress and get starting with the strong defensive turn.",
   "main": "wp-ignitor.php",
   "scripts": {
@@ -35,6 +35,7 @@
     "@babel/preset-env": "^7.11.5",
     "autoprefixer": "^10.0.0",
     "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^7.0.2",
     "css-loader": "^4.3.0",
     "cssnano": "^4.1.10",
@@ -47,7 +48,8 @@
     "sass-loader": "^10.0.2",
     "style-loader": "^1.2.1",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "write-file-webpack-plugin": "^4.5.1"
   },
   "browserslist": [
     "last 2 versions",

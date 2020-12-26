@@ -342,9 +342,9 @@ $current_new_login = $this->get_option( 'new_login' );
 <?php endif; ?>
             <li class="d-flex-row flex-nowrap items-start mbh">
               <input type="hidden" name="advanced_htaccess[avoid_author]" value="0">
-              <input type="checkbox" id="advanced-option-4" name="advanced_htaccess[avoid_author]" value="1" class="prefix-toggle"
+              <input type="checkbox" id="advanced-option-5" name="advanced_htaccess[avoid_author]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['avoid_author'] ) && $advanced_htaccess_options['avoid_author'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-4" class="plh">
+              ><label for="advanced-option-5" class="plh">
                 <?= __( "Avoid the discovery of an author's ID.", IGNITOR ) ?>
               </label>
            </li>

@@ -1,6 +1,6 @@
 /**
  * WP-Ignitor plugin
- * @since 1.0.0
+ * @since 1.0.1
  */
 //import '../styles/index.scss'
 import { hasProp, logger, triggerEvent } from './_utils'

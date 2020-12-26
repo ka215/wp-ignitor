@@ -16,7 +16,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
   <tbody>
     <!-- Enable New Login Page -->
     <tr>
-      <th scope="row"><label><?= __( 'Enable New Login Page', IGNITOR ) ?></label></th>
+      <th scope="row"><label for="new-login-on"><?= __( 'Enable New Login Page', IGNITOR ) ?></label></th>
       <td>
         <div class="d-flex-row flex-nowrap mbh">
           <input type="hidden" name="new_login_on" value="0">

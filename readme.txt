@@ -3,7 +3,7 @@ Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
 Tested up to: 5.6.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Requires PHP: 7.2
@@ -42,20 +42,39 @@ Let's get rid of our tedious configuration work right away and ignite the launch
 
 == Frequently asked questions ==
 
-Not yet.
+= Source code does not appear in "Cleanup Frontend HTML" on the "Conceals" tab =
 
+You can use the wpignitor_remote_request_args filter added since version 1.0.1 to control the request behavior of the WP_Http API.
+If you have problems with SSL communication such as "SSL certificate problem", please add the following filter hook to functions.php.
 
+`
+add_filter( 'wpignitor_remote_request_args', function( $args, $get_uri ) {
+    $args = [
+        'sslverify' => false,
+    ];
+    return $args;
+}, 10, 2 );
+`
+
+Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/WP_Http/request/) for details on the optional arguments that can be given when requesting by WP_Http API.
 
 == Screenshots ==
 
-1. Not yet.
-
-
+1. The globals section can have an overwhelming impact on your entire website.
+2. The Conceals section can have a securely conceal your website.
+3. The authorizations section can have a customize the URL of WordPress login page.
+4. The utilities section contains useful features for site management.
 
 == Changelog ==
 
+= 1.0.1 =
+Bump to version - December 26, 2020
+* Fixed some minor UI bugs
+* Added filter hooks for "wpignitor_remote_request_args" and "wpignitor_remote_retrieve_html".
+* Changed "functions.php" for bundled plugin extension to sample file.
+
 = 1.0.0 =
-Bump an initial version - December 11, 2020
+Bump an publish version - December 24, 2020
 
 
 

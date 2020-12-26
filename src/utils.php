@@ -173,16 +173,34 @@ trait utils {
     /**
      * Get frontend HTML
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.0.1
      * @access public
      */
     public function get_frontend_html( string $path = '/', string $element = '', bool $to_string = false ): string {
         $get_uri = home_url( $path );
         $result = '';
-        $raw_html = wp_remote_retrieve_body( wp_remote_request( $get_uri ) );
+        /**
+         * Filter the HTTP request arguments to give into wp_remote_request()
+         *
+         * @since 1.0.1
+         * @hook  filter
+         */
+        $args = apply_filters( 'wpignitor_remote_request_args', [], $get_uri );
+        $response = wp_remote_request( $get_uri, $args );
+        $raw_html = wp_remote_retrieve_body( $response );
+        /**
+         * Filter the retrieved HTML source
+         *
+         * @since 1.0.1
+         * @hook  filter
+         */
+        $raw_html = apply_filters( 'wpignitor_remote_retrieve_html', $raw_html, $get_uri, $response );
         if ( ! $raw_html ) {
+            if ( is_wp_error( $response ) ) {
+                return $response->get_error_message();
+            }
             if ( $this->debug ) {
-                self::logger( __( 'Successfully obtained the html code using file_get_content()', IGNITOR ) );
+                self::logger( __( 'Failed to get the HTML source code by wp_remote_request()', IGNITOR ) );
             }
             return __( 'Could not get the HTML source.', IGNITOR );
         } else {

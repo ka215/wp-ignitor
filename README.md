@@ -4,8 +4,10 @@
   <img alt="WordPress Plugin: Requires at least" src="https://img.shields.io/wordpress/plugin/wp-version/wp-ignitor?style=flat-square">
   <img alt="WordPress Plugin: Tested up to" src="https://img.shields.io/wordpress/plugin/tested/wp-ignitor?style=flat-square">
   <img alt="WordPress Plugin Version" src="https://img.shields.io/wordpress/plugin/v/wp-ignitor?style=flat-square">
-  <img alt="GitHub" src="https://img.shields.io/github/license/ka215/wp-ignitor?style=flat-square">
   <img alt="WordPress Plugin: Requires PHP" src="https://img.shields.io/wordpress/plugin/required-php/wp-ignitor?style=flat-square">
+  <img alt="WordPress Plugin Downloads" src="https://img.shields.io/wordpress/plugin/dt/wp-ignitor?style=flat-square">
+  <img alt="WordPress Plugin Active Installs" src="https://img.shields.io/wordpress/plugin/installs/wp-ignitor?style=flat-square">
+  <img alt="License" src="https://img.shields.io/badge/license-GPL%20(%3E%3D2)-blue?style=flat-square">
 </p>
 
 <p align="center">
