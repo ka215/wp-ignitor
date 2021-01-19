@@ -32,7 +32,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
             data-error-title="<?= __( 'Missing Parameters', IGNITOR ) ?>"
             data-blank-error="<?= __( 'New login path has not been entered.', IGNITOR ) ?>">
         </div>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The new login page will not work just by enabling this option.', IGNITOR ) ?>
           <?= sprintf( __( 'You need to update the ".htaccess" file by checking to the corresponding advanced options in the "Update .htaccess" section in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals#option-for-new-login">', '</a>' ) ?>
@@ -64,7 +64,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
 <?php if ( isset( $current_new_login['orig'] ) && $current_new_login['orig'] == 200 ): ?> checked="checked"<?php endif; ?>
             ><?= __( 'Redirect to home', IGNITOR ) ?></label></li>
         </ul>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'If it accesses "wp-admin/" when we are not logged in, an auto redirect to the login page will be the same behavior too.', IGNITOR ) ?>
           <?= sprintf( __( 'As with the previous option, this setting will be applied after updating ".htaccess" in the "%sGlobals%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=globals#option-for-new-login">', '</a>' ) ?>
@@ -117,7 +117,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
             <option value="403"<?php if ( $deny_login_redirect && ! empty( $deny_login_redirect ) && (int) $deny_login_redirect == 403 ): ?> selected="selected"<?php endif; ?>><?= __( '403 Redirection', IGNITOR ) ?></option>
             <option value="404"<?php if ( $deny_login_redirect && ! empty( $deny_login_redirect ) && (int) $deny_login_redirect == 404 ): ?> selected="selected"<?php endif; ?>><?= __( '404 Redirection', IGNITOR ) ?></option>
           </select>
-          <p class="description mt1">
+          <p class="description info-list mt1">
             <span class="mdi mdi-alert-circle-outline text-info"></span>
             <?= __( 'The permission IP address settings for the login page apply regardless of whether the new login page is enabled or disabled.', IGNITOR ) ?><br>
             <?= __( 'If you do not set anything, all visitors can access the login page.', IGNITOR ) ?>

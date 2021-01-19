@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Ignitor 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
-"POT-Creation-Date: 2021-01-19 09:35+0900\n"
-"PO-Revision-Date: 2021-01-19 09:38+0900\n"
+"POT-Creation-Date: 2021-01-19 10:43+0900\n"
+"PO-Revision-Date: 2021-01-19 10:45+0900\n"
 "Last-Translator: \n"
 "Language-Team: ka2@ka2.org\n"
 "Language: ja\n"
@@ -511,7 +511,7 @@ msgstr "なし"
 msgid "Move Installation Path"
 msgstr "インストールパスの移動"
 
-#: views/globals.php:59
+#: views/globals.php:59 views/globals.php:364 views/globals.php:375
 msgid "New Path"
 msgstr "新規パス"
 
@@ -621,19 +621,28 @@ msgstr ""
 "事前にWordPressに実装されている定数により、さまざまな機能を有効または無効にし"
 "ます。この設定は「wp-config.php」に直接書き込まれます。"
 
-#: views/globals.php:161 views/globals.php:302
+#: views/globals.php:163
+#, php-format
+msgid ""
+"Please refer to %sthe official documentation%s for the detailed behavior of "
+"each option constant."
+msgstr ""
+"各オプション定数の詳細な動作については、%s公式ドキュメント%sを参照してくださ"
+"い。"
+
+#: views/globals.php:165 views/globals.php:306
 msgid "Preview:"
 msgstr "プレビュー:"
 
-#: views/globals.php:166
+#: views/globals.php:170
 msgid "Update wp-config.php"
 msgstr "「wp-config.php」を更新"
 
-#: views/globals.php:170
+#: views/globals.php:174
 msgid "Restore wp-config.php"
 msgstr "「wp-config.php」の復元"
 
-#: views/globals.php:173
+#: views/globals.php:177
 msgid ""
 "The above settings will be inserted into marker (rows) from \"BEGIN WP "
 "Ignitor\" to \"END WP Ignitor\"."
@@ -641,7 +650,7 @@ msgstr ""
 "上記の設定は、「BEGIN WP Ignitor」から「END WP Ignitor」までのマーカー（行）"
 "に挿入されます。"
 
-#: views/globals.php:174
+#: views/globals.php:178
 msgid ""
 "Only the checked options will be written to wp-config.php. And you can "
 "remove the settings by updating with all the unchecked."
@@ -649,7 +658,7 @@ msgstr ""
 "チェックされたオプションのみがwp-config.phpに書き込まれます。 また、チェック"
 "を外して更新すると、設定を削除できます。"
 
-#: views/globals.php:175
+#: views/globals.php:179
 msgid ""
 "If there is an option already defined in \"wp-config.php\", that will be "
 "applied with priority."
@@ -657,11 +666,11 @@ msgstr ""
 "「wp-config.php」ですでに定義されているオプションがある場合は、そちらが優先的"
 "に適用されます。"
 
-#: views/globals.php:181
+#: views/globals.php:185
 msgid "Update \".htaccess\""
 msgstr "「.htaccess」の更新"
 
-#: views/globals.php:184
+#: views/globals.php:188
 msgid ""
 "Improve the security of your site by preventing access to each WordPress "
 "core file from anyone other than the allowed sources."
@@ -669,51 +678,51 @@ msgstr ""
 "許可された接続元以外から各WordPressコアファイルにアクセスできないようにするこ"
 "とで、サイトのセキュリティを向上させます。"
 
-#: views/globals.php:187
+#: views/globals.php:191
 msgid "Allow Hosts"
 msgstr "許可するホスト"
 
-#: views/globals.php:193 views/globals.php:232 views/globals.php:270
+#: views/globals.php:197 views/globals.php:236 views/globals.php:274
 msgid "(Auto Set by System)"
 msgstr "（システム自動定義）"
 
-#: views/globals.php:205
+#: views/globals.php:209
 msgid "Remove Host"
 msgstr "ホスト削除"
 
-#: views/globals.php:211 views/globals.php:222
+#: views/globals.php:215 views/globals.php:226
 msgid "Add New Hostname"
 msgstr "新規ホスト名追加"
 
-#: views/globals.php:227
+#: views/globals.php:231
 msgid "Allow Addresses"
 msgstr "許可するアドレス"
 
-#: views/globals.php:243
+#: views/globals.php:247
 msgid "Remove Address"
 msgstr "アドレス削除"
 
-#: views/globals.php:249 views/globals.php:260
+#: views/globals.php:253 views/globals.php:264
 msgid "Add New Address"
 msgstr "新規アドレス追加"
 
-#: views/globals.php:265
+#: views/globals.php:269
 msgid "Allow Referers"
 msgstr "許可するリファラー"
 
-#: views/globals.php:281
+#: views/globals.php:285
 msgid "Remove Referer"
 msgstr "リファラー削除"
 
-#: views/globals.php:287 views/globals.php:298
+#: views/globals.php:291 views/globals.php:302
 msgid "Add New Referer"
 msgstr "新規リファラー追加"
 
-#: views/globals.php:304
+#: views/globals.php:308
 msgid "Advanced Settings:"
 msgstr "高度な設定:"
 
-#: views/globals.php:311
+#: views/globals.php:315
 msgid ""
 "Restrict access to core PHP files under the WordPress installation directory "
 "from anyone other than the allowed sources."
@@ -721,7 +730,7 @@ msgstr ""
 "許可された接続元以外のユーザーからのWordPressインストールディレクトリ下のコア"
 "PHPファイルへのアクセスを制限します。"
 
-#: views/globals.php:319
+#: views/globals.php:323
 msgid ""
 "An access to \"xmlrpc.php\" only allow access that has user agent of "
 "\"Jetpack\", and other accesses redirect to \"0.0.0.0\" to avoid load."
@@ -730,7 +739,7 @@ msgstr ""
 "のみを許可し、それ以外のアクセスは、ロードを回避するために「0.0.0.0」へリダイ"
 "レクトします。"
 
-#: views/globals.php:327
+#: views/globals.php:331
 msgid ""
 "Access to \"wp-login.php\" returns a uniform 404 response regardless of the "
 "connection source."
@@ -738,7 +747,7 @@ msgstr ""
 "「wp-login.php」にアクセスすると、接続元に関係なく、均一に 404 レスポンスが返"
 "されます。"
 
-#: views/globals.php:336
+#: views/globals.php:340
 #, php-format
 msgid ""
 "Close direct access to \"wp-login.php\" and set up a new login URL (%s)."
@@ -746,7 +755,7 @@ msgstr ""
 "「wp-login.php」への直接アクセスを制限して、新しいログインURL（%s）を設定しま"
 "す。"
 
-#: views/globals.php:337
+#: views/globals.php:341
 #, php-format
 msgid ""
 "Detailed settings for the new login URL can be made in the relevant section "
@@ -755,23 +764,35 @@ msgstr ""
 "新しいログインURLの詳細な設定は、「%s認証%s」タブの関連セクションで行うことが"
 "できます。"
 
-#: views/globals.php:348
+#: views/globals.php:352
 msgid "Avoid the discovery of an author's ID."
 msgstr "著作者IDが検出されることを回避する。"
 
-#: views/globals.php:362
+#: views/globals.php:361
+msgid "Rewrite URL path of the plugins directory."
+msgstr "プラグインディレクトリのURLパスをリライトする。"
+
+#: views/globals.php:363 views/globals.php:374
+msgid "New destination:"
+msgstr "新しいパス:"
+
+#: views/globals.php:372
+msgid "Rewrite URL path of the themes directory."
+msgstr "テーマディレクトリのURLパスをリライトする。"
+
+#: views/globals.php:390
 msgid "Insert Above Settings"
 msgstr "上記設定の挿入"
 
-#: views/globals.php:366
+#: views/globals.php:394
 msgid "Withdraw Above Settings"
 msgstr "上記設定の撤回"
 
-#: views/globals.php:367
+#: views/globals.php:395
 msgid "Refer to configure for Nginx"
 msgstr "Nginx向け構成の参照"
 
-#: views/globals.php:371
+#: views/globals.php:399
 msgid ""
 "The directive (lines) from \"BEGIN WP Ignitor Rules\" to \"END WP Ignitor "
 "Rules\" are inserted before the directive (lines) from \"BEGIN WordPress\" "
@@ -781,15 +802,15 @@ msgstr ""
 "（行）は、「BEGIN WordPress」から「END WordPress」までのディレクティブ（行）"
 "の前に挿入されます。"
 
-#: views/globals.php:377
+#: views/globals.php:405
 msgid "Clear All Settings"
 msgstr "全ての設定の削除"
 
-#: views/globals.php:383
+#: views/globals.php:411
 msgid "Clear All Saved Settings Of This Plugin"
 msgstr "プラグインの保存済み全設定を削除"
 
-#: views/globals.php:386
+#: views/globals.php:414
 msgid ""
 "Clearing all saved settings will reset all options for this plugin. However, "
 "moved files and updated files will not be restored to the state before such "

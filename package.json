@@ -1,6 +1,6 @@
 {
   "name": "wp-ignitor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "WP-Ignitor is an ignition kit of WordPress. Let's hide that we are WordPress and get starting with the strong defensive turn.",
   "main": "wp-ignitor.php",
   "scripts": {
@@ -20,8 +20,8 @@
     "WordPress",
     "plugin"
   ],
-  "author": "ka215 <ka2@ka2.org>",
-  "license": "MIT",
+  "author": "Ka2 <ka2@ka2.org>",
+  "license": "GPL v2 or later",
   "bugs": {
     "url": "https://github.com/ka215/wp-ignitor/issues"
   },

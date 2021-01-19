@@ -58,7 +58,7 @@ trait utils {
         }
 
         if ( ! file_exists( $template ) ) {
-            _doing_it_wrong( __METHOD__, sprintf( '<code>%s</code> does not exist.', $template ), '5.5.0' );
+            _doing_it_wrong( __METHOD__, sprintf( __( '<code>%s</code> does not exist.', IGNITOR ), $template ), '5.5.0' );
             return;
         }
 
@@ -257,7 +257,7 @@ trait utils {
     public static function is_valid_phar(): bool {
         $version = \Phar::apiVersion();
         if ( ! version_compare( $version, '1.0.0', '>=' ) ) {
-            self::logger( __( 'The current PHP environment does not support Phar class ('. $version .').', IGNITOR ) );
+            self::logger( sprintf( __( 'The current PHP environment does not support Phar class (%s).', IGNITOR ), $version ) );
             return false;
         } else {
             return true;

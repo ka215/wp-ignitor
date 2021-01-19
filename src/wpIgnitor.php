@@ -153,6 +153,9 @@ class wpIgnitor extends abstractClass {
             'install_path'   => str_replace( DIRECTORY_SEPARATOR, '/', ABSPATH ),
         ];
 
+        // For i18n translation
+        load_plugin_textdomain( IGNITOR, false, plugin_basename( IGNITOR_PLUGIN_DIR ) . '/languages' );
+
         // Initialize the errors object for this plugin
         $this->errors = new \WP_Error();
 

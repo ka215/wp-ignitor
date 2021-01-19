@@ -41,7 +41,7 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
           type="button"
           id="btn-commit-to-cleanup"
           class="button button-primary"><i class="mdi mdi-broom"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Their committed settings will be reflected immediately in the front end.', IGNITOR ) ?>
         </p>
@@ -89,7 +89,7 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
           type="button"
           id="btn-save-rest-behavior"
           class="button button-primary"><i class="mdi mdi-routes"></i> <?= __( 'Save Behavior', IGNITOR ) ?></button>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Control the behavior of "wp-json/", which is the root of the REST route, in the "/" only namespace.', IGNITOR ) ?>
         </p>

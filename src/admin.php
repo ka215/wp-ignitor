@@ -37,7 +37,7 @@ trait admin {
             }
 
             // Add menu for this plugin
-            add_submenu_page( 'options-general.php', __( 'WP Ignitor Settings' ), __( 'WP Ignitor' ), 'manage_options', 'wpignitor-settings', [ &$this, 'plugin_settings_page' ] );
+            add_submenu_page( 'options-general.php', __( 'WP Ignitor Settings', IGNITOR ), __( 'WP Ignitor', IGNITOR ), 'manage_options', 'wpignitor-settings', [ &$this, 'plugin_settings_page' ] );
         }
     }
 
@@ -177,7 +177,7 @@ trait admin {
                 $this->help_tabs[] = array_merge( [ 'id' => $help_id ], $data );
                 $this->help_sidebars[$help_id] = [
                     '<dt>'. __( 'More Information:', IGNITOR ) .'</dt>',
-                    '<dd><a href="#" target="_blank">'. __( 'Plugin Page', IGNITOR ) .'</a></dd>',
+                    '<dd><a href="https://wordpress.org/plugins/wp-ignitor/" target="_blank">'. __( 'Plugin Page', IGNITOR ) .'</a></dd>',
                     '<dd><a href="https://github.com/ka215/wp-ignitor" target="_blank">'. __( 'Repository', IGNITOR ) .'</a></dd>',
                     '<dt>'. __( 'Contribution:', IGNITOR ) .'</dt>',
                     '<dd><a href="https://github.com/sponsors/ka215" target="_blank"><i class="mdi mdi-heart-outline" style="color:#ff0099;"></i> '. __( 'Sponsor', IGNITOR ) .'</a></dd>',
@@ -398,7 +398,7 @@ trait admin {
             'wp_content_dir'       => [ 'label' => __( 'Move wp-content directory', IGNITOR ), 'type' => 'text', 'value' => WP_CONTENT_DIR, 'class' => 'medium-text code', 'placeholder' => WP_CONTENT_DIR, 'pair' => 'WP_CONTENT_URL' ],
             'wp_plugin_dir'        => [ 'label' => __( 'Move plugin directory', IGNITOR ), 'type' => 'text', 'value' => WP_PLUGIN_DIR, 'class' => 'medium-text code', 'placeholder' => WP_PLUGIN_DIR, 'pair' => 'WP_PLUGIN_URL' ],
             'uploads'              => [ 'label' => __( 'Move upload directory', IGNITOR ), 'type' => 'text', 'value' => defined( 'UPLOADS' ) ? UPLOAD : '', 'class' => 'regular-text code', 'placeholder' => __( 'Undefined', IGNITOR ) ],
-            'autosave_interval'    => [ 'label' => __( 'Change auto save interval', IGNITOR ), 'type' => 'number', 'value' => AUTOSAVE_INTERVAL, 'class' => 'small-text', 'placeholder' => AUTOSAVE_INTERVAL, 'unit' => 'Sec.' ],
+            'autosave_interval'    => [ 'label' => __( 'Change auto save interval', IGNITOR ), 'type' => 'number', 'value' => AUTOSAVE_INTERVAL, 'class' => 'small-text', 'placeholder' => AUTOSAVE_INTERVAL, 'unit' => __( 'Sec.', IGNITOR ) ],
             'wp_post_revisions'    => [ 'label' => __( 'Disable post revisions', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_POST_REVISIONS ],
             'cookie_domain'        => [ 'label' => __( 'Cookie domain', IGNITOR ), 'type' => 'text', 'value' => COOKIE_DOMAIN, 'class' => 'regular-text code', 'placeholder' => COOKIE_DOMAIN ],
             'wp_allow_multisite'   => [ 'label' => __( 'Enable multi-site', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_ALLOW_MULTISITE' ) ? WP_ALLOW_MULTISITE : false ],
@@ -409,11 +409,11 @@ trait admin {
             'wp_debug_display'     => [ 'label' => __( 'Enable PHP error display', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG_DISPLAY ],
             'script_debug'         => [ 'label' => __( 'Enable script debug (for *.js and *.css)', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => SCRIPT_DEBUG ],
             'concatenate_scripts'  => [ 'label' => __( 'Disable JavaScript concatenation', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'CONCATENATE_SCRIPTS' ) ? CONCATENATE_SCRIPTS : false ],
-            'wp_memory_limit'      => [ 'label' => __( 'Change PHP allocated memory limit', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MEMORY_LIMIT, 'unit' => 'MB' ],
-            'wp_max_memory_limit'  => [ 'label' => __( 'Change max memory limit for admin pages', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MAX_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MAX_MEMORY_LIMIT, 'unit' => 'MB' ],
+            'wp_memory_limit'      => [ 'label' => __( 'Change PHP allocated memory limit', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MEMORY_LIMIT, 'unit' => __( 'MB', IGNITOR ) ],
+            'wp_max_memory_limit'  => [ 'label' => __( 'Change max memory limit for admin pages', IGNITOR ), 'type' => 'number', 'value' => (int) WP_MAX_MEMORY_LIMIT, 'class' => 'little-text', 'placeholder' => (int) WP_MAX_MEMORY_LIMIT, 'unit' => __( 'MB', IGNITOR ) ],
             'disable_wp_cron'      => [ 'label' => __( 'Disable Cron', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'DISABLE_WP_CRON' ) ? DISABLE_WP_CRON : false ],
-            'wp_cron_lock_timeout' => [ 'label' => __( 'Change cron timeout time', IGNITOR ), 'type' => 'number', 'value' => defined( 'WP_CRON_LOCK_TIMEOUT' ) ? WP_CRON_LOCK_TIMEOUT : '', 'class' => 'small-text', 'placeholder' => 60, 'unit' => 'Sec.' ],
-            'empty_trash_days'     => [ 'label' => __( 'Change period until trash emptied', IGNITOR ), 'type' => 'number', 'value' => EMPTY_TRASH_DAYS, 'class' => 'small-text', 'placeholder' => EMPTY_TRASH_DAYS, 'unit' => 'Day' ],
+            'wp_cron_lock_timeout' => [ 'label' => __( 'Change cron timeout time', IGNITOR ), 'type' => 'number', 'value' => defined( 'WP_CRON_LOCK_TIMEOUT' ) ? WP_CRON_LOCK_TIMEOUT : '', 'class' => 'small-text', 'placeholder' => 60, 'unit' => __( 'Sec.', IGNITOR ) ],
+            'empty_trash_days'     => [ 'label' => __( 'Change period until trash emptied', IGNITOR ), 'type' => 'number', 'value' => EMPTY_TRASH_DAYS, 'class' => 'small-text', 'placeholder' => EMPTY_TRASH_DAYS, 'unit' => __( 'Day', IGNITOR ) ],
             'disallow_file_edit'   => [ 'label' => __( 'Disallow plugin/theme editor', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'DISALLOW_FILE_EDIT' ) ? DISALLOW_FILE_EDIT : false ],
             'force_ssl_admin'      => [ 'label' => __( 'Force SSL on admin and login pages', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => FORCE_SSL_ADMIN ],
             'ignitor_debug'        => [ 'label' => __( 'Enable debug mode for WP-Ignitor plugin', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => IGNITOR_DEBUG ],

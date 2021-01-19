@@ -77,7 +77,7 @@ $current_new_login = $this->get_option( 'new_login' );
             _e( "After moving all files, optimize the \".htaccess\" or create a new one if it doesn't exist.", IGNITOR ) ?>
           </label>
         </div>
-        <p class="description">
+        <p class="description info-list">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Cannot move to the path of directory that already exists, or to the path of directly document root.', IGNITOR ) ?><br>
           <?= __( 'WP-Ignitor make a new directory before moving.', IGNITOR ) ?><br>
@@ -158,6 +158,10 @@ $current_new_login = $this->get_option( 'new_login' );
           </li>
 <?php endforeach; ?>
         </ul>
+        <p class="description info-list my1">
+          <span class="mdi mdi-alert-circle-outline text-info"></span>
+          <?= sprintf( __( 'Please refer to %sthe official documentation%s for the detailed behavior of each option constant.', IGNITOR ), '<a href="https://wordpress.org/support/article/editing-wp-config-php/" target="_blank">', '</a>' ) ?>
+        </p>
         <label for="preview-wp-config"><?= __( 'Preview:', IGNITOR ) ?></label>
         <textarea id="preview-wp-config" name="add_config_fulltext" class="large-text code myh" rows="5" readonly></textarea>
         <button
@@ -168,11 +172,11 @@ $current_new_login = $this->get_option( 'new_login' );
           type="button"
           id="btn-restore-wp-config"
           class="button button-secondary"><span class="mdi mdi-file-undo-outline"></span> <?= __( 'Restore wp-config.php', IGNITOR ) ?></button>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The above settings will be inserted into marker (rows) from "BEGIN WP Ignitor" to "END WP Ignitor".', IGNITOR ) ?><br>
           <?= __( 'Only the checked options will be written to wp-config.php. And you can remove the settings by updating with all the unchecked.', IGNITOR ) ?><br>
-          <?= __( 'If there is an option already defined in "wp-config.php", that will be applied with priority.', IGNITOR ) ?>
+          <?= __( 'If there is an option already defined in "wp-config.php", that will be applied with priority.', IGNITOR ) ?><br>
         </p>
       </td>
     </tr>
@@ -284,7 +288,7 @@ $current_new_login = $this->get_option( 'new_login' );
       } ?>
             </ul>
             <div>
-              <input type="text" id="allow-referer-new" value="" class="medium-text core" placeholder="<?= __( 'Add New Address', IGNITOR ) ?>"
+              <input type="text" id="allow-referer-new" value="" class="medium-text core" placeholder="<?= __( 'Add New Referer', IGNITOR ) ?>"
               ><button
                 type="button"
                 id="add-fluctuation-referer"
@@ -304,50 +308,74 @@ $current_new_login = $this->get_option( 'new_login' );
         <label class="fw600"><?= __( 'Advanced Settings:', IGNITOR ) ?></label>
         <ul id="advanced-htaccess-options">
            <li class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[prevent_php_files]" value="0">
-              <input type="checkbox" id="advanced-option-1" name="advanced_htaccess[prevent_php_files]" value="1" class="prefix-toggle"
+             <input type="hidden" name="advanced_htaccess[prevent_php_files]" value="0">
+             <input type="checkbox" id="advanced-option-1" name="advanced_htaccess[prevent_php_files]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['prevent_php_files'] ) && $advanced_htaccess_options['prevent_php_files'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-1" class="plh">
-                <?= __( 'Restrict access to core PHP files under the WordPress installation directory from anyone other than the allowed sources.', IGNITOR ) ?>
-              </label>
+             ><label for="advanced-option-1" class="plh">
+               <?= __( 'Restrict access to core PHP files under the WordPress installation directory from anyone other than the allowed sources.', IGNITOR ) ?>
+             </label>
            </li>
            <li class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[prevent_xmlrpc]" value="0">
-              <input type="checkbox" id="advanced-option-2" name="advanced_htaccess[prevent_xmlrpc]" value="1" class="prefix-toggle"
+             <input type="hidden" name="advanced_htaccess[prevent_xmlrpc]" value="0">
+             <input type="checkbox" id="advanced-option-2" name="advanced_htaccess[prevent_xmlrpc]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['prevent_xmlrpc'] ) && $advanced_htaccess_options['prevent_xmlrpc'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-2" class="plh">
-                <?= __( 'An access to "xmlrpc.php" only allow access that has user agent of "Jetpack", and other accesses redirect to "0.0.0.0" to avoid load.', IGNITOR ) ?>
-              </label>
+             ><label for="advanced-option-2" class="plh">
+               <?= __( 'An access to "xmlrpc.php" only allow access that has user agent of "Jetpack", and other accesses redirect to "0.0.0.0" to avoid load.', IGNITOR ) ?>
+             </label>
            </li>
            <li class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[uniform_login]" value="0">
-              <input type="checkbox" id="advanced-option-3" name="advanced_htaccess[uniform_login]" value="1" class="prefix-toggle"
+             <input type="hidden" name="advanced_htaccess[uniform_login]" value="0">
+             <input type="checkbox" id="advanced-option-3" name="advanced_htaccess[uniform_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['uniform_login'] ) && $advanced_htaccess_options['uniform_login'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-3" class="plh">
-                <?= __( 'Access to "wp-login.php" returns a uniform 404 response regardless of the connection source.', IGNITOR ) ?>
-              </label>
+             ><label for="advanced-option-3" class="plh">
+               <?= __( 'Access to "wp-login.php" returns a uniform 404 response regardless of the connection source.', IGNITOR ) ?>
+             </label>
            </li>
 <?php if ( ! empty( $current_new_login ) ): ?>
            <li id="option-for-new-login" class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[new_login]" value="0">
-              <input type="checkbox" id="advanced-option-4" name="advanced_htaccess[new_login]" value="1" class="prefix-toggle"
+             <input type="hidden" name="advanced_htaccess[new_login]" value="0">
+             <input type="checkbox" id="advanced-option-4" name="advanced_htaccess[new_login]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['new_login'] ) && $advanced_htaccess_options['new_login'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-4" class="plh">
-                <?= sprintf( __( 'Close direct access to "wp-login.php" and set up a new login URL (%s).', IGNITOR ), '<code>'. home_url( $current_new_login['path'] ) .'</code>') ?>
-                <?= sprintf( __( 'Detailed settings for the new login URL can be made in the relevant section of the "%sAuthorizations%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=login">', '</a>' ) ?>
-              </label>
+             ><label for="advanced-option-4" class="plh">
+               <?= sprintf( __( 'Close direct access to "wp-login.php" and set up a new login URL (%s).', IGNITOR ), '<code>'. home_url( $current_new_login['path'] ) .'</code>') ?>
+               <?= sprintf( __( 'Detailed settings for the new login URL can be made in the relevant section of the "%sAuthorizations%s" tab.', IGNITOR ), '<a href="?page='. esc_attr( $query_args['page'] ) .'&tab=login">', '</a>' ) ?>
+             </label>
            </li>
 <?php else: ?>
            <input type="hidden" name="advanced_htaccess[new_login]" value="0">
 <?php endif; ?>
-            <li class="d-flex-row flex-nowrap items-start mbh">
-              <input type="hidden" name="advanced_htaccess[avoid_author]" value="0">
-              <input type="checkbox" id="advanced-option-5" name="advanced_htaccess[avoid_author]" value="1" class="prefix-toggle"
+           <li class="d-flex-row flex-nowrap items-start mbh">
+             <input type="hidden" name="advanced_htaccess[avoid_author]" value="0">
+             <input type="checkbox" id="advanced-option-5" name="advanced_htaccess[avoid_author]" value="1" class="prefix-toggle"
 <?php if ( isset( $advanced_htaccess_options['avoid_author'] ) && $advanced_htaccess_options['avoid_author'] ): ?> checked="checked"<?php endif; ?>
-              ><label for="advanced-option-5" class="plh">
-                <?= __( "Avoid the discovery of an author's ID.", IGNITOR ) ?>
-              </label>
+             ><label for="advanced-option-5" class="plh">
+               <?= __( "Avoid the discovery of an author's ID.", IGNITOR ) ?>
+             </label>
            </li>
+           <!-- /*
+           <li class="d-flex-row flex-nowrap items-start mbh" style="line-height:30px;">
+             <input type="hidden" name="advanced_htaccess[rewrite_plugins_dir]" value="0">
+             <input type="checkbox" id="advanced-option-6" name="advanced_htaccess[rewrite_plugins_dir]" value="1" class="prefix-toggle" style="margin-top:0.7em !important;"
+<?php if ( isset( $advanced_htaccess_options['rewrite_plugins_dir'] ) && $advanced_htaccess_options['rewrite_plugins_dir'] ): ?> checked="checked"<?php endif; ?>
+             ><label for="advanced-option-6" class="plh">
+               <?= __( 'Rewrite URL path of the plugins directory.', IGNITOR ) ?>
+             </label>
+             <label for="advanced-option-6-1" class="plh"><?= __( 'New destination:', IGNITOR ) ?><code>{DOCUMENT_ROOT}/</code>
+               <input type="text" id="advanced-option-6-1" name="advanced_htaccess[new_plugins_dest]" placeholder="<?= __( 'New Path', IGNITOR ) ?>" value="">
+             </label>
+           </li>
+           <li class="d-flex-row flex-nowrap items-start mbh" style="line-height:30px;">
+             <input type="hidden" name="advanced_htaccess[rewrite_themes_dir]" value="0">
+             <input type="checkbox" id="advanced-option-7" name="advanced_htaccess[rewrite_themes_dir]" value="1" class="prefix-toggle" style="margin-top:0.7em !important;"
+<?php if ( isset( $advanced_htaccess_options['rewrite_themes_dir'] ) && $advanced_htaccess_options['rewrite_themes_dir'] ): ?> checked="checked"<?php endif; ?>
+             ><label for="advanced-option-7" class="plh">
+               <?= __( 'Rewrite URL path of the themes directory.', IGNITOR ) ?>
+             </label>
+             <label for="advanced-option-7-1" class="plh"><?= __( 'New destination:', IGNITOR ) ?><code>{DOCUMENT_ROOT}/</code>
+               <input type="text" id="advanced-option-7-1" name="advanced_htaccess[new_themes_dest]" placeholder="<?= __( 'New Path', IGNITOR ) ?>" value="">
+             </label>
+           </li>
+           */ -->
         </ul>
         <div class="d-flex-row mt1">
           <button
@@ -366,7 +394,7 @@ $current_new_login = $this->get_option( 'new_login' );
             class="button button-secondary"><i class="mdi mdi-text-box-remove-outline"></i> <?= __( 'Withdraw Above Settings', IGNITOR ) ?></button>
           <a href="https://timmehosting.de/htaccess-converter" target="_blank" class="ml2"><i class="mdi mdi-dock-window"></i> <?= __( 'Refer to configure for Nginx', IGNITOR ) ?></a>
         </div>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'The directive (lines) from "BEGIN WP Ignitor Rules" to "END WP Ignitor Rules" are inserted before the directive (lines) from "BEGIN WordPress" to "END WordPress".', IGNITOR ) ?><br>
         </p>
@@ -381,7 +409,7 @@ $current_new_login = $this->get_option( 'new_login' );
           id="btn-clear-all-settings"
           class="button button-secondary"
         ><i class="mdi mdi-redo-variant"></i> <?= __( 'Clear All Saved Settings Of This Plugin', IGNITOR ) ?></button>
-        <p class="description mt1">
+        <p class="description info-list mt1">
           <span class="mdi mdi-alert-circle-outline text-info"></span>
           <?= __( 'Clearing all saved settings will reset all options for this plugin. However, moved files and updated files will not be restored to the state before such executing.', IGNITOR ) ?><br>
         </p>

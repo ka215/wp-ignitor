@@ -3,7 +3,9 @@ Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
 Tested up to: 5.6.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
+Text Domain: wpignitor
+Domain Path: /languages/
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 Requires PHP: 7.2
@@ -67,8 +69,16 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 
 == Changelog ==
 
+= 1.0.2 =
+Bump to version - January 19, 2021
+
+* Minor fixes in the settings page UI.
+* Added translation template and Japanese translation files.
+* Introduced a workflow for releasing packages to the SVN repository in sync with GitHub tag additions.
+
 = 1.0.1 =
 Bump to version - December 26, 2020
+
 * Fixed some minor UI bugs
 * Added filter hooks for "wpignitor_remote_request_args" and "wpignitor_remote_retrieve_html".
 * Changed "functions.php" for bundled plugin extension to sample file.
