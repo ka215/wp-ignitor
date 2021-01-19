@@ -1,0 +1,1113 @@
+# Copyright (C) 2021 WP Ignitor
+# This file is distributed under the same license as the WP Ignitor package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Ignitor 1.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
+"POT-Creation-Date: 2021-01-19 09:35+0900\n"
+"PO-Revision-Date: 2021-01-19 09:38+0900\n"
+"Last-Translator: \n"
+"Language-Team: ka2@ka2.org\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-Basepath: .\n"
+
+#: src/actions.php:171
+msgid "Invalid Access!"
+msgstr "無効なアクセスです！"
+
+#: src/actions.php:183 src/actions.php:263
+msgid "Close"
+msgstr "閉じる"
+
+#: src/actions.php:186
+msgid "The new path to move to is not specified."
+msgstr "移動先の新しいパスが指定されていません。"
+
+#: src/actions.php:203
+msgid "Copied the files under the current installation path to the new path."
+msgstr "現在のインストールパスの下にあるファイルを新しいパスにコピーしました。"
+
+#: src/actions.php:208
+msgid "Updated site URL in the DataBase."
+msgstr "データベースのサイトURLを更新しました。"
+
+#: src/actions.php:211
+msgid "Updated site and home URL in the DataBase."
+msgstr "データベースのサイトとホームのURLを更新しました。"
+
+#: src/actions.php:222
+msgid ""
+"I didn't update it because \".htaccess\" already exists in the document root."
+msgstr ""
+"「.htaccess」がドキュメントルートにすでに存在するため、更新しませんでした。"
+
+#: src/actions.php:232
+msgid "Saved the optimized \".htaccess\"."
+msgstr "最適化された「.htaccess」を保存しました。"
+
+#: src/actions.php:234 src/admin.php:619
+msgid "Failed to update \".htaccess\"."
+msgstr "「.htaccess」の更新に失敗しました。"
+
+#: src/actions.php:255
+msgid ""
+"The file move was successful, but some of the source files could not be "
+"removed."
+msgstr ""
+"ファイルの移動は成功しましたが、一部のソースファイルを削除できませんでした。"
+
+#: src/actions.php:257
+msgid "The files move completed successfully."
+msgstr "ファイルの移動が正常に完了しました。"
+
+#: src/actions.php:263
+msgid "Re-login"
+msgstr "再ログイン"
+
+#: src/actions.php:270
+msgid ""
+"Failed to move the files. It may not have sufficient permissions to operate "
+"the source files or directories."
+msgstr ""
+"ファイルの移動に失敗しました。 ソースファイルまたはディレクトリを操作するため"
+"の十分な権限がない可能性があります。"
+
+#: src/actions.php:281
+msgid "The \"wp-config.php\" file already exists to the destination."
+msgstr "「wp-config.php」ファイルは、移動先にすでに存在します。"
+
+#: src/actions.php:284
+msgid "The \"wp-config.php\" file has been moved."
+msgstr "「wp-config.php」ファイルは移動されました。"
+
+#: src/actions.php:287
+msgid "Failed to move the \"wp-config.php\" file."
+msgstr "「wp-config.php」ファイルの移動に失敗しました。"
+
+#: src/actions.php:291
+msgid "Do not have permission to work with files."
+msgstr "ファイルを操作する権限がありません。"
+
+#: src/admin.php:40 views/settings.php:13
+msgid "WP Ignitor Settings"
+msgstr "WPイグナイタ設定"
+
+#: src/admin.php:40
+msgid "WP Ignitor"
+msgstr "WPイグナイタ"
+
+#: src/admin.php:156 src/admin.php:490
+msgid "Globals"
+msgstr "全般"
+
+#: src/admin.php:161 src/admin.php:491
+msgid "Conceals"
+msgstr "隠蔽"
+
+#: src/admin.php:166 src/admin.php:492
+msgid "Authorizations"
+msgstr "認証"
+
+#: src/admin.php:171 src/admin.php:493
+msgid "Utilities"
+msgstr "補助"
+
+#: src/admin.php:179
+msgid "More Information:"
+msgstr "詳細情報:"
+
+#: src/admin.php:180
+msgid "Plugin Page"
+msgstr "プラグインページ"
+
+#: src/admin.php:181
+msgid "Repository"
+msgstr "ソース管理"
+
+#: src/admin.php:182
+msgid "Contribution:"
+msgstr "貢献:"
+
+#: src/admin.php:183
+msgid "Sponsor"
+msgstr "スポンサー"
+
+#: src/admin.php:184
+msgid "Plugin Version:"
+msgstr "バージョン:"
+
+#: src/admin.php:274
+msgid "Settings"
+msgstr "設定"
+
+#: src/admin.php:290
+msgid ""
+"<strong>Thank you for using!</strong> Now let's hide that we are WordPress "
+"and get starting with the strong defensive turn."
+msgstr ""
+"<strong>ご利用ありがとうございます！</strong>　それでは、私たちがWordPressで"
+"あることを隠し、堅固に守られたサイトに点火しましょう。"
+
+#: src/admin.php:292
+msgid ""
+"Now let's hide that we are WordPress and get starting with the strong "
+"defensive turn."
+msgstr ""
+"さぁ、私たちがWordPressであることを隠して、強固な防衛策を実施していきましょ"
+"う。"
+
+#: src/admin.php:350
+msgid "Failed to create the directory to move the file to."
+msgstr "ファイルの移動先のディレクトリ作成に失敗しました。"
+
+#: src/admin.php:357
+msgid "The destination path is invalid directory, or never write permission."
+msgstr "移動先パスが無効なディレクトリであるか、書き込み権限がありません。"
+
+#: src/admin.php:365
+msgid "The files on the installation path for moving could not compressed."
+msgstr "移動用のインストールパス上のファイルを圧縮できませんでした。"
+
+#: src/admin.php:375
+msgid "Failed to move the files."
+msgstr "ファイルの移動に失敗しました。"
+
+#: src/admin.php:398
+msgid "Move wp-content directory"
+msgstr "「wp-content」ディレクトリの移動"
+
+#: src/admin.php:399
+msgid "Move plugin directory"
+msgstr "プラグインディレクトリの移動"
+
+#: src/admin.php:400
+msgid "Move upload directory"
+msgstr "アップロードディレクトリの移動"
+
+#: src/admin.php:400 src/admin.php:405
+msgid "Undefined"
+msgstr "未定義"
+
+#: src/admin.php:401
+msgid "Change auto save interval"
+msgstr "自動保存間隔の変更"
+
+#: src/admin.php:401 src/admin.php:415
+msgid "Sec."
+msgstr "秒"
+
+#: src/admin.php:402
+msgid "Disable post revisions"
+msgstr "投稿の改訂履歴を無効化"
+
+#: src/admin.php:403
+msgid "Cookie domain"
+msgstr "Cookieドメイン設定"
+
+#: src/admin.php:404
+msgid "Enable multi-site"
+msgstr "マルチサイトの有効化"
+
+#: src/admin.php:405
+msgid "Redirect non-existent blogs"
+msgstr "存在しないブログのリダイレクト"
+
+#: src/admin.php:406
+msgid "Disable recovery mode (>= WP 5.2)"
+msgstr "リカバリモードを無効化（WPバージョン 5.2 以降）"
+
+#: src/admin.php:407
+msgid "Enable debug mode"
+msgstr "デバッグモードの有効化"
+
+#: src/admin.php:408
+msgid "Enable debug log output"
+msgstr "デバッグログ出力の有効化"
+
+#: src/admin.php:409
+msgid "Enable PHP error display"
+msgstr "PHPエラー表示の有効化"
+
+#: src/admin.php:410
+msgid "Enable script debug (for *.js and *.css)"
+msgstr "スクリプトデバッグの有効化（ *.js と *.css 用）"
+
+#: src/admin.php:411
+msgid "Disable JavaScript concatenation"
+msgstr "JavaScriptの連結を無効化"
+
+#: src/admin.php:412
+msgid "Change PHP allocated memory limit"
+msgstr "PHPの割り当てメモリ制限を変更する"
+
+#: src/admin.php:412 src/admin.php:413
+msgid "MB"
+msgstr "MB"
+
+#: src/admin.php:413
+msgid "Change max memory limit for admin pages"
+msgstr "管理画面の最大メモリ制限を変更する"
+
+#: src/admin.php:414
+msgid "Disable Cron"
+msgstr "代替cronの無効化"
+
+#: src/admin.php:415
+msgid "Change cron timeout time"
+msgstr "代替cronのタイムアウト時間を変更する"
+
+#: src/admin.php:416
+msgid "Change period until trash emptied"
+msgstr "ゴミ箱が空になるまでの期間を変更する"
+
+#: src/admin.php:416
+msgid "Day"
+msgstr "日"
+
+#: src/admin.php:417
+msgid "Disallow plugin/theme editor"
+msgstr "プラグイン/テーマエディターを禁止する"
+
+#: src/admin.php:418
+msgid "Force SSL on admin and login pages"
+msgstr "管理画面とログインページにSSLを強制する"
+
+#: src/admin.php:419
+msgid "Enable debug mode for WP-Ignitor plugin"
+msgstr "WPイグナイタプラグインのデバッグモードを有効にする"
+
+#: src/admin.php:435
+msgid "Remove tags for prefetch as resource hint."
+msgstr "リソースヒント用のプリフェッチするタグを削除する。"
+
+#: src/admin.php:436
+msgid "Prevent output all feed links."
+msgstr "すべてのフィードリンクの出力を停止する。"
+
+#: src/admin.php:437
+msgid "Disable comment."
+msgstr "コメント投稿ライブラリの読み込みを削除する。"
+
+#: src/admin.php:438
+msgid "Stop the import of emoji-related resources."
+msgstr "絵文字関連リソースのインポートを停止する。"
+
+#: src/admin.php:439
+msgid "Remove RSD link for remote posting."
+msgstr "リモート投稿用のRSDリンクを削除する。"
+
+#: src/admin.php:440
+msgid "Remove wlwmanifest link."
+msgstr "マニフェスト（wlwmanifest）リンクを削除する。"
+
+#: src/admin.php:441
+msgid "Remove canonical link."
+msgstr "正規化（canonical）リンクを削除します。"
+
+#: src/admin.php:442
+msgid "Stop providing oEmbed for media embedding."
+msgstr "メディア埋め込み用のoEmbedの提供を停止する。"
+
+#: src/admin.php:443
+msgid "Remove the REST API link tag (REST API will be not disabled)."
+msgstr "REST APIのリンクタグを削除する（REST APIは無効になりません）。"
+
+#: src/admin.php:444
+msgid "Remove the library of block editor on the frontend."
+msgstr "フロントエンドのブロックエディタのライブラリ読み込みを削除する。"
+
+#: src/admin.php:445
+msgid "Remove several outputs, such as generator meta tag."
+msgstr "ジェネレータ（generator）メタタグ等の、いくつかの出力を削除する。"
+
+#: src/admin.php:520
+msgid "Invalid access."
+msgstr "無効なアクセスです。"
+
+#: src/admin.php:596
+msgid "Failed to update \"wp-config.php\"."
+msgstr "「wp-config.php」の更新に失敗しました。"
+
+#: src/admin.php:668
+msgid "It's not locked right now."
+msgstr "現在はロックされていません。"
+
+#: src/admin.php:680
+msgid "Completed successfully."
+msgstr "正常に完了しました。"
+
+#: src/admin.php:680
+msgid "Execution failed."
+msgstr "実行に失敗しました。"
+
+#: src/filters.php:103
+msgid "No route matching URL and request method."
+msgstr "URLとリクエストメソッドに一致するルートがありません。"
+
+#: src/utils.php:61
+#, php-format
+msgid "<code>%s</code> does not exist."
+msgstr "<code>%s</code>は存在しません。"
+
+#: src/utils.php:203
+msgid "Failed to get the HTML source code by wp_remote_request()"
+msgstr "「wp_remote_request()」によるHTMLソースコードの取得に失敗しました。"
+
+#: src/utils.php:205
+msgid "Could not get the HTML source."
+msgstr "HTMLソースを取得できませんでした。"
+
+#: src/utils.php:260
+#, php-format
+msgid "The current PHP environment does not support Phar class (%s)."
+msgstr "現在のPHP環境はPharクラス（%s）をサポートしていません。"
+
+#: src/utils.php:337
+msgid "The specified file does not exist."
+msgstr "指定されたファイルは存在しません。"
+
+#: views/conceal.php:13 views/help-conceal.php:11
+msgid ""
+"In this setting section, you can remove the elements that is assumed this "
+"site is built by WordPress from the outputting HTML source to keep the site "
+"confidential."
+msgstr ""
+"この設定セクションでは、このサイトがWordPressによって構築されていると想定され"
+"うる要素を出力HTMLソースから削除して、サイトの機密性を保つことができます。"
+
+#: views/conceal.php:19
+msgid "Cleanup Frontend HTML"
+msgstr "フロントエンドHTMLの整形"
+
+#: views/conceal.php:22
+msgid "Target page path to view:"
+msgstr "表示する対象ページのパス:"
+
+#: views/conceal.php:27
+#, php-format
+msgid "Actual view of the %s tag for the specified page as follows:"
+msgstr "指定されたページの %s タグの実際の出力は次の通り:"
+
+#: views/conceal.php:43
+msgid "Commit Settings"
+msgstr "設定を適用"
+
+#: views/conceal.php:46
+msgid ""
+"Their committed settings will be reflected immediately in the front end."
+msgstr "これらの適用された設定は、フロントエンドにすぐに反映されます。"
+
+#: views/conceal.php:52
+msgid "REST API Routes"
+msgstr "REST APIの経路"
+
+#: views/conceal.php:55
+msgid "Choose the behavior for each namespace in the REST API routes."
+msgstr "REST APIの経路の名前空間ごとの動作を選択してください。"
+
+#: views/conceal.php:70
+msgid "Allow All"
+msgstr "全て許可"
+
+#: views/conceal.php:71
+msgid "Allow Self Only"
+msgstr "自己のみ許可"
+
+#: views/conceal.php:72
+msgid "Allow Jetpack"
+msgstr "Jetpackを許可"
+
+#: views/conceal.php:73
+msgid "Deny All"
+msgstr "全て拒否"
+
+#: views/conceal.php:74
+msgid "Redirection"
+msgstr "リダイレクト"
+
+#: views/conceal.php:76
+msgid "HTTP code if deny:"
+msgstr "拒否する場合のHTTPコード:"
+
+#: views/conceal.php:79
+msgid "301 Moved Permanently"
+msgstr "301 Moved Permanently"
+
+#: views/conceal.php:80
+msgid "302 Found"
+msgstr "302 Found"
+
+#: views/conceal.php:81
+msgid "401 Unauthorized"
+msgstr "401 Unauthorized"
+
+#: views/conceal.php:82
+msgid "403 Forbidden"
+msgstr "403 Forbidden"
+
+#: views/conceal.php:83
+msgid "404 Not Found"
+msgstr "404 Not Found"
+
+#: views/conceal.php:91
+msgid "Save Behavior"
+msgstr "動作を保存"
+
+#: views/conceal.php:94
+msgid ""
+"Control the behavior of \"wp-json/\", which is the root of the REST route, "
+"in the \"/\" only namespace."
+msgstr ""
+"「/」のみの名前空間は、REST経路のルートである「wp-json/」の動作を制御します。"
+
+#: views/globals.php:17 views/help-globals.php:11
+msgid ""
+"This settings section contains settings that have a destructive impact on "
+"the entire website. It's risky to do, so it's a good idea to do it before "
+"you bring in the content."
+msgstr ""
+"この設定セクションには、Webサイト全体に破壊的な影響を与える設定が含まれていま"
+"す。 リスクを伴うため、コンテンツを導入する前に行うことをお勧めします。"
+
+#: views/globals.php:22
+msgid "File Control Permissions"
+msgstr "ファイル操作権限"
+
+#: views/globals.php:25
+msgid ""
+"It is the state whether each file or directory can be controlled from the WP-"
+"Ignitor plug-in. These affect the execution of various operations in this "
+"section."
+msgstr ""
+"各ファイルまたはディレクトリをWPイグナイタプラグインから制御できるかどうかの"
+"状態です。 これらは、このセクションのさまざまな操作の実行に影響します。"
+
+#: views/globals.php:30
+msgid "DOCUMENT_ROOT:"
+msgstr "ドキュメントルート:"
+
+#: views/globals.php:35
+msgid "Install Directory:"
+msgstr "インストールディレクトリ:"
+
+#: views/globals.php:40
+msgid "\"wp-config.php\" File Path:"
+msgstr "「wp-config.php」ファイルパス:"
+
+#: views/globals.php:45
+msgid "\".htaccess\" File Path:"
+msgstr "「.htaccess」ファイルパス:"
+
+#: views/globals.php:46
+msgid "None"
+msgstr "なし"
+
+#: views/globals.php:53
+msgid "Move Installation Path"
+msgstr "インストールパスの移動"
+
+#: views/globals.php:59
+msgid "New Path"
+msgstr "新規パス"
+
+#: views/globals.php:65
+msgid "Moving files to new install path"
+msgstr "新しいインストールパスへのファイル移動"
+
+#: views/globals.php:68
+msgid "Move To"
+msgstr "移動する"
+
+#: views/globals.php:73
+msgid "To use the home URL (site URL) without subdirectory after moving files."
+msgstr ""
+"ファイルを移動した後、サブディレクトリなしでホームURL（サイトURL）を使用しま"
+"す。"
+
+#: views/globals.php:77
+msgid ""
+"After moving all files, optimize the \".htaccess\" or create a new one if it "
+"doesn't exist."
+msgstr ""
+"すべてのファイルを移動した後、「.htaccess」を最適化する。もし存在しない場合は"
+"新しいファイルを作成します。"
+
+#: views/globals.php:82
+msgid ""
+"Cannot move to the path of directory that already exists, or to the path of "
+"directly document root."
+msgstr ""
+"すでに存在するディレクトリのパス、または直接ドキュメントルートのパスに移動す"
+"ることはできません。"
+
+#: views/globals.php:83
+msgid "WP-Ignitor make a new directory before moving."
+msgstr "WPイグナイタは、移動する前に新しいディレクトリを作成します。"
+
+#: views/globals.php:84
+msgid ""
+"When moving, the \"wp-config.php\" will be forcibly placed directly under "
+"the installation directory."
+msgstr ""
+"移動すると、「wp-config.php」がインストールディレクトリの直下に強制的に配置さ"
+"れます。"
+
+#: views/globals.php:85
+msgid ""
+"Files in the \"node_modules\", \".cache\", and \".git\" directories are "
+"excluded from the move."
+msgstr ""
+"「node_modules」、「.cache」、および「.git」のディレクトリ内ファイルは移動か"
+"ら除外されます。"
+
+#: views/globals.php:86
+msgid "Also cannot move to the path that is two or more levels deep."
+msgstr "また、2階層以下のパスに移動することはできません。"
+
+#: views/globals.php:87
+msgid ""
+"If you do not have enough permission to operate the file, you cannot move it."
+msgstr ""
+"ファイルを操作するための十分な権限がない場合、ファイルを移動することはできま"
+"せん。"
+
+#: views/globals.php:93
+msgid "Move \"wp-config.php\""
+msgstr "「wp-config.php」の移動"
+
+#: views/globals.php:106
+msgid "Move To One Upper Level Path"
+msgstr "1階層上へ移動"
+
+#: views/globals.php:112
+msgid ""
+"No secure because it's same the installed path. Recommend that you move the "
+"file up one level for better security."
+msgstr ""
+"インストールされているパスと同じ階層にあるため、安全ではありません。セキュリ"
+"ティを強化するためには、ファイルを1階層上に移動することをお勧めします。"
+
+#: views/globals.php:117
+msgid ""
+"It's more appropriate because upper the installed path. However, please note "
+"that it is installed under the document root that can be accessed by "
+"everyone."
+msgstr ""
+"インストールされたパスの上位にあるため、より適切です。ただし、誰でもアクセス"
+"できるドキュメントルートの下にインストールされていることにご留意ください。"
+
+#: views/globals.php:122
+msgid ""
+"It's already in the correct position recommended for security. You will also "
+"be better off by paying attention to directory traversal attacks."
+msgstr ""
+"すでにセキュリティ上の推奨される正しい位置にあります。さらに、ディレクトリト"
+"ラバーサル攻撃に注意を払うことで、より良い結果が得られます。"
+
+#: views/globals.php:131
+msgid "Update \"wp-config.php\""
+msgstr "「wp-config.php」の更新"
+
+#: views/globals.php:134
+msgid ""
+"Enables or disables various functions by constants implemented in WordPress "
+"in advance. This settings will be written directly to \"wp-config.php\"."
+msgstr ""
+"事前にWordPressに実装されている定数により、さまざまな機能を有効または無効にし"
+"ます。この設定は「wp-config.php」に直接書き込まれます。"
+
+#: views/globals.php:161 views/globals.php:302
+msgid "Preview:"
+msgstr "プレビュー:"
+
+#: views/globals.php:166
+msgid "Update wp-config.php"
+msgstr "「wp-config.php」を更新"
+
+#: views/globals.php:170
+msgid "Restore wp-config.php"
+msgstr "「wp-config.php」の復元"
+
+#: views/globals.php:173
+msgid ""
+"The above settings will be inserted into marker (rows) from \"BEGIN WP "
+"Ignitor\" to \"END WP Ignitor\"."
+msgstr ""
+"上記の設定は、「BEGIN WP Ignitor」から「END WP Ignitor」までのマーカー（行）"
+"に挿入されます。"
+
+#: views/globals.php:174
+msgid ""
+"Only the checked options will be written to wp-config.php. And you can "
+"remove the settings by updating with all the unchecked."
+msgstr ""
+"チェックされたオプションのみがwp-config.phpに書き込まれます。 また、チェック"
+"を外して更新すると、設定を削除できます。"
+
+#: views/globals.php:175
+msgid ""
+"If there is an option already defined in \"wp-config.php\", that will be "
+"applied with priority."
+msgstr ""
+"「wp-config.php」ですでに定義されているオプションがある場合は、そちらが優先的"
+"に適用されます。"
+
+#: views/globals.php:181
+msgid "Update \".htaccess\""
+msgstr "「.htaccess」の更新"
+
+#: views/globals.php:184
+msgid ""
+"Improve the security of your site by preventing access to each WordPress "
+"core file from anyone other than the allowed sources."
+msgstr ""
+"許可された接続元以外から各WordPressコアファイルにアクセスできないようにするこ"
+"とで、サイトのセキュリティを向上させます。"
+
+#: views/globals.php:187
+msgid "Allow Hosts"
+msgstr "許可するホスト"
+
+#: views/globals.php:193 views/globals.php:232 views/globals.php:270
+msgid "(Auto Set by System)"
+msgstr "（システム自動定義）"
+
+#: views/globals.php:205
+msgid "Remove Host"
+msgstr "ホスト削除"
+
+#: views/globals.php:211 views/globals.php:222
+msgid "Add New Hostname"
+msgstr "新規ホスト名追加"
+
+#: views/globals.php:227
+msgid "Allow Addresses"
+msgstr "許可するアドレス"
+
+#: views/globals.php:243
+msgid "Remove Address"
+msgstr "アドレス削除"
+
+#: views/globals.php:249 views/globals.php:260
+msgid "Add New Address"
+msgstr "新規アドレス追加"
+
+#: views/globals.php:265
+msgid "Allow Referers"
+msgstr "許可するリファラー"
+
+#: views/globals.php:281
+msgid "Remove Referer"
+msgstr "リファラー削除"
+
+#: views/globals.php:287 views/globals.php:298
+msgid "Add New Referer"
+msgstr "新規リファラー追加"
+
+#: views/globals.php:304
+msgid "Advanced Settings:"
+msgstr "高度な設定:"
+
+#: views/globals.php:311
+msgid ""
+"Restrict access to core PHP files under the WordPress installation directory "
+"from anyone other than the allowed sources."
+msgstr ""
+"許可された接続元以外のユーザーからのWordPressインストールディレクトリ下のコア"
+"PHPファイルへのアクセスを制限します。"
+
+#: views/globals.php:319
+msgid ""
+"An access to \"xmlrpc.php\" only allow access that has user agent of "
+"\"Jetpack\", and other accesses redirect to \"0.0.0.0\" to avoid load."
+msgstr ""
+"「xmlrpc.php」へのアクセスは、「Jetpack」のユーザーエージェントを持つアクセス"
+"のみを許可し、それ以外のアクセスは、ロードを回避するために「0.0.0.0」へリダイ"
+"レクトします。"
+
+#: views/globals.php:327
+msgid ""
+"Access to \"wp-login.php\" returns a uniform 404 response regardless of the "
+"connection source."
+msgstr ""
+"「wp-login.php」にアクセスすると、接続元に関係なく、均一に 404 レスポンスが返"
+"されます。"
+
+#: views/globals.php:336
+#, php-format
+msgid ""
+"Close direct access to \"wp-login.php\" and set up a new login URL (%s)."
+msgstr ""
+"「wp-login.php」への直接アクセスを制限して、新しいログインURL（%s）を設定しま"
+"す。"
+
+#: views/globals.php:337
+#, php-format
+msgid ""
+"Detailed settings for the new login URL can be made in the relevant section "
+"of the \"%sAuthorizations%s\" tab."
+msgstr ""
+"新しいログインURLの詳細な設定は、「%s認証%s」タブの関連セクションで行うことが"
+"できます。"
+
+#: views/globals.php:348
+msgid "Avoid the discovery of an author's ID."
+msgstr "著作者IDが検出されることを回避する。"
+
+#: views/globals.php:362
+msgid "Insert Above Settings"
+msgstr "上記設定の挿入"
+
+#: views/globals.php:366
+msgid "Withdraw Above Settings"
+msgstr "上記設定の撤回"
+
+#: views/globals.php:367
+msgid "Refer to configure for Nginx"
+msgstr "Nginx向け構成の参照"
+
+#: views/globals.php:371
+msgid ""
+"The directive (lines) from \"BEGIN WP Ignitor Rules\" to \"END WP Ignitor "
+"Rules\" are inserted before the directive (lines) from \"BEGIN WordPress\" "
+"to \"END WordPress\"."
+msgstr ""
+"「BEGIN WP Ignitor Rules」から「END WP Ignitor Rules」までのディレクティブ"
+"（行）は、「BEGIN WordPress」から「END WordPress」までのディレクティブ（行）"
+"の前に挿入されます。"
+
+#: views/globals.php:377
+msgid "Clear All Settings"
+msgstr "全ての設定の削除"
+
+#: views/globals.php:383
+msgid "Clear All Saved Settings Of This Plugin"
+msgstr "プラグインの保存済み全設定を削除"
+
+#: views/globals.php:386
+msgid ""
+"Clearing all saved settings will reset all options for this plugin. However, "
+"moved files and updated files will not be restored to the state before such "
+"executing."
+msgstr ""
+"保存されているすべての設定を削除すると、このプラグインのすべてのオプションが"
+"リセットされます。 ただし、移動したファイルや更新したファイルは、実行前の状態"
+"には戻りません。"
+
+#: views/help-conceal.php:9
+msgid "About Conceals Tab"
+msgstr "隠蔽タブについて"
+
+#: views/help-conceal.php:12
+msgid ""
+"Concealing that your site is built by WordPress is very important in "
+"protecting your site from attackers."
+msgstr ""
+"サイトがWordPressによって構築されていることを隠すことは、攻撃者からサイトを保"
+"護する上で非常に重要です。"
+
+#: views/help-conceal.php:13
+msgid ""
+"In addition, by eliminating unnecessary output elements it will improve your "
+"site's performance."
+msgstr ""
+"さらに、不要な出力要素を排除することで、サイトのパフォーマンスが向上します。"
+
+#: views/help-conceal.php:15
+msgid ""
+"WordPress produces HTML output that is not detrimental to anyone in order to "
+"maintain its versatility as a CMS. But that can often be unnecessary for our "
+"site. WP Ignitor makes it easy to switch outputs that we don't need."
+msgstr ""
+"WordPressは、CMSとしての汎用性を維持するために、誰にとっても有害ではないHTML"
+"出力を生成します。しかし、それは私たちのサイトではしばしば不要です。WPイグナ"
+"イタを使用すると、不要な出力を簡単に切り替えることができます。"
+
+#: views/help-conceal.php:17
+msgid ""
+"The WP REST API is a very useful feature, but it also runs the risk of being "
+"a point of contact for leaking information on our website. We should "
+"properly control the REST API path for self-defense."
+msgstr ""
+"WP REST APIは非常に便利な機能ですが、私たちのWebサイトの情報を漏らすための窓"
+"口になるリスクもあります。 自己防衛のためにREST APIのパスを適切に制御する必要"
+"があります。"
+
+#: views/help-globals.php:9
+msgid "About Globals Tab"
+msgstr "全般タブについて"
+
+#: views/help-globals.php:13
+msgid ""
+"By installing WordPress to a subdirectory instead of the document root, you "
+"can prevent malicious users from accessing the attack vector. With WP "
+"Ignitor you can easily change the installation path."
+msgstr ""
+"WordPressをドキュメントルートではなくサブディレクトリにインストールすること"
+"で、悪意のあるユーザーが攻撃位置にアクセスするのを防ぐことができます。WPイグ"
+"ナイタでは、インストールパスを簡単に変更することができます。"
+
+#: views/help-globals.php:15
+msgid ""
+"There are many important things that can be controlled by the WordPress "
+"configuration file \"wp-config.php\", but you need to update the file "
+"directly. WP Ignitor can be updated from this section with a simple "
+"operation."
+msgstr ""
+"WordPressの設定ファイル「wp-config.php」で制御できる重要なものはたくさんあり"
+"ますが、ファイルを直接更新する必要があります。WPイグナイタは、このセクション"
+"から簡単な操作で更新ができます。"
+
+#: views/help-globals.php:17
+msgid ""
+"Maintaining \".htaccess\", which controls the routing of WordPress sites, "
+"requires specialized knowledge and can be a pain. WP Ignitor will take over "
+"your efforts."
+msgstr ""
+"WordPressサイトのルーティングを制御する「.htaccess」を保守するには、専門知識"
+"が必要であり、面倒な場合があります。WPイグナイタがあなたの労力を引き受けま"
+"す。"
+
+#: views/help-login.php:9
+msgid "About Authorizations Tab"
+msgstr "認証タブについて"
+
+#: views/help-login.php:11 views/login.php:13
+msgid ""
+"In this section you can control the login page that authenticates WordPress "
+"users."
+msgstr ""
+"このセクションでは、WordPressユーザーを認証するログインページを制御できます。"
+
+#: views/help-login.php:12
+msgid ""
+"The WordPress login page \"wp-login.php\" is a great target for malicious "
+"visitors."
+msgstr ""
+"WordPressのログインページ「wp-login.php」は、悪意のある訪問者にとって格好の標"
+"的です。"
+
+#: views/help-login.php:13
+msgid ""
+"Therefore, blocking access to this page and setting up a new login page is "
+"one of the best ways to protect your site."
+msgstr ""
+"そのため、このページへのアクセスをブロックし、新しいログインページを設けるこ"
+"とは、あなたのサイトを保護するうえで最良の方法の一つです。"
+
+#: views/help-login.php:15
+msgid ""
+"Simply specify a new login path instead of the initially bundled \"wp-login."
+"php\" and your site will have a new entrance to WordPress. Is it too easy?"
+msgstr ""
+"最初にバンドルされた「wp-login.php」の代わりに新しいログインパスを指定するだ"
+"けで、サイトにWordPressへの新しい入り口ができます。とても簡単ですよね？"
+
+#: views/help-login.php:16
+msgid ""
+"Oh, but wait a minute. Don't forget to update \".htaccess\" in the Global "
+"tab section to open a new entrance and tell WordPress where the new entrance "
+"is."
+msgstr ""
+"あ、でもちょっと待って。新しい入口を開くには、全般タブのセクションから「."
+"htaccess」を更新して、WordPressに新しい入口の場所を伝えることを忘れないでくだ"
+"さい。"
+
+#: views/help-utils.php:9
+msgid "About Utilities Tab"
+msgstr "補助タブについて"
+
+#: views/help-utils.php:11
+msgid ""
+"This section provides useful features when you want to keep WordPress site "
+"running continuously."
+msgstr ""
+"このセクションでは、WordPressサイトを継続的に運用する際に役立つ機能を提供しま"
+"す。"
+
+#: views/help-utils.php:13
+msgid "Stay tuned for more options in this section."
+msgstr "このセクションの今後のオプションにご期待ください。"
+
+#: views/help-utils.php:15
+msgid ""
+"If you have a request what you want to do for WP Ignitor, please share your "
+"ideas!"
+msgstr ""
+"もしWPイグナイタで何かしたいというご要望がありましたら、是非アイデアをご共有"
+"ください！"
+
+#: views/login.php:19
+msgid "Enable New Login Page"
+msgstr "新しいログインページの有効化"
+
+#: views/login.php:27
+msgid "New Login Path:"
+msgstr "新しいログインパス:"
+
+#: views/login.php:32
+msgid "Missing Parameters"
+msgstr "パラメータがありません"
+
+#: views/login.php:33
+msgid "New login path has not been entered."
+msgstr "新しいログインパスが入力されていません。"
+
+#: views/login.php:37
+msgid "The new login page will not work just by enabling this option."
+msgstr ""
+"このオプションを有効にしただけでは、新しいログインページは機能しません。"
+
+#: views/login.php:38
+#, php-format
+msgid ""
+"You need to update the \".htaccess\" file by checking to the corresponding "
+"advanced options in the \"Update .htaccess\" section in the \"%sGlobals%s\" "
+"tab."
+msgstr ""
+"「%s全般%s」タブの「.htaccess更新」セクションで対応する詳細オプションをチェッ"
+"クして、「.htaccess」ファイルを更新する必要があります。"
+
+#: views/login.php:44
+msgid "Origin Login Page Behavior"
+msgstr "オリジンログインページの動作"
+
+#: views/login.php:47
+msgid ""
+"After enabling the new login page, decides a behavior when is accessed the "
+"original login page."
+msgstr ""
+"新しいログインページを有効にした後の、元のログインページにアクセスしたときの"
+"動作を設定します。"
+
+#: views/login.php:52 views/login.php:116
+msgid "401 Redirection"
+msgstr "401 リダイレクト"
+
+#: views/login.php:55 views/login.php:117
+msgid "403 Redirection"
+msgstr "403 リダイレクト"
+
+#: views/login.php:59 views/login.php:118
+msgid "404 Redirection"
+msgstr "404 リダイレクト"
+
+#: views/login.php:62
+msgid "Redirect to new login page"
+msgstr "新しいログインページへリダイレクト"
+
+#: views/login.php:65
+msgid "Redirect to home"
+msgstr "ホームへリダイレクト"
+
+#: views/login.php:69
+msgid ""
+"If it accesses \"wp-admin/\" when we are not logged in, an auto redirect to "
+"the login page will be the same behavior too."
+msgstr ""
+"ログインしていないときに「wp-admin/」にアクセスすると、ログインページへの自動"
+"リダイレクトも同じように動作します。"
+
+#: views/login.php:70
+#, php-format
+msgid ""
+"As with the previous option, this setting will be applied after updating \"."
+"htaccess\" in the \"%sGlobals%s\" tab."
+msgstr ""
+"前出のオプション同様、この設定は「%s全般%s」タブの「.htaccess」を更新した後に"
+"適用されます。"
+
+#: views/login.php:76
+msgid "Set Login Permission"
+msgstr "ログイン権限設定"
+
+#: views/login.php:79
+msgid ""
+"Set the IP addresses of connection source that is allowed access to the "
+"login page."
+msgstr "ログインページへのアクセスを許可する接続元のIPアドレスを設定します。"
+
+#: views/login.php:80
+#, php-format
+msgid ""
+"This setting is executed by the %slogin_init%s action on the login page, so "
+"if you have a restriction in \".htaccess\", that will take precedence."
+msgstr ""
+"この設定は、ログインページの%slogin_init%sアクションによって実行されるため、"
+"「.htaccess」に制限がある場合は、そちらが優先されます。"
+
+#: views/login.php:83
+msgid "Allowed Sources:"
+msgstr "許可された接続元:"
+
+#: views/login.php:93
+msgid "Remove Source"
+msgstr "接続元の削除"
+
+#: views/login.php:99 views/login.php:109
+msgid "Add New IP Address"
+msgstr "新規IPアドレス追加"
+
+#: views/login.php:113
+msgid "Unauthorized connections redirect to:"
+msgstr "許可されていない接続のリダイレクト先:"
+
+#: views/login.php:122
+msgid ""
+"The permission IP address settings for the login page apply regardless of "
+"whether the new login page is enabled or disabled."
+msgstr ""
+"ログインページへのアクセス許可IPアドレス設定は、新しいログインページが有効か"
+"無効かに関係なく適用されます。"
+
+#: views/login.php:123
+msgid "If you do not set anything, all visitors can access the login page."
+msgstr "何も設定しない場合、すべての訪問者がログインページにアクセスできます。"
+
+#: views/login.php:131
+msgid "Commit Changes"
+msgstr "変更を適用"
+
+#: views/settings.php:42
+msgid "Failed to load tab content."
+msgstr "タブ内のコンテンツ読み込みに失敗しました。"
+
+#: views/utils.php:13
+msgid "Unlock Core Updater"
+msgstr "コア更新ロック解除"
+
+#: views/utils.php:16
+msgid ""
+"If you are in a waiting state where the \"Another update is currently in "
+"progress.\" is notified due likes to accidental page transition while "
+"updating WordPress, use this option to able to unlock before the waiting "
+"time of 15 minutes elapses."
+msgstr ""
+"WordPressの更新中に誤ってページ遷移を行った等で「別の更新が現在進行中です。」"
+"と表示されて待機状態になった場合に、このオプションを使用して15分の待機時間が"
+"経過する前にロックを解除できます。"
+
+#: views/utils.php:22
+msgid "Unlock"
+msgstr "ロック解除"
+
+#~ msgid "https://ka2.org/wp-ignitor"
+#~ msgstr "https://ka2.org/wp-ignitor"
+
+#~ msgid ""
+#~ "Now let's ignition to your site, with conceal that we are WordPress and "
+#~ "get starting with the stronger defensive turn."
+#~ msgstr ""
+#~ "さあ、私たちがWordPressであることを隠し、堅固に守られたサイトに点火しま"
+#~ "しょう。"
+
+#~ msgid "Ka2"
+#~ msgstr "Ka2"
+
+#~ msgid "https://ka2.org"
+#~ msgstr "https://ka2.org"
