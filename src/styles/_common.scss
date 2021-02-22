@@ -1,5 +1,5 @@
 [hidden],
-.hidden:not(.screen-meta-toggle > button) {
+.hidden:not(.screen-meta-toggle > button):not(#contextual-help-wrap) {
   display: none !important;
 }
 

@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the WP Ignitor package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Ignitor 1.0.2\n"
+"Project-Id-Version: WP Ignitor 1.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
-"POT-Creation-Date: 2021-01-19 10:43+0900\n"
-"PO-Revision-Date: 2021-01-19 10:45+0900\n"
+"POT-Creation-Date: 2021-02-22 14:47+0900\n"
+"PO-Revision-Date: 2021-02-22 14:48+0900\n"
 "Last-Translator: \n"
 "Language-Team: ka2@ka2.org\n"
 "Language: ja\n"
@@ -16,60 +16,60 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-Basepath: .\n"
 
-#: src/actions.php:171
+#: src/actions.php:191
 msgid "Invalid Access!"
 msgstr "無効なアクセスです！"
 
-#: src/actions.php:183 src/actions.php:263
+#: src/actions.php:203 src/actions.php:283
 msgid "Close"
 msgstr "閉じる"
 
-#: src/actions.php:186
+#: src/actions.php:206
 msgid "The new path to move to is not specified."
 msgstr "移動先の新しいパスが指定されていません。"
 
-#: src/actions.php:203
+#: src/actions.php:223
 msgid "Copied the files under the current installation path to the new path."
 msgstr "現在のインストールパスの下にあるファイルを新しいパスにコピーしました。"
 
-#: src/actions.php:208
+#: src/actions.php:228
 msgid "Updated site URL in the DataBase."
 msgstr "データベースのサイトURLを更新しました。"
 
-#: src/actions.php:211
+#: src/actions.php:231
 msgid "Updated site and home URL in the DataBase."
 msgstr "データベースのサイトとホームのURLを更新しました。"
 
-#: src/actions.php:222
+#: src/actions.php:242
 msgid ""
 "I didn't update it because \".htaccess\" already exists in the document root."
 msgstr ""
 "「.htaccess」がドキュメントルートにすでに存在するため、更新しませんでした。"
 
-#: src/actions.php:232
+#: src/actions.php:252
 msgid "Saved the optimized \".htaccess\"."
 msgstr "最適化された「.htaccess」を保存しました。"
 
-#: src/actions.php:234 src/admin.php:619
+#: src/actions.php:254 src/admin.php:619
 msgid "Failed to update \".htaccess\"."
 msgstr "「.htaccess」の更新に失敗しました。"
 
-#: src/actions.php:255
+#: src/actions.php:275
 msgid ""
 "The file move was successful, but some of the source files could not be "
 "removed."
 msgstr ""
 "ファイルの移動は成功しましたが、一部のソースファイルを削除できませんでした。"
 
-#: src/actions.php:257
+#: src/actions.php:277
 msgid "The files move completed successfully."
 msgstr "ファイルの移動が正常に完了しました。"
 
-#: src/actions.php:263
+#: src/actions.php:283
 msgid "Re-login"
 msgstr "再ログイン"
 
-#: src/actions.php:270
+#: src/actions.php:290
 msgid ""
 "Failed to move the files. It may not have sufficient permissions to operate "
 "the source files or directories."
@@ -77,21 +77,29 @@ msgstr ""
 "ファイルの移動に失敗しました。 ソースファイルまたはディレクトリを操作するため"
 "の十分な権限がない可能性があります。"
 
-#: src/actions.php:281
+#: src/actions.php:301
 msgid "The \"wp-config.php\" file already exists to the destination."
 msgstr "「wp-config.php」ファイルは、移動先にすでに存在します。"
 
-#: src/actions.php:284
+#: src/actions.php:304
 msgid "The \"wp-config.php\" file has been moved."
 msgstr "「wp-config.php」ファイルは移動されました。"
 
-#: src/actions.php:287
+#: src/actions.php:307
 msgid "Failed to move the \"wp-config.php\" file."
 msgstr "「wp-config.php」ファイルの移動に失敗しました。"
 
-#: src/actions.php:291
+#: src/actions.php:311
 msgid "Do not have permission to work with files."
 msgstr "ファイルを操作する権限がありません。"
+
+#: src/actions.php:404
+msgid ""
+"Performed an emergency recovery. If you want to continue using the WP "
+"igniter, you should disable the \"wpignitor_emergency_recovery\" filter."
+msgstr ""
+"緊急復旧を実行しました。 WPイグナイタを引き続き使用する場合は、"
+"「wpignitor_emergency_recovery」フィルターを無効にする必要があります。"
 
 #: src/admin.php:40 views/settings.php:13
 msgid "WP Ignitor Settings"

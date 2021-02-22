@@ -159,12 +159,13 @@ class wpIgnitor extends abstractClass {
         // Initialize the errors object for this plugin
         $this->errors = new \WP_Error();
 
-        add_filter( 'auto_update_plugin', '__return_false' );
+        $this->emergency_recovery_done = false;
+        //add_filter( 'auto_update_plugin', '__return_false' );
 
         // Action hooks: refer definition in "actions" trait
         add_action( 'registered_taxonomy', [ $this, 'registered_taxonomy' ], 10, 3 );
         add_action( 'registered_post_type', [ $this, 'registered_post_type' ], 10, 2 );
-        //add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ] );
+        add_action( 'plugins_loaded', [ $this, 'plugins_loaded' ] );
         add_action( 'after_setup_theme', [ $this, 'after_setup_theme' ] );
         add_action( 'init', [ $this, 'init' ] );
         add_action( 'widgets_init', [ $this, 'widgets_init' ] );
@@ -172,6 +173,7 @@ class wpIgnitor extends abstractClass {
         add_action( 'wp_ajax_wpignitor_ajax', [ $this, 'wpignitor_ajax' ] );
         add_action( 'wp_ajax_nopriv_wpignitor_ajax', [ $this, 'nopriv_wpignitor_ajax' ] );
         add_action( 'wp_footer', [ $this, 'wp_footer' ] );
+        add_action( 'wp_print_footer_scripts', [ $this, 'print_footer_scripts' ] );
         add_action( 'shutdown', [ $this, 'shutdown' ] );
         // For New Login
         add_action( 'login_init', [ $this, 'login_init' ] );
@@ -201,6 +203,7 @@ class wpIgnitor extends abstractClass {
             add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
             add_action( 'admin_print_styles', [ $this, 'admin_print_styles' ] );
             add_action( 'admin_head', [ $this, 'admin_head' ] );
+            add_action( 'admin_print_footer_scripts', [ $this, 'print_footer_scripts' ] );
             add_filter( 'user_contactmethods', [ $this, 'user_contactmethods' ], 10, 2 );
             add_filter( 'admin_footer_text', [ $this, 'admin_footer_text' ] );
             add_filter( 'set-screen-option', [ $this, 'set_screen_option' ], 10, 3 );
@@ -220,6 +223,7 @@ class wpIgnitor extends abstractClass {
             add_action( 'all', [ $this, 'debug_all_actions' ] );
             add_filter( 'all', [ $this, 'debug_all_filters' ] );
         }
+
     }
 
     /**

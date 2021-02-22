@@ -2,8 +2,8 @@
 Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
-Tested up to: 5.6.0
-Stable tag: 1.0.2
+Tested up to: 5.6.1
+Stable tag: 1.0.3
 Text Domain: wpignitor
 Domain Path: /languages/
 License: GPL v2 or later
@@ -44,9 +44,22 @@ Let's get rid of our tedious configuration work right away and ignite the launch
 
 == Frequently asked questions ==
 
+= I failed to set up this plugin and can't log in to WordPress =
+
+You can use the filter hook "wpignitor_emergency_recovery" added since version 1.0.3.
+By enabling this filter hook, you can remove all the settings saved by the WP Ignitor and revert the updated ".htaccess" and "wp-config.php" files.
+Prepare functions.php in the plugin directory and add it as shown below.
+
+`
+add_filter( 'wpignitor_emergency_recovery', '__return_true' );
+`
+
+After the filter hook enabled, accessing the site will perform an emergency recovery.
+If you continue to use the WP Ignitor, please disable the filter hook for emergency recovery.
+
 = Source code does not appear in "Cleanup Frontend HTML" on the "Conceals" tab =
 
-You can use the wpignitor_remote_request_args filter added since version 1.0.1 to control the request behavior of the WP_Http API.
+You can use the "wpignitor_remote_request_args" filter added since version 1.0.1 to control the request behavior of the WP_Http API.
 If you have problems with SSL communication such as "SSL certificate problem", please add the following filter hook to functions.php.
 
 `
@@ -68,6 +81,12 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 4. The utilities section contains useful features for site management.
 
 == Changelog ==
+
+= 1.0.3 =
+Bump to version - February 22, 2021
+
+* Fixed a bug that the context helper tab of the management screen does not open.
+* Added the recovery script to reset all the plugin settings when can't log in to WordPress, such as when the plugin settings fail.
 
 = 1.0.2 =
 Bump to version - January 19, 2021

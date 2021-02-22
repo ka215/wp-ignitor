@@ -3,9 +3,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Ignitor 1.0.2\n"
+"Project-Id-Version: WP Ignitor 1.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
-"POT-Creation-Date: 2021-01-19 10:43+0900\n"
+"POT-Creation-Date: 2021-02-22 14:47+0900\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,77 +25,83 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: src/scripts\n"
 "X-Poedit-SearchPathExcluded-2: src/styles\n"
 
-#: src/actions.php:171
+#: src/actions.php:191
 msgid "Invalid Access!"
 msgstr ""
 
-#: src/actions.php:183 src/actions.php:263
+#: src/actions.php:203 src/actions.php:283
 msgid "Close"
 msgstr ""
 
-#: src/actions.php:186
+#: src/actions.php:206
 msgid "The new path to move to is not specified."
 msgstr ""
 
-#: src/actions.php:203
+#: src/actions.php:223
 msgid "Copied the files under the current installation path to the new path."
 msgstr ""
 
-#: src/actions.php:208
+#: src/actions.php:228
 msgid "Updated site URL in the DataBase."
 msgstr ""
 
-#: src/actions.php:211
+#: src/actions.php:231
 msgid "Updated site and home URL in the DataBase."
 msgstr ""
 
-#: src/actions.php:222
+#: src/actions.php:242
 msgid ""
 "I didn't update it because \".htaccess\" already exists in the document root."
 msgstr ""
 
-#: src/actions.php:232
+#: src/actions.php:252
 msgid "Saved the optimized \".htaccess\"."
 msgstr ""
 
-#: src/actions.php:234 src/admin.php:619
+#: src/actions.php:254 src/admin.php:619
 msgid "Failed to update \".htaccess\"."
 msgstr ""
 
-#: src/actions.php:255
+#: src/actions.php:275
 msgid ""
 "The file move was successful, but some of the source files could not be "
 "removed."
 msgstr ""
 
-#: src/actions.php:257
+#: src/actions.php:277
 msgid "The files move completed successfully."
 msgstr ""
 
-#: src/actions.php:263
+#: src/actions.php:283
 msgid "Re-login"
 msgstr ""
 
-#: src/actions.php:270
+#: src/actions.php:290
 msgid ""
 "Failed to move the files. It may not have sufficient permissions to operate "
 "the source files or directories."
 msgstr ""
 
-#: src/actions.php:281
+#: src/actions.php:301
 msgid "The \"wp-config.php\" file already exists to the destination."
 msgstr ""
 
-#: src/actions.php:284
+#: src/actions.php:304
 msgid "The \"wp-config.php\" file has been moved."
 msgstr ""
 
-#: src/actions.php:287
+#: src/actions.php:307
 msgid "Failed to move the \"wp-config.php\" file."
 msgstr ""
 
-#: src/actions.php:291
+#: src/actions.php:311
 msgid "Do not have permission to work with files."
+msgstr ""
+
+#: src/actions.php:404
+msgid ""
+"Performed an emergency recovery. If you want to continue using the WP "
+"igniter, you should disable the \"wpignitor_emergency_recovery\" filter."
 msgstr ""
 
 #: src/admin.php:40 views/settings.php:13

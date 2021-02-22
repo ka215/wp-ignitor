@@ -831,7 +831,19 @@ trait utils {
         return self::wpconfig_insert_with_markers( $wpconfig_path, 'WP Ignitor', '' );
     }
 
-
+    /**
+     * Running this script will remove all the settings saved by the WP Ignitor from the database and
+     * the settings written by the plugin from the contents of ".htaccess" and "wp-config.php".
+     *
+     * @since 1.0.3
+     * @access public
+     */
+    public function emergency_recovery(): void {
+        $this->clear_all_options( true );
+        $this->restore_htaccess();
+        $this->restore_wpconfig();
+        $this->emergency_recovery_done = true;
+    }
 
     /**
      * Logger for this plugin only

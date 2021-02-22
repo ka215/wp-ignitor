@@ -31,6 +31,26 @@ trait actions {
     }
 
     /**
+     * Fires once activated plugins have loaded.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 1.5.0
+     */
+    public function plugins_loaded() {
+        /**
+         * Fire emergency recovery
+         *
+         * @since 1.0.3
+         * @hook  filter
+         */
+        $run_recovery = apply_filters( 'wpignitor_emergency_recovery', false );
+        if ( $run_recovery ) {
+            $this->emergency_recovery();
+        }
+    }
+
+    /**
      * Fires after the theme is loaded
      *
      * @access public
@@ -369,6 +389,35 @@ trait actions {
         if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
             // Remove oEmbeds
             wp_deregister_script( 'wp-embed' );
+        }
+    }
+
+    /**
+     * Prints any scripts and data queued for the footer. For both admin page and frontend.
+     *
+     * @access public
+     * @package WordPress(core)
+     * @since 2.8.0
+     */
+    public function print_footer_scripts() {
+        if ( $this->emergency_recovery_done ) {
+            $message = __( 'Performed an emergency recovery. If you want to continue using the WP igniter, you should disable the "wpignitor_emergency_recovery" filter.', IGNITOR );
+            $alert = <<<EOS
+<script>
+var recovered = function() {
+  alert( '{$message}' );
+};
+if ( document.readyState === 'complete' || ( document.readyState !== 'loading' && ! document.documentElement.doScroll ) ) {
+  recovered()
+} else
+if ( document.addEventListener ) {
+  document.addEventListener( 'DOMContentLoaded', recovered, false )
+} else {
+  window.onload = recovered
+}
+</script>
+EOS;
+            echo $alert;
         }
     }
 
