@@ -2,8 +2,8 @@
 Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
-Tested up to: 5.6.1
-Stable tag: 1.0.3
+Tested up to: 5.7
+Stable tag: 1.0.4
 Text Domain: wpignitor
 Domain Path: /languages/
 License: GPL v2 or later
@@ -81,6 +81,12 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 4. The utilities section contains useful features for site management.
 
 == Changelog ==
+
+= 1.0.4 =
+Bump to version - March 10, 2021
+
+* Improved .htaccess settings that plugins save. This will avoid the error that the WordPress health check does not complete the loopback request.
+* Fixed a bug that the tag of IfModule directive is missing for .htaccess inserted by this plugin.
 
 = 1.0.3 =
 Bump to version - February 22, 2021

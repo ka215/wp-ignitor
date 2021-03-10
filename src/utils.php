@@ -384,7 +384,7 @@ trait utils {
 
         $_section_number = 1;
         $_stack = [];
-        array_unshift( $_stack, '# BEGIN WP Ignitor Rules', '<IfModule mod_rewrite.c>', 'RewriteEngine On' );
+        array_unshift( $_stack, '# BEGIN WP Ignitor Rules', '<IfModule mod_rewrite.c>', 'RewriteEngine On', 'RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]' );
         // Set Environment Section
         $_stack[] = '# Environment';
         $_stack[] = '# - Definition of connection sources to allow.';
@@ -416,9 +416,12 @@ trait utils {
         // Protects "wp-config.php" and "wp-cron.php"
         $_stack[] = "# {$_section_number}.";
         $_stack[] = '# - "wp-config.php" and "wp-cron.php" returns 404 response if the connection source is';
-        $_stack[] = '# - not the allowed hosts and addresses.';
-        $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
-        $_stack[] = 'RewriteRule "wp-(config|cron)\.php$" - [R=404,L]';
+        $_stack[] = '# - not the allowed hosts and addresses or the allowed referrers.';
+        $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$ [OR]';
+        $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
+        $_stack[] = 'RewriteRule "wp-config\.php$" - [R=404,L]';
+        $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
+        $_stack[] = 'RewriteRule "wp-cron\.php$" - [R=404,L]';
         $_section_number++;
         if ( isset( $advanced_htaccess_options['prevent_php_files'] ) && $advanced_htaccess_options['prevent_php_files'] ) {
             // Restrict access to core PHP files
@@ -439,7 +442,7 @@ trait utils {
             $_stack[] = "# {$_section_number}.";
             $_stack[] = '# - Access to each directory directly under the installation directory returns 404';
             $_stack[] = '# - response if the connection source is other than the allowed hosts, addresses or';
-            $_stack[] = '# - referers.';
+            $_stack[] = '# - referrers.';
             $_stack[] = 'RewriteCond %{ENV:is_allow} !^true$';
             $_stack[] = 'RewriteCond %{ENV:is_allow_referer} !^true$';
             $_stack[] = 'RewriteCond %{REQUEST_FILENAME} !-f';
@@ -530,7 +533,7 @@ trait utils {
                 $_stack[] = 'RewriteRule . /'. $_install_dir .'index.php [L]';
             }
         }
-        array_push( $_stack, '', '</IfModule>', '# END WP Ignitor Rules' );
+        array_push( $_stack, '</IfModule>', '', '# END WP Ignitor Rules' );
         return implode( "\n", $_stack );
     }
 

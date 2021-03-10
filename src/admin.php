@@ -563,6 +563,16 @@ trait admin {
                 case 'tab':
                     // Skip because it has already been filtered
                     break;
+                case 'htaccess':
+                    // For string that allows only specific tags
+                    $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
+                    $allowed_html = [
+                        'ifmodule' => [
+                            'mod_rewrite.c' => [],
+                        ],
+                    ];
+                    $params[$_k] = wp_kses( $params[$_k], $allowed_html );
+                    break;
                 default:
                     // For string
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
