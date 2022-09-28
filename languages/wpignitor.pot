@@ -3,16 +3,16 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Ignitor 1.0.3\n"
+"Project-Id-Version: WP Ignitor 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
-"POT-Creation-Date: 2021-02-22 14:47+0900\n"
+"POT-Creation-Date: 2022-09-26 17:25+0900\n"
+"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Ka2 <ka2@ka2.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-Poedit-KeywordsList: __;_e;_x;_n\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: src\n"
@@ -25,80 +25,80 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: src/scripts\n"
 "X-Poedit-SearchPathExcluded-2: src/styles\n"
 
-#: src/actions.php:191
+#: src/actions.php:210
 msgid "Invalid Access!"
 msgstr ""
 
-#: src/actions.php:203 src/actions.php:283
+#: src/actions.php:222 src/actions.php:304
 msgid "Close"
 msgstr ""
 
-#: src/actions.php:206
+#: src/actions.php:225
 msgid "The new path to move to is not specified."
 msgstr ""
 
-#: src/actions.php:223
+#: src/actions.php:242
 msgid "Copied the files under the current installation path to the new path."
 msgstr ""
 
-#: src/actions.php:228
+#: src/actions.php:247
 msgid "Updated site URL in the DataBase."
 msgstr ""
 
-#: src/actions.php:231
+#: src/actions.php:250
 msgid "Updated site and home URL in the DataBase."
 msgstr ""
 
-#: src/actions.php:242
+#: src/actions.php:261
 msgid ""
 "I didn't update it because \".htaccess\" already exists in the document root."
 msgstr ""
 
-#: src/actions.php:252
+#: src/actions.php:271
 msgid "Saved the optimized \".htaccess\"."
 msgstr ""
 
-#: src/actions.php:254 src/admin.php:619
+#: src/actions.php:273 src/admin.php:689
 msgid "Failed to update \".htaccess\"."
 msgstr ""
 
-#: src/actions.php:275
+#: src/actions.php:296
 msgid ""
 "The file move was successful, but some of the source files could not be "
 "removed."
 msgstr ""
 
-#: src/actions.php:277
+#: src/actions.php:298
 msgid "The files move completed successfully."
 msgstr ""
 
-#: src/actions.php:283
+#: src/actions.php:304
 msgid "Re-login"
 msgstr ""
 
-#: src/actions.php:290
+#: src/actions.php:311
 msgid ""
 "Failed to move the files. It may not have sufficient permissions to operate "
 "the source files or directories."
 msgstr ""
 
-#: src/actions.php:301
+#: src/actions.php:322
 msgid "The \"wp-config.php\" file already exists to the destination."
 msgstr ""
 
-#: src/actions.php:304
+#: src/actions.php:325
 msgid "The \"wp-config.php\" file has been moved."
 msgstr ""
 
-#: src/actions.php:307
+#: src/actions.php:328
 msgid "Failed to move the \"wp-config.php\" file."
 msgstr ""
 
-#: src/actions.php:311
+#: src/actions.php:332
 msgid "Do not have permission to work with files."
 msgstr ""
 
-#: src/actions.php:404
+#: src/actions.php:435
 msgid ""
 "Performed an emergency recovery. If you want to continue using the WP "
 "igniter, you should disable the \"wpignitor_emergency_recovery\" filter."
@@ -112,19 +112,19 @@ msgstr ""
 msgid "WP Ignitor"
 msgstr ""
 
-#: src/admin.php:156 src/admin.php:490
+#: src/admin.php:156 src/admin.php:499
 msgid "Globals"
 msgstr ""
 
-#: src/admin.php:161 src/admin.php:491
+#: src/admin.php:161 src/admin.php:500
 msgid "Conceals"
 msgstr ""
 
-#: src/admin.php:166 src/admin.php:492
+#: src/admin.php:166 src/admin.php:501
 msgid "Authorizations"
 msgstr ""
 
-#: src/admin.php:171 src/admin.php:493
+#: src/admin.php:171 src/admin.php:502
 msgid "Utilities"
 msgstr ""
 
@@ -172,183 +172,195 @@ msgstr ""
 msgid "Failed to create the directory to move the file to."
 msgstr ""
 
-#: src/admin.php:357
+#: src/admin.php:359
 msgid "The destination path is invalid directory, or never write permission."
 msgstr ""
 
-#: src/admin.php:365
+#: src/admin.php:369
 msgid "The files on the installation path for moving could not compressed."
 msgstr ""
 
-#: src/admin.php:375
+#: src/admin.php:381
 msgid "Failed to move the files."
 msgstr ""
 
-#: src/admin.php:398
+#: src/admin.php:406
 msgid "Move wp-content directory"
 msgstr ""
 
-#: src/admin.php:399
+#: src/admin.php:407
 msgid "Move plugin directory"
 msgstr ""
 
-#: src/admin.php:400
+#: src/admin.php:408
 msgid "Move upload directory"
 msgstr ""
 
-#: src/admin.php:400 src/admin.php:405
+#: src/admin.php:408 src/admin.php:413
 msgid "Undefined"
 msgstr ""
 
-#: src/admin.php:401
+#: src/admin.php:409
 msgid "Change auto save interval"
 msgstr ""
 
-#: src/admin.php:401 src/admin.php:415
+#: src/admin.php:409 src/admin.php:424
 msgid "Sec."
 msgstr ""
 
-#: src/admin.php:402
+#: src/admin.php:410
 msgid "Disable post revisions"
 msgstr ""
 
-#: src/admin.php:403
+#: src/admin.php:411
 msgid "Cookie domain"
 msgstr ""
 
-#: src/admin.php:404
+#: src/admin.php:412
 msgid "Enable multi-site"
 msgstr ""
 
-#: src/admin.php:405
+#: src/admin.php:413
 msgid "Redirect non-existent blogs"
 msgstr ""
 
-#: src/admin.php:406
+#: src/admin.php:415
 msgid "Disable recovery mode (>= WP 5.2)"
 msgstr ""
 
-#: src/admin.php:407
+#: src/admin.php:416
 msgid "Enable debug mode"
 msgstr ""
 
-#: src/admin.php:408
+#: src/admin.php:417
 msgid "Enable debug log output"
 msgstr ""
 
-#: src/admin.php:409
+#: src/admin.php:418
 msgid "Enable PHP error display"
 msgstr ""
 
-#: src/admin.php:410
+#: src/admin.php:419
 msgid "Enable script debug (for *.js and *.css)"
 msgstr ""
 
-#: src/admin.php:411
+#: src/admin.php:420
 msgid "Disable JavaScript concatenation"
 msgstr ""
 
-#: src/admin.php:412
+#: src/admin.php:421
 msgid "Change PHP allocated memory limit"
 msgstr ""
 
-#: src/admin.php:412 src/admin.php:413
+#: src/admin.php:421 src/admin.php:422
 msgid "MB"
 msgstr ""
 
-#: src/admin.php:413
+#: src/admin.php:422
 msgid "Change max memory limit for admin pages"
 msgstr ""
 
-#: src/admin.php:414
+#: src/admin.php:423
 msgid "Disable Cron"
 msgstr ""
 
-#: src/admin.php:415
+#: src/admin.php:424
 msgid "Change cron timeout time"
 msgstr ""
 
-#: src/admin.php:416
+#: src/admin.php:425
 msgid "Change period until trash emptied"
 msgstr ""
 
-#: src/admin.php:416
+#: src/admin.php:425
 msgid "Day"
 msgstr ""
 
-#: src/admin.php:417
+#: src/admin.php:426
 msgid "Disallow plugin/theme editor"
 msgstr ""
 
-#: src/admin.php:418
+#: src/admin.php:427
 msgid "Force SSL on admin and login pages"
 msgstr ""
 
-#: src/admin.php:419
+#: src/admin.php:428
 msgid "Enable debug mode for WP-Ignitor plugin"
 msgstr ""
 
-#: src/admin.php:435
+#: src/admin.php:444
 msgid "Remove tags for prefetch as resource hint."
 msgstr ""
 
-#: src/admin.php:436
+#: src/admin.php:445
 msgid "Prevent output all feed links."
 msgstr ""
 
-#: src/admin.php:437
+#: src/admin.php:446
 msgid "Disable comment."
 msgstr ""
 
-#: src/admin.php:438
+#: src/admin.php:447
 msgid "Stop the import of emoji-related resources."
 msgstr ""
 
-#: src/admin.php:439
+#: src/admin.php:448
 msgid "Remove RSD link for remote posting."
 msgstr ""
 
-#: src/admin.php:440
+#: src/admin.php:449
 msgid "Remove wlwmanifest link."
 msgstr ""
 
-#: src/admin.php:441
+#: src/admin.php:450
 msgid "Remove canonical link."
 msgstr ""
 
-#: src/admin.php:442
+#: src/admin.php:451
 msgid "Stop providing oEmbed for media embedding."
 msgstr ""
 
-#: src/admin.php:443
+#: src/admin.php:452
 msgid "Remove the REST API link tag (REST API will be not disabled)."
 msgstr ""
 
-#: src/admin.php:444
+#: src/admin.php:453
 msgid "Remove the library of block editor on the frontend."
 msgstr ""
 
-#: src/admin.php:445
+#: src/admin.php:454
 msgid "Remove several outputs, such as generator meta tag."
 msgstr ""
 
-#: src/admin.php:520
+#: src/admin.php:529
 msgid "Invalid access."
 msgstr ""
 
-#: src/admin.php:596
+#: src/admin.php:620
 msgid "Failed to update \"wp-config.php\"."
 msgstr ""
 
-#: src/admin.php:668
+#: src/admin.php:661
+msgid ""
+"Updated \".htaccess\", but the apache authentication setting was aborted "
+"because the saving of the authentication user file failed."
+msgstr ""
+
+#: src/admin.php:664
+msgid ""
+"Updated \".htaccess\", but the apache authentication setting was aborted "
+"because anyone valid authentication user has not been set."
+msgstr ""
+
+#: src/admin.php:738
 msgid "It's not locked right now."
 msgstr ""
 
-#: src/admin.php:680
+#: src/admin.php:750
 msgid "Completed successfully."
 msgstr ""
 
-#: src/admin.php:680
+#: src/admin.php:750
 msgid "Execution failed."
 msgstr ""
 
@@ -356,26 +368,65 @@ msgstr ""
 msgid "No route matching URL and request method."
 msgstr ""
 
-#: src/utils.php:61
+#: src/utils.php:79
 #, php-format
 msgid "<code>%s</code> does not exist."
 msgstr ""
 
-#: src/utils.php:203
+#: src/utils.php:274
 msgid "Failed to get the HTML source code by wp_remote_request()"
 msgstr ""
 
-#: src/utils.php:205
+#: src/utils.php:276
 msgid "Could not get the HTML source."
 msgstr ""
 
-#: src/utils.php:260
+#: src/utils.php:332
 #, php-format
 msgid "The current PHP environment does not support Phar class (%s)."
 msgstr ""
 
-#: src/utils.php:337
+#: src/utils.php:414
 msgid "The specified file does not exist."
+msgstr ""
+
+#: src/utils.php:621 src/utils.php:627 src/utils.php:1060
+msgid "Restricted Area"
+msgstr ""
+
+#: src/utils.php:971
+msgid "Updated the apache auth user files."
+msgstr ""
+
+#: src/utils.php:973
+msgid "Not have permission to update the apache auth user file."
+msgstr ""
+
+#: src/utils.php:985
+msgid "Created new apache auth user file."
+msgstr ""
+
+#: src/utils.php:987 src/utils.php:993
+msgid "Failed to save the apache auth user file."
+msgstr ""
+
+#: src/utils.php:990
+msgid "Not have permission to create the apache auth user file."
+msgstr ""
+
+#: src/utils.php:1014
+#, php-format
+msgid "Removed the %s file, but could not remove the parent directory."
+msgstr ""
+
+#: src/utils.php:1018
+#, php-format
+msgid "The %s file could not be removed."
+msgstr ""
+
+#: src/utils.php:1021
+#, php-format
+msgid "The %s file does not exist."
 msgstr ""
 
 #: views/conceal.php:13 views/help-conceal.php:11
@@ -393,384 +444,463 @@ msgstr ""
 msgid "Target page path to view:"
 msgstr ""
 
-#: views/conceal.php:27
+#: views/conceal.php:28
 #, php-format
 msgid "Actual view of the %s tag for the specified page as follows:"
 msgstr ""
 
-#: views/conceal.php:43
+#: views/conceal.php:44
 msgid "Commit Settings"
 msgstr ""
 
-#: views/conceal.php:46
+#: views/conceal.php:47
 msgid ""
 "Their committed settings will be reflected immediately in the front end."
 msgstr ""
 
-#: views/conceal.php:52
+#: views/conceal.php:52 views/conceal.php:58 views/globals.php:188
+#: views/globals.php:194 views/globals.php:492 views/globals.php:498
+msgid "Display Details"
+msgstr ""
+
+#: views/conceal.php:53 views/globals.php:189 views/globals.php:493
+msgid "Shrink Display"
+msgstr ""
+
+#: views/conceal.php:66
 msgid "REST API Routes"
 msgstr ""
 
-#: views/conceal.php:55
+#: views/conceal.php:69
 msgid "Choose the behavior for each namespace in the REST API routes."
 msgstr ""
 
-#: views/conceal.php:70
+#: views/conceal.php:84
 msgid "Allow All"
 msgstr ""
 
-#: views/conceal.php:71
+#: views/conceal.php:85
 msgid "Allow Self Only"
 msgstr ""
 
-#: views/conceal.php:72
+#: views/conceal.php:86
 msgid "Allow Jetpack"
 msgstr ""
 
-#: views/conceal.php:73
+#: views/conceal.php:87
 msgid "Deny All"
 msgstr ""
 
-#: views/conceal.php:74
+#: views/conceal.php:88
 msgid "Redirection"
 msgstr ""
 
-#: views/conceal.php:76
+#: views/conceal.php:90
 msgid "HTTP code if deny:"
 msgstr ""
 
-#: views/conceal.php:79
+#: views/conceal.php:93
 msgid "301 Moved Permanently"
 msgstr ""
 
-#: views/conceal.php:80
+#: views/conceal.php:94
 msgid "302 Found"
 msgstr ""
 
-#: views/conceal.php:81
+#: views/conceal.php:95
 msgid "401 Unauthorized"
 msgstr ""
 
-#: views/conceal.php:82
+#: views/conceal.php:96
 msgid "403 Forbidden"
 msgstr ""
 
-#: views/conceal.php:83
+#: views/conceal.php:97
 msgid "404 Not Found"
 msgstr ""
 
-#: views/conceal.php:91
+#: views/conceal.php:105
 msgid "Save Behavior"
 msgstr ""
 
-#: views/conceal.php:94
+#: views/conceal.php:108
 msgid ""
 "Control the behavior of \"wp-json/\", which is the root of the REST route, "
 "in the \"/\" only namespace."
 msgstr ""
 
-#: views/globals.php:17 views/help-globals.php:11
+#: views/globals.php:20 views/help-globals.php:11
 msgid ""
 "This settings section contains settings that have a destructive impact on "
 "the entire website. It's risky to do, so it's a good idea to do it before "
 "you bring in the content."
 msgstr ""
 
-#: views/globals.php:22
+#: views/globals.php:25
 msgid "File Control Permissions"
 msgstr ""
 
-#: views/globals.php:25
+#: views/globals.php:28
 msgid ""
 "It is the state whether each file or directory can be controlled from the WP-"
 "Ignitor plug-in. These affect the execution of various operations in this "
 "section."
 msgstr ""
 
-#: views/globals.php:30
+#: views/globals.php:33
 msgid "DOCUMENT_ROOT:"
 msgstr ""
 
-#: views/globals.php:35
+#: views/globals.php:38
 msgid "Install Directory:"
 msgstr ""
 
-#: views/globals.php:40
+#: views/globals.php:43
 msgid "\"wp-config.php\" File Path:"
 msgstr ""
 
-#: views/globals.php:45
+#: views/globals.php:48
 msgid "\".htaccess\" File Path:"
 msgstr ""
 
-#: views/globals.php:46
+#: views/globals.php:49
 msgid "None"
 msgstr ""
 
-#: views/globals.php:53
+#: views/globals.php:56
 msgid "Move Installation Path"
 msgstr ""
 
-#: views/globals.php:59 views/globals.php:364 views/globals.php:375
+#: views/globals.php:62 views/globals.php:452 views/globals.php:463
 msgid "New Path"
 msgstr ""
 
-#: views/globals.php:65
+#: views/globals.php:68
 msgid "Moving files to new install path"
 msgstr ""
 
-#: views/globals.php:68
+#: views/globals.php:71
 msgid "Move To"
 msgstr ""
 
-#: views/globals.php:73
+#: views/globals.php:76
 msgid "To use the home URL (site URL) without subdirectory after moving files."
 msgstr ""
 
-#: views/globals.php:77
+#: views/globals.php:80
 msgid ""
 "After moving all files, optimize the \".htaccess\" or create a new one if it "
 "doesn't exist."
 msgstr ""
 
-#: views/globals.php:82
+#: views/globals.php:85
 msgid ""
 "Cannot move to the path of directory that already exists, or to the path of "
 "directly document root."
 msgstr ""
 
-#: views/globals.php:83
+#: views/globals.php:86
 msgid "WP-Ignitor make a new directory before moving."
 msgstr ""
 
-#: views/globals.php:84
+#: views/globals.php:87
 msgid ""
 "When moving, the \"wp-config.php\" will be forcibly placed directly under "
 "the installation directory."
 msgstr ""
 
-#: views/globals.php:85
+#: views/globals.php:88
 msgid ""
 "Files in the \"node_modules\", \".cache\", and \".git\" directories are "
 "excluded from the move."
 msgstr ""
 
-#: views/globals.php:86
+#: views/globals.php:89
 msgid "Also cannot move to the path that is two or more levels deep."
 msgstr ""
 
-#: views/globals.php:87
+#: views/globals.php:90
 msgid ""
 "If you do not have enough permission to operate the file, you cannot move it."
 msgstr ""
 
-#: views/globals.php:93
+#: views/globals.php:96
 msgid "Move \"wp-config.php\""
 msgstr ""
 
-#: views/globals.php:106
+#: views/globals.php:109
 msgid "Move To One Upper Level Path"
 msgstr ""
 
-#: views/globals.php:112
+#: views/globals.php:115
 msgid ""
 "No secure because it's same the installed path. Recommend that you move the "
 "file up one level for better security."
 msgstr ""
 
-#: views/globals.php:117
+#: views/globals.php:120
 msgid ""
 "It's more appropriate because upper the installed path. However, please note "
 "that it is installed under the document root that can be accessed by "
 "everyone."
 msgstr ""
 
-#: views/globals.php:122
+#: views/globals.php:125
 msgid ""
 "It's already in the correct position recommended for security. You will also "
 "be better off by paying attention to directory traversal attacks."
 msgstr ""
 
-#: views/globals.php:131
+#: views/globals.php:134
 msgid "Update \"wp-config.php\""
 msgstr ""
 
-#: views/globals.php:134
+#: views/globals.php:137
 msgid ""
 "Enables or disables various functions by constants implemented in WordPress "
 "in advance. This settings will be written directly to \"wp-config.php\"."
 msgstr ""
 
-#: views/globals.php:163
+#: views/globals.php:167
 #, php-format
 msgid ""
 "Please refer to %sthe official documentation%s for the detailed behavior of "
 "each option constant."
 msgstr ""
 
-#: views/globals.php:165 views/globals.php:306
+#: views/globals.php:169 views/globals.php:324
 msgid "Preview:"
 msgstr ""
 
-#: views/globals.php:170
+#: views/globals.php:174
 msgid "Update wp-config.php"
 msgstr ""
 
-#: views/globals.php:174
+#: views/globals.php:178
 msgid "Restore wp-config.php"
 msgstr ""
 
-#: views/globals.php:177
+#: views/globals.php:181
 msgid ""
 "The above settings will be inserted into marker (rows) from \"BEGIN WP "
 "Ignitor\" to \"END WP Ignitor\"."
 msgstr ""
 
-#: views/globals.php:178
+#: views/globals.php:182
 msgid ""
 "Only the checked options will be written to wp-config.php. And you can "
 "remove the settings by updating with all the unchecked."
 msgstr ""
 
-#: views/globals.php:179
+#: views/globals.php:183
 msgid ""
 "If there is an option already defined in \"wp-config.php\", that will be "
 "applied with priority."
 msgstr ""
 
-#: views/globals.php:185
+#: views/globals.php:202
 msgid "Update \".htaccess\""
 msgstr ""
 
-#: views/globals.php:188
+#: views/globals.php:205
 msgid ""
 "Improve the security of your site by preventing access to each WordPress "
 "core file from anyone other than the allowed sources."
 msgstr ""
 
-#: views/globals.php:191
+#: views/globals.php:209
 msgid "Allow Hosts"
 msgstr ""
 
-#: views/globals.php:197 views/globals.php:236 views/globals.php:274
+#: views/globals.php:215 views/globals.php:254 views/globals.php:292
 msgid "(Auto Set by System)"
 msgstr ""
 
-#: views/globals.php:209
+#: views/globals.php:227
 msgid "Remove Host"
 msgstr ""
 
-#: views/globals.php:215 views/globals.php:226
+#: views/globals.php:233 views/globals.php:244
 msgid "Add New Hostname"
 msgstr ""
 
-#: views/globals.php:231
+#: views/globals.php:234
+msgid "Allowed characters: A-z0-9 - _ and colon only"
+msgstr ""
+
+#: views/globals.php:249
 msgid "Allow Addresses"
 msgstr ""
 
-#: views/globals.php:247
+#: views/globals.php:265
 msgid "Remove Address"
 msgstr ""
 
-#: views/globals.php:253 views/globals.php:264
+#: views/globals.php:271 views/globals.php:282
 msgid "Add New Address"
 msgstr ""
 
-#: views/globals.php:269
+#: views/globals.php:272 views/login.php:100
+msgid "Allowed characters: 0-9 and colons only"
+msgstr ""
+
+#: views/globals.php:287
 msgid "Allow Referers"
 msgstr ""
 
-#: views/globals.php:285
+#: views/globals.php:303
 msgid "Remove Referer"
 msgstr ""
 
-#: views/globals.php:291 views/globals.php:302
+#: views/globals.php:309 views/globals.php:320
 msgid "Add New Referer"
 msgstr ""
 
-#: views/globals.php:308
+#: views/globals.php:310
+msgid "Incorrect format of inputted"
+msgstr ""
+
+#: views/globals.php:326
 msgid "Advanced Settings:"
 msgstr ""
 
-#: views/globals.php:315
+#: views/globals.php:333
 msgid ""
 "Restrict access to core PHP files under the WordPress installation directory "
 "from anyone other than the allowed sources."
 msgstr ""
 
-#: views/globals.php:323
+#: views/globals.php:341
 msgid ""
 "An access to \"xmlrpc.php\" only allow access that has user agent of "
 "\"Jetpack\", and other accesses redirect to \"0.0.0.0\" to avoid load."
 msgstr ""
 
-#: views/globals.php:331
+#: views/globals.php:349
 msgid ""
 "Access to \"wp-login.php\" returns a uniform 404 response regardless of the "
 "connection source."
 msgstr ""
 
-#: views/globals.php:340
+#: views/globals.php:358
 #, php-format
 msgid ""
 "Close direct access to \"wp-login.php\" and set up a new login URL (%s)."
 msgstr ""
 
-#: views/globals.php:341
+#: views/globals.php:359
 #, php-format
 msgid ""
 "Detailed settings for the new login URL can be made in the relevant section "
 "of the \"%sAuthorizations%s\" tab."
 msgstr ""
 
-#: views/globals.php:352
+#: views/globals.php:370
 msgid "Avoid the discovery of an author's ID."
 msgstr ""
 
-#: views/globals.php:361
+#: views/globals.php:378
+msgid "Set up apache authentication (Basic or Digest auth.) for this site URL."
+msgstr ""
+
+#: views/globals.php:379
+#, php-format
+msgid ""
+"You can change the path of an authentication user file by using "
+"\"%swpignitor_apache_auth_user_file_path%s\" filter."
+msgstr ""
+
+#: views/globals.php:382
+msgid "Authentication Type:"
+msgstr ""
+
+#: views/globals.php:384
+msgid "Basic Auth."
+msgstr ""
+
+#: views/globals.php:385
+msgid "Digest Auth."
+msgstr ""
+
+#: views/globals.php:388
+msgid "AuthUserFile Path:"
+msgstr ""
+
+#: views/globals.php:389
+msgid "AuthUserFile Path"
+msgstr ""
+
+#: views/globals.php:393
+msgid "Auth User Accounts"
+msgstr ""
+
+#: views/globals.php:405 views/globals.php:419
+msgid "Remove Account"
+msgstr ""
+
+#: views/globals.php:426
+msgid "Add New Auth ID"
+msgstr ""
+
+#: views/globals.php:428
+msgid "Add New Password"
+msgstr ""
+
+#: views/globals.php:438
+msgid "Add New Account"
+msgstr ""
+
+#: views/globals.php:449
 msgid "Rewrite URL path of the plugins directory."
 msgstr ""
 
-#: views/globals.php:363 views/globals.php:374
+#: views/globals.php:451 views/globals.php:462
 msgid "New destination:"
 msgstr ""
 
-#: views/globals.php:372
+#: views/globals.php:460
 msgid "Rewrite URL path of the themes directory."
 msgstr ""
 
-#: views/globals.php:390
+#: views/globals.php:478
 msgid "Insert Above Settings"
 msgstr ""
 
-#: views/globals.php:394
+#: views/globals.php:482
 msgid "Withdraw Above Settings"
 msgstr ""
 
-#: views/globals.php:395
+#: views/globals.php:483
 msgid "Refer to configure for Nginx"
 msgstr ""
 
-#: views/globals.php:399
+#: views/globals.php:487
 msgid ""
 "The directive (lines) from \"BEGIN WP Ignitor Rules\" to \"END WP Ignitor "
 "Rules\" are inserted before the directive (lines) from \"BEGIN WordPress\" "
 "to \"END WordPress\"."
 msgstr ""
 
-#: views/globals.php:405
+#: views/globals.php:506
 msgid "Clear All Settings"
 msgstr ""
 
-#: views/globals.php:411
+#: views/globals.php:512
 msgid "Clear All Saved Settings Of This Plugin"
 msgstr ""
 
-#: views/globals.php:414
+#: views/globals.php:515
 msgid ""
 "Clearing all saved settings will reset all options for this plugin. However, "
 "moved files and updated files will not be restored to the state before such "
 "executing."
+msgstr ""
+
+#: views/globals.php:516
+#, php-format
+msgid ""
+"If you want to recover all updated files (not including files on the moved "
+"installation path), use the \"%swpignitor_emergency_recovery%s\" filter hook."
 msgstr ""
 
 #: views/help-conceal.php:9

@@ -205,7 +205,7 @@ trait admin {
      * @package WordPress(core)
      * @since 2.9.0
      */
-    public function user_contactmethods( array $methods, object $user ): array {
+    public function user_contactmethods( array $methods, ?object $user ): array {
         if ( current_user_can( 'manage_options' ) ) {
             // Add to admin user's profile only
         }
@@ -232,7 +232,7 @@ trait admin {
      * @package WordPress(core)
      * @since 2.8.0 -> 5.4.2
      */
-    public function set_screen_option( $screen_option, string $option, int $value ) {
+    public function set_screen_option( $screen_option, ?string $option, ?int $value ) {
         $user = wp_get_current_user();
         update_user_meta( $user->ID, $option, $value );
         return $screen_option;
@@ -257,7 +257,7 @@ trait admin {
      * @package WordPress(core)
      * @since 2.5.0 -> 2.6.0 -> 4.9.0
      */
-    public function plugin_action_links( array $actions, string $plugin_file, array $plugin_data, string $context ): array {
+    public function plugin_action_links( ?array $actions, ?string $plugin_file, ?array $plugin_data, ?string $context ): array {
         return $actions;
     }
 
@@ -269,7 +269,7 @@ trait admin {
      * @package WordPress(core)
      * @since 2.7.0 -> 4.9.0
      */
-    public function plugin_action_links_self( array $actions, string $plugin_file, array $plugin_data, string $context ): array {
+    public function plugin_action_links_self( ?array $actions, ?string $plugin_file, ?array $plugin_data, ?string $context ): array {
         $_link = esc_url( self::get_page_url() );
         $settings_link = '<a href="'. $_link .'">'. __( 'Settings' ) .'</a>';
         array_unshift( $actions, $settings_link ); 
@@ -349,14 +349,18 @@ trait admin {
             } catch ( Exception $e ) {
                 $message = __( 'Failed to create the directory to move the file to.', IGNITOR );
                 $this->errors->add( 'failure_to_moving_install_path', $message );
-                $this->logger( $message );
+                if ( $this->debug ) {        
+                    self::logger( $message );
+                }
                 return false;
             }
         }
         if ( ! is_dir( $new_install_path ) || ! is_writable( $new_install_path ) ) {
             $message = __( 'The destination path is invalid directory, or never write permission.', IGNITOR );
             $this->errors->add( 'failure_to_moving_install_path', $message );
-            $this->logger( $message );
+            if ( $this->debug ) {        
+                self::logger( $message );
+            }
             return false;
         }
 
@@ -364,7 +368,9 @@ trait admin {
         if ( ! $this->compressTarball( ABSPATH ) ) {
             $message = __( 'The files on the installation path for moving could not compressed.', IGNITOR );
             $this->errors->add( 'failure_to_moving_install_path', $message );
-            $this->logger( $message );
+            if ( $this->debug ) {        
+                self::logger( $message );
+            }
             return false;
         }
 
@@ -374,7 +380,9 @@ trait admin {
         if ( ! $this->extractTarball( $origin_archive_path, $new_install_path ) ) {
             $message = __( 'Failed to move the files.', IGNITOR );
             $this->errors->add( 'failure_to_moving_install_path', $message );
-            $this->logger( $message );
+            if ( $this->debug ) {        
+                self::logger( $message );
+            }
             return false;
         }
 
@@ -403,7 +411,8 @@ trait admin {
             'cookie_domain'        => [ 'label' => __( 'Cookie domain', IGNITOR ), 'type' => 'text', 'value' => COOKIE_DOMAIN, 'class' => 'regular-text code', 'placeholder' => COOKIE_DOMAIN ],
             'wp_allow_multisite'   => [ 'label' => __( 'Enable multi-site', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_ALLOW_MULTISITE' ) ? WP_ALLOW_MULTISITE : false ],
             'noblogredirect'       => [ 'label' => __( 'Redirect non-existent blogs', IGNITOR ), 'type' => 'text', 'value' => defined( 'NOBLOGREDIRECT' ) ? NOBLOGREDIRECT : '', 'class' => 'medium-text code', 'placeholder' => __( 'Undefined', IGNITOR ) ],
-            'wp_disable_fatal_error_handler' => [ 'label' => __( 'Disable recovery mode (>= WP 5.2)', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_DISABLE_FATAL_ERROR_HANDLER' ) ? WP_DISABLE_FATAL_ERROR_HANDLER : false ],
+            'wp_disable_fatal_error_handler' => [
+                                        'label' => __( 'Disable recovery mode (>= WP 5.2)', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => defined( 'WP_DISABLE_FATAL_ERROR_HANDLER' ) ? WP_DISABLE_FATAL_ERROR_HANDLER : false ],
             'wp_debug'             => [ 'label' => __( 'Enable debug mode', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG ],
             'wp_debug_log'         => [ 'label' => __( 'Enable debug log output', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG_LOG ],
             'wp_debug_display'     => [ 'label' => __( 'Enable PHP error display', IGNITOR ), 'type' => 'checkbox', 'value' => 1, 'class' => 'toggle', 'checked' => WP_DEBUG_DISPLAY ],
@@ -534,9 +543,12 @@ trait admin {
                     break;
                 case 'array':
                 case 'wp_config':
+                case 'advanced_htaccess':
                 case 'namespaces':
                 case 'http_code':
                 case 'allow_login_ips':
+                case 'apache_auth_ids':
+                case 'apache_auth_passwords':
                     // For array
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
                     if ( ! empty( $params[$_k] ) ) {
@@ -568,7 +580,9 @@ trait admin {
                     $params[$_k] = filter_input( INPUT_POST, $_k, FILTER_DEFAULT );
                     $allowed_html = [
                         'ifmodule' => [
-                            'mod_rewrite.c' => [],
+                            'mod_rewrite.c'     => [],
+                            'mod_auth_basic.c'  => [],
+                            'mod_auth_digest.c' => [],
                         ],
                     ];
                     $params[$_k] = wp_kses( $params[$_k], $allowed_html );
@@ -611,10 +625,56 @@ trait admin {
                 break;
             case 'update-htaccess':
                 unset( $params['wp_config'] );
+                $rules = $params['htaccess'];
+                // Upsert the basic auth user file if necessary; since v1.1.0
+                if ( $this->debug ) {        
+                    self::logger( $params, __METHOD__ );
+                }
+                $apache_auth_user_exists = false;
+                // Firstly register auth users
+                if ( ! empty( $params['apache_auth_ids'] ) && ! empty( $params['apache_auth_passwords'] ) ) {
+                    $_auth_user_pair = [];
+                    foreach ( $params['apache_auth_ids'] as $_id => $_user ) {
+                        if ( ! empty( $_user ) && isset( $params['apache_auth_passwords'][$_id] ) && ! empty( $params['apache_auth_passwords'][$_id] ) ) {
+                            $_auth_user_pair[sanitize_user( $_user )] = sanitize_text_field( $params['apache_auth_passwords'][$_id] );
+                        }
+                    }
+                    if ( empty( $_auth_user_pair ) ) {
+                        $this->options['apache_auth_users'] = [];
+                        $this->remove_auth_user_file();
+                    } else {
+                        $this->options['apache_auth_users'] = $_auth_user_pair;
+                        $apache_auth_user_exists = true;
+                    }
+                    $this->options['advanced_htaccess']['apache_auth_type'] = $params['advanced_htaccess']['apache_auth_type'] ?: 'basic';
+                    $this->save_options();
+                }
+                // self::logger( $this->get_options() );
+                if ( (bool)$params['advanced_htaccess']['apache_auth'] ) {
+                    $is_enabled_apache_auth = false;
+                    // Then save the apache authentication user file.
+                    if ( $apache_auth_user_exists ) {
+                        $file_path = $params['advanced_htaccess']['apache_auth_user_file'];
+                        $auth_type = $params['advanced_htaccess']['apache_auth_type'] ?: 'basic';
+                        $is_enabled_apache_auth = $this->save_auth_user_file( $file_path, $auth_type );
+                        if ( ! $is_enabled_apache_auth ) {
+                            $messages[] = __( 'Updated ".htaccess", but the apache authentication setting was aborted because the saving of the authentication user file failed.', IGNITOR );
+                        }
+                    } else {
+                        $messages[] = __( 'Updated ".htaccess", but the apache authentication setting was aborted because anyone valid authentication user has not been set.', IGNITOR );
+                    }
+                    if ( ! $is_enabled_apache_auth ) {
+                        $this->options['advanced_htaccess']['apache_auth'] = false;
+                        $this->save_options();
+                        $rules = $this->generate_htaccess();
+                    }
+                } else {
+                    // Then remove the apache authentication user file.
+                    $this->remove_auth_user_file();
+                }
                 // Ensure get_home_path() is declared.
                 require_once ABSPATH . 'wp-admin/includes/file.php';
                 $htaccess_file = $this->get_htaccess_path();
-                $rules = $params['htaccess'];
                 if ( ! $htaccess_file ) {
                     $home_path     = get_home_path();
                     $htaccess_file = $home_path . '.htaccess';

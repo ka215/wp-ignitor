@@ -1,13 +1,15 @@
 /**
  * WP-Ignitor plugin
- * @since 1.0.3
+ * @since 1.0.3 -> 1.1.0
  */
 //import '../styles/index.scss'
-import { hasProp, logger, triggerEvent } from './_utils'
+import { sleep, hasProp, logger, triggerEvent } from './_utils'
 import { postData, addPostField } from './_postData'
 import { callback } from './_callback'
 import { initDialog, showDialog } from './_dialog'
 import { initFluctuation } from './_fluctuation'
+import { initFluctuationTemplate } from './_fluctuationTemplate'
+import { initToggleField } from './_toggleField'
 
 function init() {
     const AJAX_URL  = window.ajaxurl || null,
@@ -17,6 +19,8 @@ function init() {
 
     initDialog()
     initFluctuation()
+    initFluctuationTemplate()
+    initToggleField()
 
     // Focus current help tab
     if ( document.getElementById('contextual-help-wrap') ) {
@@ -29,6 +33,61 @@ function init() {
             }
         })
     }
+
+    // Expansionable Block
+    Array.prototype.forEach.call(document.querySelectorAll('.drawer-control'), (elm) => {
+        elm.addEventListener('click', (evt) => {
+            let _self  = evt.target,
+                _label = _self.querySelector('.drawer-label-text'),
+                targetBlock = document.getElementById(_self.getAttribute('data-target'))
+
+            _self.classList.toggle('expanded')
+            if (_self.classList.contains('expanded')) {
+                targetBlock.style.height = `${targetBlock.scrollHeight}px`
+                targetBlock.classList.add('expanded')
+                _label.textContent = _self.getAttribute('data-stretched')
+            } else {
+                targetBlock.style.height = '5em'
+                targetBlock.classList.remove('expanded')
+                _label.textContent = _self.getAttribute('data-shrinked')
+            }
+            sleep(301).then(() => {
+                //targetBlock.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                let focusingElm = document.getElementById(parsedURL.hash.replace('#', '')),
+                    targetTop = targetBlock.closest('tr').getBoundingClientRect().top,
+                    offsetTop = window.pageYOffset,
+                    buffer = document.getElementById('wpadminbar').clientHeight,
+                    moveY  = targetTop + offsetTop - buffer
+                if (focusingElm) {
+                    moveY = focusingElm.getBoundingClientRect().top + offsetTop - buffer
+                }
+                window.scrollTo({
+                    top: moveY,
+                    behavior: 'smooth'
+                })
+            })
+        }, false)
+    })
+
+    // Watch DOM by MutationObserver
+    const moConfig    = { attributes: true, childList: true, subtree: true },
+          moCallback  = function(mutationsList) {
+            const checkUlIds = [ 'allowed-hosts', 'allowed-addresses', 'allowed-referers', 'auth-accounts' ],
+                  checkTextareaIds = [ 'preview-wp-config', 'htaccess' ]
+            for (const mutation of mutationsList) {
+                if ((mutation.type === 'childList' && checkUlIds.includes(mutation.target.id)) ||
+                    (mutation.type === 'attributes' && checkTextareaIds.includes(mutation.target.id))) {
+                    let targetBlock = mutation.target.closest('.expanded')
+                    if (targetBlock) {
+                        targetBlock.removeAttribute('style')
+                    }
+                }
+            }
+          },
+          observer   = new MutationObserver(moCallback)
+    Array.prototype.forEach.call(document.querySelectorAll('.expansionable-block'), (node) => {
+        observer.observe(node, moConfig)
+    })
 
     // Update "wp-config.php" section
     Array.prototype.forEach.call(document.querySelectorAll('.toggle-option'), (elm) => {
@@ -46,7 +105,7 @@ function init() {
     modifyConfigPreview()
 
     // Update ".htaccess" section
-    Array.prototype.forEach.call(document.querySelectorAll('input[id^="advanced-option-"]'), (elm) => {
+    Array.prototype.forEach.call(document.querySelectorAll('[id^="advanced-option-"]'), (elm) => {
         elm.addEventListener('change', () => {
             triggerEvent( document.getElementById('btn-reload-preview-htaccess'), 'click' )
         }, false)
@@ -123,6 +182,14 @@ function init() {
         let targetElm = document.getElementById(parsedURL.hash.replace('#', ''))
 
         if (targetElm) {
+            let expandElm = targetElm.closest('.expansionable-block')
+            if (expandElm && !expandElm.classList.contains('expanded')) {
+                triggerEvent( expandElm.nextElementSibling, 'click' )
+                window.scrollTo({
+                    top: targetElm.offsetTop,
+                    behavior: 'smooth'
+                })
+            }
             targetElm.classList.add('focus', 'focus-active')
             targetElm.addEventListener('mouseout', (evt) => {
                 evt.target.classList.remove('focus-active')

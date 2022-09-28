@@ -193,6 +193,7 @@ class wpIgnitor extends abstractClass {
         add_filter( 'site_url', [ $this, 'site_url' ], 10, 4 );
         add_filter( 'admin_url', [ $this, 'admin_url' ], 10, 3 );
         add_filter( 'wp_redirect', [ $this, 'wp_redirect' ], 10, 2 );
+        add_filter( 'admin_email_remind_interval', [ $this, 'admin_email_remind_interval' ] );
 
         if ( is_admin() ) {
             // For admin screen controls: refer definition in "admin" trait
@@ -264,7 +265,7 @@ class wpIgnitor extends abstractClass {
             ob_get_clean();
             $logs[] = $buffer;
         }
-        if ( IGNITOR_DEBUG ) {
+        if ( $this->debug ) {        
             self::logger( $logs );
         }
     }
@@ -277,7 +278,7 @@ class wpIgnitor extends abstractClass {
      */
     public static function plugin_deactivation() {
         $logs = [ '"WP Ignitor" plugin deactivated!' ];
-        if ( IGNITOR_DEBUG ) {
+        if ( $this->debug ) {        
             self::logger( $logs );
         }
     }

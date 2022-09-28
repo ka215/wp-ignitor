@@ -23,28 +23,42 @@ $rest_behavior_options = $this->get_option( 'rest_behavior' );
           <span class="prefix"><code><?= home_url() ?></code></span>
           <input type="text" id="target-page-path" name="target_page_path" value="/" placeholder="/">
         </div>
-        <p class="description myh">
-          <?= sprintf( __( 'Actual view of the %s tag for the specified page as follows:', IGNITOR ), '<code>&lt;HEAD&gt;</code>' ) ?>
-        </p>
-        <textarea id="html" class="large-text code" rows="20" readonly><?= esc_textarea( $front_index_html ) ?></textarea>
-        <ul id="cleanup-items">
+        <div class="expansionable-block" id="cleanup-contents">
+          <p class="description myh">
+            <?= sprintf( __( 'Actual view of the %s tag for the specified page as follows:', IGNITOR ), '<code>&lt;HEAD&gt;</code>' ) ?>
+          </p>
+          <textarea id="html" class="large-text code" rows="20" readonly><?= esc_textarea( $front_index_html ) ?></textarea>
+          <ul id="cleanup-items">
 <?php foreach ( $cleanup_items as $name => $items ): ?>
-          <li class="d-flex-row mbh">
-            <label class="tgl" data-follow-color="inherit"><?= $items['label'] ?>
-              <input type="checkbox" id="<?= esc_attr( $name ) ?>" name="cleanup[<?= $name ?>]" value="1"<?php if ( $items['checked'] ): ?> checked="checked"<?php endif; ?>>
-              <span class="tgl-btn"></span>
-            </label>
-          </li>
+            <li class="d-flex-row mbh">
+              <label class="tgl" data-follow-color="inherit"><?= $items['label'] ?>
+                <input type="checkbox" id="<?= esc_attr( $name ) ?>" name="cleanup[<?= $name ?>]" value="1"<?php if ( $items['checked'] ): ?> checked="checked"<?php endif; ?>>
+                <span class="tgl-btn"></span>
+              </label>
+            </li>
 <?php endforeach; ?>
-        </ul>
-        <button
-          type="button"
-          id="btn-commit-to-cleanup"
-          class="button button-primary"><i class="mdi mdi-broom"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
-        <p class="description info-list mt1">
-          <span class="mdi mdi-alert-circle-outline text-info"></span>
-          <?= __( 'Their committed settings will be reflected immediately in the front end.', IGNITOR ) ?>
-        </p>
+          </ul>
+          <button
+            type="button"
+            id="btn-commit-to-cleanup"
+            class="button button-primary"><i class="mdi mdi-broom"></i> <?= __( 'Commit Settings', IGNITOR ) ?></button>
+          <p class="description info-list mt1">
+            <span class="mdi mdi-alert-circle-outline text-info"></span>
+            <?= __( 'Their committed settings will be reflected immediately in the front end.', IGNITOR ) ?>
+          </p>
+        </div><!-- /.expansionable-block -->
+        <div class="drawer-control"
+          data-target="cleanup-contents"
+          data-shrinked="<?= __( 'Display Details', IGNITOR ) ?>"
+          data-stretched="<?= __( 'Shrink Display', IGNITOR ) ?>"
+        >
+          <i class="mdi mdi-chevron-down chevron-left"></i>
+          <div class="drawer-label">
+            <i class="mdi mdi-dots-vertical"></i>
+            <p class="drawer-label-text"><?= __( 'Display Details', IGNITOR ) ?></p>
+          </div>
+          <i class="mdi mdi-chevron-down chevron-right"></i>
+        </div>
       </td>
     </tr>
     <!-- REST API Routes -->

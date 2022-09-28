@@ -4,72 +4,72 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Ignitor 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-ignitor\n"
-"POT-Creation-Date: 2022-09-26 17:25+0900\n"
-"PO-Revision-Date: 2022-09-26 17:34+0900\n"
+"POT-Creation-Date: 2021-03-19 18:15+0900\n"
+"PO-Revision-Date: 2021-03-19 18:16+0900\n"
 "Last-Translator: \n"
 "Language-Team: ka2@ka2.org\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.1.1\n"
 "X-Poedit-Basepath: .\n"
 
-#: src/actions.php:210
+#: src/actions.php:191
 msgid "Invalid Access!"
 msgstr "無効なアクセスです！"
 
-#: src/actions.php:222 src/actions.php:304
+#: src/actions.php:203 src/actions.php:283
 msgid "Close"
 msgstr "閉じる"
 
-#: src/actions.php:225
+#: src/actions.php:206
 msgid "The new path to move to is not specified."
 msgstr "移動先の新しいパスが指定されていません。"
 
-#: src/actions.php:242
+#: src/actions.php:223
 msgid "Copied the files under the current installation path to the new path."
 msgstr "現在のインストールパスの下にあるファイルを新しいパスにコピーしました。"
 
-#: src/actions.php:247
+#: src/actions.php:228
 msgid "Updated site URL in the DataBase."
 msgstr "データベースのサイトURLを更新しました。"
 
-#: src/actions.php:250
+#: src/actions.php:231
 msgid "Updated site and home URL in the DataBase."
 msgstr "データベースのサイトとホームのURLを更新しました。"
 
-#: src/actions.php:261
+#: src/actions.php:242
 msgid ""
 "I didn't update it because \".htaccess\" already exists in the document root."
 msgstr ""
 "「.htaccess」がドキュメントルートにすでに存在するため、更新しませんでした。"
 
-#: src/actions.php:271
+#: src/actions.php:252
 msgid "Saved the optimized \".htaccess\"."
 msgstr "最適化された「.htaccess」を保存しました。"
 
-#: src/actions.php:273 src/admin.php:689
+#: src/actions.php:254 src/admin.php:670
 msgid "Failed to update \".htaccess\"."
 msgstr "「.htaccess」の更新に失敗しました。"
 
-#: src/actions.php:296
+#: src/actions.php:275
 msgid ""
 "The file move was successful, but some of the source files could not be "
 "removed."
 msgstr ""
 "ファイルの移動は成功しましたが、一部のソースファイルを削除できませんでした。"
 
-#: src/actions.php:298
+#: src/actions.php:277
 msgid "The files move completed successfully."
 msgstr "ファイルの移動が正常に完了しました。"
 
-#: src/actions.php:304
+#: src/actions.php:283
 msgid "Re-login"
 msgstr "再ログイン"
 
-#: src/actions.php:311
+#: src/actions.php:290
 msgid ""
 "Failed to move the files. It may not have sufficient permissions to operate "
 "the source files or directories."
@@ -77,23 +77,23 @@ msgstr ""
 "ファイルの移動に失敗しました。 ソースファイルまたはディレクトリを操作するため"
 "の十分な権限がない可能性があります。"
 
-#: src/actions.php:322
+#: src/actions.php:301
 msgid "The \"wp-config.php\" file already exists to the destination."
 msgstr "「wp-config.php」ファイルは、移動先にすでに存在します。"
 
-#: src/actions.php:325
+#: src/actions.php:304
 msgid "The \"wp-config.php\" file has been moved."
 msgstr "「wp-config.php」ファイルは移動されました。"
 
-#: src/actions.php:328
+#: src/actions.php:307
 msgid "Failed to move the \"wp-config.php\" file."
 msgstr "「wp-config.php」ファイルの移動に失敗しました。"
 
-#: src/actions.php:332
+#: src/actions.php:311
 msgid "Do not have permission to work with files."
 msgstr "ファイルを操作する権限がありません。"
 
-#: src/actions.php:435
+#: src/actions.php:410
 msgid ""
 "Performed an emergency recovery. If you want to continue using the WP "
 "igniter, you should disable the \"wpignitor_emergency_recovery\" filter."
@@ -109,19 +109,19 @@ msgstr "WPイグナイタ設定"
 msgid "WP Ignitor"
 msgstr "WPイグナイタ"
 
-#: src/admin.php:156 src/admin.php:499
+#: src/admin.php:156 src/admin.php:490
 msgid "Globals"
 msgstr "全般"
 
-#: src/admin.php:161 src/admin.php:500
+#: src/admin.php:161 src/admin.php:491
 msgid "Conceals"
 msgstr "隠蔽"
 
-#: src/admin.php:166 src/admin.php:501
+#: src/admin.php:166 src/admin.php:492
 msgid "Authorizations"
 msgstr "認証"
 
-#: src/admin.php:171 src/admin.php:502
+#: src/admin.php:171 src/admin.php:493
 msgid "Utilities"
 msgstr "補助"
 
@@ -173,199 +173,199 @@ msgstr ""
 msgid "Failed to create the directory to move the file to."
 msgstr "ファイルの移動先のディレクトリ作成に失敗しました。"
 
-#: src/admin.php:359
+#: src/admin.php:357
 msgid "The destination path is invalid directory, or never write permission."
 msgstr "移動先パスが無効なディレクトリであるか、書き込み権限がありません。"
 
-#: src/admin.php:369
+#: src/admin.php:365
 msgid "The files on the installation path for moving could not compressed."
 msgstr "移動用のインストールパス上のファイルを圧縮できませんでした。"
 
-#: src/admin.php:381
+#: src/admin.php:375
 msgid "Failed to move the files."
 msgstr "ファイルの移動に失敗しました。"
 
-#: src/admin.php:406
+#: src/admin.php:398
 msgid "Move wp-content directory"
 msgstr "「wp-content」ディレクトリの移動"
 
-#: src/admin.php:407
+#: src/admin.php:399
 msgid "Move plugin directory"
 msgstr "プラグインディレクトリの移動"
 
-#: src/admin.php:408
+#: src/admin.php:400
 msgid "Move upload directory"
 msgstr "アップロードディレクトリの移動"
 
-#: src/admin.php:408 src/admin.php:413
+#: src/admin.php:400 src/admin.php:405
 msgid "Undefined"
 msgstr "未定義"
 
-#: src/admin.php:409
+#: src/admin.php:401
 msgid "Change auto save interval"
 msgstr "自動保存間隔の変更"
 
-#: src/admin.php:409 src/admin.php:424
+#: src/admin.php:401 src/admin.php:415
 msgid "Sec."
 msgstr "秒"
 
-#: src/admin.php:410
+#: src/admin.php:402
 msgid "Disable post revisions"
 msgstr "投稿の改訂履歴を無効化"
 
-#: src/admin.php:411
+#: src/admin.php:403
 msgid "Cookie domain"
 msgstr "Cookieドメイン設定"
 
-#: src/admin.php:412
+#: src/admin.php:404
 msgid "Enable multi-site"
 msgstr "マルチサイトの有効化"
 
-#: src/admin.php:413
+#: src/admin.php:405
 msgid "Redirect non-existent blogs"
 msgstr "存在しないブログのリダイレクト"
 
-#: src/admin.php:415
+#: src/admin.php:406
 msgid "Disable recovery mode (>= WP 5.2)"
 msgstr "リカバリモードを無効化（WPバージョン 5.2 以降）"
 
-#: src/admin.php:416
+#: src/admin.php:407
 msgid "Enable debug mode"
 msgstr "デバッグモードの有効化"
 
-#: src/admin.php:417
+#: src/admin.php:408
 msgid "Enable debug log output"
 msgstr "デバッグログ出力の有効化"
 
-#: src/admin.php:418
+#: src/admin.php:409
 msgid "Enable PHP error display"
 msgstr "PHPエラー表示の有効化"
 
-#: src/admin.php:419
+#: src/admin.php:410
 msgid "Enable script debug (for *.js and *.css)"
 msgstr "スクリプトデバッグの有効化（ *.js と *.css 用）"
 
-#: src/admin.php:420
+#: src/admin.php:411
 msgid "Disable JavaScript concatenation"
 msgstr "JavaScriptの連結を無効化"
 
-#: src/admin.php:421
+#: src/admin.php:412
 msgid "Change PHP allocated memory limit"
 msgstr "PHPの割り当てメモリ制限を変更する"
 
-#: src/admin.php:421 src/admin.php:422
+#: src/admin.php:412 src/admin.php:413
 msgid "MB"
 msgstr "MB"
 
-#: src/admin.php:422
+#: src/admin.php:413
 msgid "Change max memory limit for admin pages"
 msgstr "管理画面の最大メモリ制限を変更する"
 
-#: src/admin.php:423
+#: src/admin.php:414
 msgid "Disable Cron"
 msgstr "代替cronの無効化"
 
-#: src/admin.php:424
+#: src/admin.php:415
 msgid "Change cron timeout time"
 msgstr "代替cronのタイムアウト時間を変更する"
 
-#: src/admin.php:425
+#: src/admin.php:416
 msgid "Change period until trash emptied"
 msgstr "ゴミ箱が空になるまでの期間を変更する"
 
-#: src/admin.php:425
+#: src/admin.php:416
 msgid "Day"
 msgstr "日"
 
-#: src/admin.php:426
+#: src/admin.php:417
 msgid "Disallow plugin/theme editor"
 msgstr "プラグイン/テーマエディターを禁止する"
 
-#: src/admin.php:427
+#: src/admin.php:418
 msgid "Force SSL on admin and login pages"
 msgstr "管理画面とログインページにSSLを強制する"
 
-#: src/admin.php:428
+#: src/admin.php:419
 msgid "Enable debug mode for WP-Ignitor plugin"
 msgstr "WPイグナイタプラグインのデバッグモードを有効にする"
 
-#: src/admin.php:444
+#: src/admin.php:435
 msgid "Remove tags for prefetch as resource hint."
 msgstr "リソースヒント用のプリフェッチするタグを削除する。"
 
-#: src/admin.php:445
+#: src/admin.php:436
 msgid "Prevent output all feed links."
 msgstr "すべてのフィードリンクの出力を停止する。"
 
-#: src/admin.php:446
+#: src/admin.php:437
 msgid "Disable comment."
 msgstr "コメント投稿ライブラリの読み込みを削除する。"
 
-#: src/admin.php:447
+#: src/admin.php:438
 msgid "Stop the import of emoji-related resources."
 msgstr "絵文字関連リソースのインポートを停止する。"
 
-#: src/admin.php:448
+#: src/admin.php:439
 msgid "Remove RSD link for remote posting."
 msgstr "リモート投稿用のRSDリンクを削除する。"
 
-#: src/admin.php:449
+#: src/admin.php:440
 msgid "Remove wlwmanifest link."
 msgstr "マニフェスト（wlwmanifest）リンクを削除する。"
 
-#: src/admin.php:450
+#: src/admin.php:441
 msgid "Remove canonical link."
 msgstr "正規化（canonical）リンクを削除します。"
 
-#: src/admin.php:451
+#: src/admin.php:442
 msgid "Stop providing oEmbed for media embedding."
 msgstr "メディア埋め込み用のoEmbedの提供を停止する。"
 
-#: src/admin.php:452
+#: src/admin.php:443
 msgid "Remove the REST API link tag (REST API will be not disabled)."
 msgstr "REST APIのリンクタグを削除する（REST APIは無効になりません）。"
 
-#: src/admin.php:453
+#: src/admin.php:444
 msgid "Remove the library of block editor on the frontend."
 msgstr "フロントエンドのブロックエディタのライブラリ読み込みを削除する。"
 
-#: src/admin.php:454
+#: src/admin.php:445
 msgid "Remove several outputs, such as generator meta tag."
 msgstr "ジェネレータ（generator）メタタグ等の、いくつかの出力を削除する。"
 
-#: src/admin.php:529
+#: src/admin.php:520
 msgid "Invalid access."
 msgstr "無効なアクセスです。"
 
-#: src/admin.php:620
+#: src/admin.php:610
 msgid "Failed to update \"wp-config.php\"."
 msgstr "「wp-config.php」の更新に失敗しました。"
 
-#: src/admin.php:661
+#: src/admin.php:645
 msgid ""
-"Updated \".htaccess\", but the apache authentication setting was aborted "
-"because the saving of the authentication user file failed."
+"Updated \".htaccess\", but the basic authentication setting was aborted "
+"because the saving of the basic auth user file failed."
 msgstr ""
-"「.htaccess」を更新しましたが、認証ユーザーファイルの保存に失敗したため、"
-"Apache認証の設定は破棄されました。"
+"「.htaccess」を更新しましたが、ベーシック認証のユーザーファイルの保存に失敗し"
+"たため、ベーシック認証の設定を中止しました。"
 
-#: src/admin.php:664
+#: src/admin.php:648
 msgid ""
-"Updated \".htaccess\", but the apache authentication setting was aborted "
-"because anyone valid authentication user has not been set."
+"Updated \".htaccess\", but the basic authentication setting was aborted "
+"because anyone valid auth user has not been set."
 msgstr ""
 "「.htaccess」を更新しましたが、有効な認証ユーザーが誰も設定されていないため、"
-"Apache認証の設定は破棄されました。"
+"ベーシック認証の設定を中止しました。"
 
-#: src/admin.php:738
+#: src/admin.php:719
 msgid "It's not locked right now."
 msgstr "現在はロックされていません。"
 
-#: src/admin.php:750
+#: src/admin.php:731
 msgid "Completed successfully."
 msgstr "正常に完了しました。"
 
-#: src/admin.php:750
+#: src/admin.php:731
 msgid "Execution failed."
 msgstr "実行に失敗しました。"
 
@@ -373,63 +373,63 @@ msgstr "実行に失敗しました。"
 msgid "No route matching URL and request method."
 msgstr "URLとリクエストメソッドに一致するルートがありません。"
 
-#: src/utils.php:79
+#: src/utils.php:61
 #, php-format
 msgid "<code>%s</code> does not exist."
 msgstr "<code>%s</code>は存在しません。"
 
-#: src/utils.php:274
+#: src/utils.php:228
 msgid "Failed to get the HTML source code by wp_remote_request()"
 msgstr "「wp_remote_request()」によるHTMLソースコードの取得に失敗しました。"
 
-#: src/utils.php:276
+#: src/utils.php:230
 msgid "Could not get the HTML source."
 msgstr "HTMLソースを取得できませんでした。"
 
-#: src/utils.php:332
+#: src/utils.php:285
 #, php-format
 msgid "The current PHP environment does not support Phar class (%s)."
 msgstr "現在のPHP環境はPharクラス（%s）をサポートしていません。"
 
-#: src/utils.php:414
+#: src/utils.php:362
 msgid "The specified file does not exist."
 msgstr "指定されたファイルは存在しません。"
 
-#: src/utils.php:621 src/utils.php:627 src/utils.php:1060
+#: src/utils.php:567
 msgid "Restricted Area"
 msgstr "Restricted Area"
 
-#: src/utils.php:971
-msgid "Updated the apache auth user files."
-msgstr "Apache認証ユーザーファイルを更新しました。"
+#: src/utils.php:910
+msgid "Updated the basic auth user files."
+msgstr "ベーシック認証ユーザーファイルを更新しました。"
 
-#: src/utils.php:973
-msgid "Not have permission to update the apache auth user file."
-msgstr "Apache認証のユーザーファイルを更新する権限がありません。"
+#: src/utils.php:912
+msgid "Not have permission to update the basic auth user file."
+msgstr "ベーシック認証のユーザーファイルを更新する権限がありません。"
 
-#: src/utils.php:985
-msgid "Created new apache auth user file."
-msgstr "Apache認証ユーザーファイルを作成しました。"
+#: src/utils.php:924
+msgid "Created a new basic auth user file."
+msgstr "ベーシック認証ユーザーファイルを作成しました。"
 
-#: src/utils.php:987 src/utils.php:993
-msgid "Failed to save the apache auth user file."
-msgstr "Apache認証のユーザーファイルの保存に失敗しました。"
+#: src/utils.php:926 src/utils.php:932
+msgid "Failed to save the basic auth user file."
+msgstr "ベーシック認証のユーザーファイルの保存に失敗しました。"
 
-#: src/utils.php:990
-msgid "Not have permission to create the apache auth user file."
-msgstr "Apache認証のユーザーファイルを作成する権限がありません。"
+#: src/utils.php:929
+msgid "Not have permission to create the basic auth user file."
+msgstr "ベーシック認証のユーザーファイルを作成する権限がありません。"
 
-#: src/utils.php:1014
+#: src/utils.php:953
 #, php-format
 msgid "Removed the %s file, but could not remove the parent directory."
 msgstr "%sファイルを削除しましたが、親ディレクトリを削除できませんでした。"
 
-#: src/utils.php:1018
+#: src/utils.php:957
 #, php-format
 msgid "The %s file could not be removed."
 msgstr "%sファイルを削除できませんでした。"
 
-#: src/utils.php:1021
+#: src/utils.php:960
 #, php-format
 msgid "The %s file does not exist."
 msgstr "%sファイルは存在しません。"
@@ -465,12 +465,12 @@ msgid ""
 "Their committed settings will be reflected immediately in the front end."
 msgstr "これらの適用された設定は、フロントエンドにすぐに反映されます。"
 
-#: views/conceal.php:52 views/conceal.php:58 views/globals.php:188
-#: views/globals.php:194 views/globals.php:492 views/globals.php:498
+#: views/conceal.php:52 views/conceal.php:58 views/globals.php:187
+#: views/globals.php:193 views/globals.php:482 views/globals.php:488
 msgid "Display Details"
 msgstr "詳細を表示"
 
-#: views/conceal.php:53 views/globals.php:189 views/globals.php:493
+#: views/conceal.php:53 views/globals.php:188 views/globals.php:483
 msgid "Shrink Display"
 msgstr "表示を縮小"
 
@@ -537,7 +537,7 @@ msgid ""
 msgstr ""
 "「/」のみの名前空間は、REST経路のルートである「wp-json/」の動作を制御します。"
 
-#: views/globals.php:20 views/help-globals.php:11
+#: views/globals.php:19 views/help-globals.php:11
 msgid ""
 "This settings section contains settings that have a destructive impact on "
 "the entire website. It's risky to do, so it's a good idea to do it before "
@@ -546,11 +546,11 @@ msgstr ""
 "この設定セクションには、Webサイト全体に破壊的な影響を与える設定が含まれていま"
 "す。 リスクを伴うため、コンテンツを導入する前に行うことをお勧めします。"
 
-#: views/globals.php:25
+#: views/globals.php:24
 msgid "File Control Permissions"
 msgstr "ファイル操作権限"
 
-#: views/globals.php:28
+#: views/globals.php:27
 msgid ""
 "It is the state whether each file or directory can be controlled from the WP-"
 "Ignitor plug-in. These affect the execution of various operations in this "
@@ -559,49 +559,49 @@ msgstr ""
 "各ファイルまたはディレクトリをWPイグナイタプラグインから制御できるかどうかの"
 "状態です。 これらは、このセクションのさまざまな操作の実行に影響します。"
 
-#: views/globals.php:33
+#: views/globals.php:32
 msgid "DOCUMENT_ROOT:"
 msgstr "ドキュメントルート:"
 
-#: views/globals.php:38
+#: views/globals.php:37
 msgid "Install Directory:"
 msgstr "インストールディレクトリ:"
 
-#: views/globals.php:43
+#: views/globals.php:42
 msgid "\"wp-config.php\" File Path:"
 msgstr "「wp-config.php」ファイルパス:"
 
-#: views/globals.php:48
+#: views/globals.php:47
 msgid "\".htaccess\" File Path:"
 msgstr "「.htaccess」ファイルパス:"
 
-#: views/globals.php:49
+#: views/globals.php:48
 msgid "None"
 msgstr "なし"
 
-#: views/globals.php:56
+#: views/globals.php:55
 msgid "Move Installation Path"
 msgstr "インストールパスの移動"
 
-#: views/globals.php:62 views/globals.php:452 views/globals.php:463
+#: views/globals.php:61 views/globals.php:442 views/globals.php:453
 msgid "New Path"
 msgstr "新規パス"
 
-#: views/globals.php:68
+#: views/globals.php:67
 msgid "Moving files to new install path"
 msgstr "新しいインストールパスへのファイル移動"
 
-#: views/globals.php:71
+#: views/globals.php:70
 msgid "Move To"
 msgstr "移動する"
 
-#: views/globals.php:76
+#: views/globals.php:75
 msgid "To use the home URL (site URL) without subdirectory after moving files."
 msgstr ""
 "ファイルを移動した後、サブディレクトリなしでホームURL（サイトURL）を使用しま"
 "す。"
 
-#: views/globals.php:80
+#: views/globals.php:79
 msgid ""
 "After moving all files, optimize the \".htaccess\" or create a new one if it "
 "doesn't exist."
@@ -609,7 +609,7 @@ msgstr ""
 "すべてのファイルを移動した後、「.htaccess」を最適化する。もし存在しない場合は"
 "新しいファイルを作成します。"
 
-#: views/globals.php:85
+#: views/globals.php:84
 msgid ""
 "Cannot move to the path of directory that already exists, or to the path of "
 "directly document root."
@@ -617,11 +617,11 @@ msgstr ""
 "すでに存在するディレクトリのパス、または直接ドキュメントルートのパスに移動す"
 "ることはできません。"
 
-#: views/globals.php:86
+#: views/globals.php:85
 msgid "WP-Ignitor make a new directory before moving."
 msgstr "WPイグナイタは、移動する前に新しいディレクトリを作成します。"
 
-#: views/globals.php:87
+#: views/globals.php:86
 msgid ""
 "When moving, the \"wp-config.php\" will be forcibly placed directly under "
 "the installation directory."
@@ -629,7 +629,7 @@ msgstr ""
 "移動すると、「wp-config.php」がインストールディレクトリの直下に強制的に配置さ"
 "れます。"
 
-#: views/globals.php:88
+#: views/globals.php:87
 msgid ""
 "Files in the \"node_modules\", \".cache\", and \".git\" directories are "
 "excluded from the move."
@@ -637,26 +637,26 @@ msgstr ""
 "「node_modules」、「.cache」、および「.git」のディレクトリ内ファイルは移動か"
 "ら除外されます。"
 
-#: views/globals.php:89
+#: views/globals.php:88
 msgid "Also cannot move to the path that is two or more levels deep."
 msgstr "また、2階層以下のパスに移動することはできません。"
 
-#: views/globals.php:90
+#: views/globals.php:89
 msgid ""
 "If you do not have enough permission to operate the file, you cannot move it."
 msgstr ""
 "ファイルを操作するための十分な権限がない場合、ファイルを移動することはできま"
 "せん。"
 
-#: views/globals.php:96
+#: views/globals.php:95
 msgid "Move \"wp-config.php\""
 msgstr "「wp-config.php」の移動"
 
-#: views/globals.php:109
+#: views/globals.php:108
 msgid "Move To One Upper Level Path"
 msgstr "1階層上へ移動"
 
-#: views/globals.php:115
+#: views/globals.php:114
 msgid ""
 "No secure because it's same the installed path. Recommend that you move the "
 "file up one level for better security."
@@ -664,7 +664,7 @@ msgstr ""
 "インストールされているパスと同じ階層にあるため、安全ではありません。セキュリ"
 "ティを強化するためには、ファイルを1階層上に移動することをお勧めします。"
 
-#: views/globals.php:120
+#: views/globals.php:119
 msgid ""
 "It's more appropriate because upper the installed path. However, please note "
 "that it is installed under the document root that can be accessed by "
@@ -673,7 +673,7 @@ msgstr ""
 "インストールされたパスの上位にあるため、より適切です。ただし、誰でもアクセス"
 "できるドキュメントルートの下にインストールされていることにご留意ください。"
 
-#: views/globals.php:125
+#: views/globals.php:124
 msgid ""
 "It's already in the correct position recommended for security. You will also "
 "be better off by paying attention to directory traversal attacks."
@@ -681,11 +681,11 @@ msgstr ""
 "すでにセキュリティ上の推奨される正しい位置にあります。さらに、ディレクトリト"
 "ラバーサル攻撃に注意を払うことで、より良い結果が得られます。"
 
-#: views/globals.php:134
+#: views/globals.php:133
 msgid "Update \"wp-config.php\""
 msgstr "「wp-config.php」の更新"
 
-#: views/globals.php:137
+#: views/globals.php:136
 msgid ""
 "Enables or disables various functions by constants implemented in WordPress "
 "in advance. This settings will be written directly to \"wp-config.php\"."
@@ -693,7 +693,7 @@ msgstr ""
 "事前にWordPressに実装されている定数により、さまざまな機能を有効または無効にし"
 "ます。この設定は「wp-config.php」に直接書き込まれます。"
 
-#: views/globals.php:167
+#: views/globals.php:166
 #, php-format
 msgid ""
 "Please refer to %sthe official documentation%s for the detailed behavior of "
@@ -702,19 +702,19 @@ msgstr ""
 "各オプション定数の詳細な動作については、%s公式ドキュメント%sを参照してくださ"
 "い。"
 
-#: views/globals.php:169 views/globals.php:324
+#: views/globals.php:168 views/globals.php:323
 msgid "Preview:"
 msgstr "プレビュー:"
 
-#: views/globals.php:174
+#: views/globals.php:173
 msgid "Update wp-config.php"
 msgstr "「wp-config.php」を更新"
 
-#: views/globals.php:178
+#: views/globals.php:177
 msgid "Restore wp-config.php"
 msgstr "「wp-config.php」の復元"
 
-#: views/globals.php:181
+#: views/globals.php:180
 msgid ""
 "The above settings will be inserted into marker (rows) from \"BEGIN WP "
 "Ignitor\" to \"END WP Ignitor\"."
@@ -722,7 +722,7 @@ msgstr ""
 "上記の設定は、「BEGIN WP Ignitor」から「END WP Ignitor」までのマーカー（行）"
 "に挿入されます。"
 
-#: views/globals.php:182
+#: views/globals.php:181
 msgid ""
 "Only the checked options will be written to wp-config.php. And you can "
 "remove the settings by updating with all the unchecked."
@@ -730,7 +730,7 @@ msgstr ""
 "チェックされたオプションのみがwp-config.phpに書き込まれます。 また、チェック"
 "を外して更新すると、設定を削除できます。"
 
-#: views/globals.php:183
+#: views/globals.php:182
 msgid ""
 "If there is an option already defined in \"wp-config.php\", that will be "
 "applied with priority."
@@ -738,11 +738,11 @@ msgstr ""
 "「wp-config.php」ですでに定義されているオプションがある場合は、そちらが優先的"
 "に適用されます。"
 
-#: views/globals.php:202
+#: views/globals.php:201
 msgid "Update \".htaccess\""
 msgstr "「.htaccess」の更新"
 
-#: views/globals.php:205
+#: views/globals.php:204
 msgid ""
 "Improve the security of your site by preventing access to each WordPress "
 "core file from anyone other than the allowed sources."
@@ -750,63 +750,63 @@ msgstr ""
 "許可された接続元以外から各WordPressコアファイルにアクセスできないようにするこ"
 "とで、サイトのセキュリティを向上させます。"
 
-#: views/globals.php:209
+#: views/globals.php:208
 msgid "Allow Hosts"
 msgstr "許可するホスト"
 
-#: views/globals.php:215 views/globals.php:254 views/globals.php:292
+#: views/globals.php:214 views/globals.php:253 views/globals.php:291
 msgid "(Auto Set by System)"
 msgstr "（システム自動定義）"
 
-#: views/globals.php:227
+#: views/globals.php:226
 msgid "Remove Host"
 msgstr "ホスト削除"
 
-#: views/globals.php:233 views/globals.php:244
+#: views/globals.php:232 views/globals.php:243
 msgid "Add New Hostname"
 msgstr "新規ホスト名追加"
 
-#: views/globals.php:234
+#: views/globals.php:233
 msgid "Allowed characters: A-z0-9 - _ and colon only"
 msgstr "許可される文字: 半角英数字と記号（-_.）のみ"
 
-#: views/globals.php:249
+#: views/globals.php:248
 msgid "Allow Addresses"
 msgstr "許可するアドレス"
 
-#: views/globals.php:265
+#: views/globals.php:264
 msgid "Remove Address"
 msgstr "アドレス削除"
 
-#: views/globals.php:271 views/globals.php:282
+#: views/globals.php:270 views/globals.php:281
 msgid "Add New Address"
 msgstr "新規アドレス追加"
 
-#: views/globals.php:272 views/login.php:100
+#: views/globals.php:271 views/login.php:100
 msgid "Allowed characters: 0-9 and colons only"
 msgstr "許可される文字: 半角数字とコロン（.）のみ"
 
-#: views/globals.php:287
+#: views/globals.php:286
 msgid "Allow Referers"
 msgstr "許可するリファラー"
 
-#: views/globals.php:303
+#: views/globals.php:302
 msgid "Remove Referer"
 msgstr "リファラー削除"
 
-#: views/globals.php:309 views/globals.php:320
+#: views/globals.php:308 views/globals.php:319
 msgid "Add New Referer"
 msgstr "新規リファラー追加"
 
-#: views/globals.php:310
+#: views/globals.php:309
 msgid "Incorrect format of inputted"
 msgstr "入力された書式に誤りがあります"
 
-#: views/globals.php:326
+#: views/globals.php:325
 msgid "Advanced Settings:"
 msgstr "高度な設定:"
 
-#: views/globals.php:333
+#: views/globals.php:332
 msgid ""
 "Restrict access to core PHP files under the WordPress installation directory "
 "from anyone other than the allowed sources."
@@ -814,7 +814,7 @@ msgstr ""
 "許可された接続元以外のユーザーからのWordPressインストールディレクトリ下のコア"
 "PHPファイルへのアクセスを制限します。"
 
-#: views/globals.php:341
+#: views/globals.php:340
 msgid ""
 "An access to \"xmlrpc.php\" only allow access that has user agent of "
 "\"Jetpack\", and other accesses redirect to \"0.0.0.0\" to avoid load."
@@ -823,7 +823,7 @@ msgstr ""
 "のみを許可し、それ以外のアクセスは、ロードを回避するために「0.0.0.0」へリダイ"
 "レクトします。"
 
-#: views/globals.php:349
+#: views/globals.php:348
 msgid ""
 "Access to \"wp-login.php\" returns a uniform 404 response regardless of the "
 "connection source."
@@ -831,7 +831,7 @@ msgstr ""
 "「wp-login.php」にアクセスすると、接続元に関係なく、均一に 404 レスポンスが返"
 "されます。"
 
-#: views/globals.php:358
+#: views/globals.php:357
 #, php-format
 msgid ""
 "Close direct access to \"wp-login.php\" and set up a new login URL (%s)."
@@ -839,7 +839,7 @@ msgstr ""
 "「wp-login.php」への直接アクセスを制限して、新しいログインURL（%s）を設定しま"
 "す。"
 
-#: views/globals.php:359
+#: views/globals.php:358
 #, php-format
 msgid ""
 "Detailed settings for the new login URL can be made in the relevant section "
@@ -848,90 +848,67 @@ msgstr ""
 "新しいログインURLの詳細な設定は、「%s認証%s」タブの関連セクションで行うことが"
 "できます。"
 
-#: views/globals.php:370
+#: views/globals.php:369
 msgid "Avoid the discovery of an author's ID."
 msgstr "著作者IDが検出されることを回避する。"
 
-#: views/globals.php:378
-msgid "Set up apache authentication (Basic or Digest auth.) for this site URL."
-msgstr ""
-"このサイトのURLにApacheによるベーシック認証もしくはダイジェスト認証を設定しま"
-"す。"
+#: views/globals.php:377
+msgid "Set up basic authentication for this site URL."
+msgstr "このサイトのURLにベーシック認証を設定します。"
 
 #: views/globals.php:379
-#, php-format
-msgid ""
-"You can change the path of an authentication user file by using "
-"\"%swpignitor_apache_auth_user_file_path%s\" filter."
-msgstr ""
-"「%swpignitor_apache_auth_user_file_path%s」フィルターを使うことで、認証ユー"
-"ザーファイルのパスを変更できます。"
-
-#: views/globals.php:382
-msgid "Authentication Type:"
-msgstr "認証方式:"
-
-#: views/globals.php:384
-msgid "Basic Auth."
-msgstr "ベーシック認証"
-
-#: views/globals.php:385
-msgid "Digest Auth."
-msgstr "ダイジェスト認証"
-
-#: views/globals.php:388
 msgid "AuthUserFile Path:"
 msgstr "認証ユーザーファイルのパス:"
 
-#: views/globals.php:389
+#: views/globals.php:380
 msgid "AuthUserFile Path"
 msgstr "認証ユーザーファイルのパス"
 
-#: views/globals.php:393
+#: views/globals.php:383
 msgid "Auth User Accounts"
 msgstr "認証ユーザーアカウント"
 
-#: views/globals.php:405 views/globals.php:419
+#: views/globals.php:395 views/globals.php:409
 msgid "Remove Account"
 msgstr "アカウント削除"
 
-#: views/globals.php:426
+#: views/globals.php:416
 msgid "Add New Auth ID"
 msgstr "認証IDの新規追加"
 
-#: views/globals.php:428
+#: views/globals.php:418
 msgid "Add New Password"
 msgstr "パスワードの新規追加"
 
-#: views/globals.php:438
+#: views/globals.php:428
 msgid "Add New Account"
 msgstr "アカウントの新規追加"
 
-#: views/globals.php:449
+#: views/globals.php:439
 msgid "Rewrite URL path of the plugins directory."
 msgstr "プラグインディレクトリのURLパスをリライトする。"
 
-#: views/globals.php:451 views/globals.php:462
+#: views/globals.php:441 views/globals.php:452
 msgid "New destination:"
 msgstr "新しいパス:"
 
-#: views/globals.php:460
+#: views/globals.php:450
 msgid "Rewrite URL path of the themes directory."
 msgstr "テーマディレクトリのURLパスをリライトする。"
 
-#: views/globals.php:478
+#: views/globals.php:468
 msgid "Insert Above Settings"
 msgstr "上記設定の挿入"
 
-#: views/globals.php:482
+#: views/globals.php:472
 msgid "Withdraw Above Settings"
 msgstr "上記設定の撤回"
 
-#: views/globals.php:483
+#: views/globals.php:473
 msgid "Refer to configure for Nginx"
 msgstr "Nginx向け構成の参照"
 
-#: views/globals.php:487
+#: views/globals.php:477
 msgid ""
 "The directive (lines) from \"BEGIN WP Ignitor Rules\" to \"END WP Ignitor "
 "Rules\" are inserted before the directive (lines) from \"BEGIN WordPress\" "
@@ -941,15 +918,15 @@ msgstr ""
 "（行）は、「BEGIN WordPress」から「END WordPress」までのディレクティブ（行）"
 "の前に挿入されます。"
 
-#: views/globals.php:506
+#: views/globals.php:496
 msgid "Clear All Settings"
 msgstr "全ての設定の削除"
 
-#: views/globals.php:512
+#: views/globals.php:502
 msgid "Clear All Saved Settings Of This Plugin"
 msgstr "プラグインの保存済み全設定を削除"
 
-#: views/globals.php:515
+#: views/globals.php:505
 msgid ""
 "Clearing all saved settings will reset all options for this plugin. However, "
 "moved files and updated files will not be restored to the state before such "
@@ -959,15 +936,14 @@ msgstr ""
 "リセットされます。 ただし、移動したファイルや更新したファイルは、実行前の状態"
 "には戻りません。"
 
-#: views/globals.php:516
-#, php-format
+#: views/globals.php:506
 msgid ""
 "If you want to recover all updated files (not including files on the moved "
-"installation path), use the \"%swpignitor_emergency_recovery%s\" filter hook."
+"installation path), use the \"wpignitor_emergency_recovery\" filter hook."
 msgstr ""
 "更新されたすべてのファイル（移動したインストールパス上のファイルを含まない）"
-"を回復したい場合は、「%swpignitor_emergency_recovery%s」フィルターフックを使"
-"用してください。"
+"を回復したい場合は、「wpignitor_emergency_recovery」フィルターフックを使用し"
+"てください。"
 
 #: views/help-conceal.php:9
 msgid "About Conceals Tab"

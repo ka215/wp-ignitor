@@ -2,13 +2,13 @@
 Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
-Tested up to: 5.7
-Stable tag: 1.0.4
+Tested up to: 6.0.2
+Stable tag: 1.1.0
 Text Domain: wpignitor
 Domain Path: /languages/
 License: GPL v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-Requires PHP: 7.2
+Requires PHP: 7.4.0
 Donate link: https://github.com/sponsors/ka215
 
 Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
@@ -81,6 +81,14 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 4. The utilities section contains useful features for site management.
 
 == Changelog ==
+
+= 1.1.0 =
+Bump to version - September 28, 2022
+
+* Added a new option to set basic or digest authentication into .htaccess.
+* Fixed a bug that some type declarations of filtering method do not have nullable arguments.
+* Fixed a bug that is not work the site_url filter when had been called "login_form_confirm_admin_email" action on login.
+* Unified to LF the line feed code of all files output by the plugin.
 
 = 1.0.4 =
 Bump to version - March 10, 2021

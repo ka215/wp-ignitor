@@ -21,8 +21,10 @@
 
 #allowed-hosts li,
 #allowed-addresses li,
-#allowed-referers li {
-  transition: all 0.2s linear;
+#allowed-referers li,
+#auth-accounts li,
+#allowed-login-ips li {
+  transition: all 0.3s linear;
 }
 
 p { font-size: $base-size; }
@@ -322,6 +324,117 @@ dd {
           background: $primary;
         }
       }
+    }
+  }
+}
+
+/*
+ * Expandable Block
+ */
+.expansionable-block {
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0 0 0 3px;
+  overflow-y: hidden;
+  width: auto;
+  height: 5em;
+  z-index: 1;
+  transition: all .3s ease-out;
+
+  &.expanded {
+    height: auto;
+  }
+}
+
+.drawer-control {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em 4px;
+  cursor: url(../images/arrow-expand-vertical.svg), row-resize;
+  background: #F0F0F1;
+  z-index: 2;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 5em;
+    top: -5em;
+    left: 0;
+    background: linear-gradient(rgba(240,240,241,0.1), rgba(240,240,241,1));
+  }
+
+  &.expanded {
+    cursor: url(../images/arrow-collapse-vertical.svg), row-resize;
+
+    &::before {
+      height: 1px;
+      top: 0;
+    }
+
+    .chevron-left {
+      transform: rotate(-0.5turn);
+    }
+
+    .drawer-label {
+      /* padding-top: 16px; */
+
+      .mdi-dots-vertical { display: none; }
+    }
+
+    .chevron-right {
+      transform: rotate(0.5turn);
+    }
+  }
+
+  * { pointer-events: none; }
+
+  .mdi-chevron-down {
+    transition: all .3s linear;
+  }
+
+  .drawer-label {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    color: #7D7D7D;
+  }
+
+  &:hover {
+    background: rgba(28,145,234,0.12) !important;
+
+    * { color: rgb(28,145,234) !important; }
+  }
+}
+
+/*
+ * Toggle field for password
+ */
+.password-field {
+  position: relative;
+  padding-right: 28px !important;
+
+  + .field-toggle {
+    position: relative;
+    display: inline-block;
+    left: -35px;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: -28px;
+    color: $dark-gray;
+    text-align: center;
+    line-height: 30px;
+    cursor: pointer;
+
+    &:hover {
+      color: $primary !important;
     }
   }
 }

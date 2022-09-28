@@ -21,6 +21,24 @@ trait utils {
     }
 
     /**
+     * Minify an internal JavaScript
+     *
+     * @since 1.1.0
+     * @access public
+     *
+     * @param string $internal_js      An internal JavaScript that wrapped by `<script></script>`
+     */
+    public static function minify_js( string $internal_js ): string {
+        $replacer = [
+            '/([(+=])\s*(\/(?:(?!(?<!\\\)\/).)+\/[dgimsuy]*)\s*([)+,.;])/s' => '${1}${2}${3}',
+            '/(\/\*[!@].*?\*\/|[(+=]\/(?:(?!(?<!\\\)\/).)+\/[dgimsuy]*[)+,.;]|\"(?:(?!(?<!\\\)\").)*\"|\'(?:(?!(?<!\\\)\').)*\'|\`(?:(?!(?<!\\\)\`).)*\`)|\/\*.*?\*\/|\/\/[^\r\n]+[\r\n]/s' => '${1}',
+            '/(\/\*[!@].*?\*\/|[(+=]\/(?:(?!(?<!\\\)\/).)+\/[dgimsuy]*[)+,.;]|\"(?:(?!(?<!\\\)\").)*\"|\'(?:(?!(?<!\\\)\').)*\'|\`(?:(?!(?<!\\\)\`).)*\`)\s*|\s+/s' => '${1} ',
+            '/(\/\*[!@].*?\*\/|[(+=]\/(?:(?!(?<!\\\)\/).)+\/[dgimsuy]*[)+,.;]|\"(?:(?!(?<!\\\)\").)*\"|\'(?:(?!(?<!\\\)\').)*\'|\`(?:(?!(?<!\\\)\`).)*\`) | ([!#$%&)*+,\-.\/:;<=>?@\]^_|}~]) | ([!#$%&)*,.\/:;<=>?@\]^_|}~]|\+(?!\+)|-(?!-)|\z)|([!#$%&()*+,\-.\/:;<=>?@\[\]^_{|}~]|\A) /s' => '${1}${2}${3}${4}',
+        ];
+        return preg_replace( array_keys( $replacer ), array_values( $replacer ), $internal_js );
+    }
+
+    /**
      * Search for the template and include the file for this plugin
      *
      * @since 1.0.0
@@ -171,6 +189,59 @@ trait utils {
     }
 
     /**
+     * Define default basic auth user file path
+     *
+     * @since 1.1.0
+     * @access public
+     * /
+    public static function default_basic_auth_user_file() {
+        $docroot_path = str_replace( DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT'] );
+        $dist_dir     = '/.'. IGNITOR;
+        $dist_file    = '/.htpasswd';
+        if ( is_writable( dirname( $docroot_path ) ) ) {
+            $dist_path = dirname( $docroot_path ) . $dist_dir . $dist_file;
+        } else {
+            $dist_path = $docroot_path . $dist_dir . $dist_file;
+        }
+        */
+        /**
+         * Filter the HTTP request arguments to give into wp_remote_request()
+         *
+         * @since 1.0.1
+         * @hook  filter
+         * /
+        $dist_path = apply_filters( 'wpignitor_basic_auth_user_file_path', $dist_path );
+        return $dist_path;
+    }
+    */
+
+    /**
+     * Define default authentication user file path
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public static function default_apache_auth_user_file() {
+        $docroot_path = str_replace( DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT'] );
+        $dist_dir     = '/.'. IGNITOR;
+        // $dist_file    = '/.ht'. $this->get_option( 'apache_auth_type' ) === 'digest' ? 'digest' : 'passwd';
+        $dist_file    = '/.htsecret';
+        if ( is_writable( dirname( $docroot_path ) ) ) {
+            $dist_path = dirname( $docroot_path ) . $dist_dir . $dist_file;
+        } else {
+            $dist_path = $docroot_path . $dist_dir . $dist_file;
+        }
+        /**
+         * Filter the HTTP request arguments to give into wp_remote_request()
+         *
+         * @since 1.1.0
+         * @hook  filter
+         */
+        $dist_path = apply_filters( 'wpignitor_apache_auth_user_file_path', $dist_path );
+        return $dist_path;
+    }
+
+    /**
      * Get frontend HTML
      *
      * @since 1.0.0 -> 1.0.1
@@ -257,7 +328,9 @@ trait utils {
     public static function is_valid_phar(): bool {
         $version = \Phar::apiVersion();
         if ( ! version_compare( $version, '1.0.0', '>=' ) ) {
-            self::logger( sprintf( __( 'The current PHP environment does not support Phar class (%s).', IGNITOR ), $version ) );
+            if ( $this->debug ) {
+                self::logger( sprintf( __( 'The current PHP environment does not support Phar class (%s).', IGNITOR ), $version ) );
+            }
             return false;
         } else {
             return true;
@@ -306,7 +379,9 @@ trait utils {
             return true;
         } catch ( Exception $e ) {
             $this->errors->add( 'failure_to_compress_phar', $e->getMessage() );
-            $this->logger( $e->getMessage() );
+            if ( $this->debug ) {
+                self::logger( $e->getMessage() );
+            }
             return false;
         }
     }
@@ -330,13 +405,17 @@ trait utils {
                 return true;
             } catch ( Exception $e ) {
                 $this->errors->add( 'failure_to_extract_phar', $e->getMessage() );
-                $this->logger( $e->getMessage() );
+                if ( $this->debug ) {
+                    self::logger( $e->getMessage() );
+                }
                 return false;
             }
         } else {
             $message = __( 'The specified file does not exist.', IGNITOR );
             $this->errors->add( 'file_does_not_exist', $message, $archive_path );
-            $this->logger( $message );
+            if ( $this->debug ) {
+                self::logger( $message );
+            }
             return false;
         }
     }
@@ -380,8 +459,7 @@ trait utils {
         }
         $_install_dir = preg_quote( empty( $subdir ) ? $this->get_wp_install_dir() : $subdir );
         $advanced_htaccess_options = $this->get_option( 'advanced_htaccess' );
-        //var_dump( $allowed_hosts, $allowed_addrs, $allowed_referers, $_install_dir, $subdir, $advanced_htaccess_options );
-
+        // self::logger( [ $allowed_hosts, $allowed_addrs, $allowed_referers, $_install_dir, $subdir, $advanced_htaccess_options ], __METHOD__ );
         $_section_number = 1;
         $_stack = [];
         array_unshift( $_stack, '# BEGIN WP Ignitor Rules', '<IfModule mod_rewrite.c>', 'RewriteEngine On', 'RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]' );
@@ -533,7 +611,29 @@ trait utils {
                 $_stack[] = 'RewriteRule . /'. $_install_dir .'index.php [L]';
             }
         }
-        array_push( $_stack, '</IfModule>', '', '# END WP Ignitor Rules' );
+        $_stack[] = "</IfModule>";
+        if ( isset( $advanced_htaccess_options['apache_auth'] ) && $advanced_htaccess_options['apache_auth'] ) {
+            if ( ! empty( $advanced_htaccess_options['apache_auth_user_file'] ) ) {
+                if ( isset( $advanced_htaccess_options['apache_auth_type'] ) && 'digest' === $advanced_htaccess_options['apache_auth_type'] ) {
+                    $_stack[] = '# AuthDigestAuthoritative Directive';
+                    $_stack[] = '<IfModule mod_auth_digest.c>';
+                    $_stack[] = 'AuthType Digest';
+                    $_stack[] = 'AuthName "'. __( 'Restricted Area', IGNITOR ) .'"';
+                    $_stack[] = 'AuthDigestProvider file';
+                } else {
+                    $_stack[] = '# AuthBasicAuthoritative Directive';
+                    $_stack[] = '<IfModule mod_auth_basic.c>';
+                    $_stack[] = 'AuthType Basic';
+                    $_stack[] = 'AuthName "'. __( 'Restricted Area', IGNITOR ) .'"';
+                    $_stack[] = 'AuthBasicProvider file';
+                }
+                $_stack[] = 'AuthUserfile '. $advanced_htaccess_options['apache_auth_user_file'];
+                $_stack[] = 'AuthGroupfile /dev/null';
+                $_stack[] = 'require valid-user';
+                $_stack[] = '</IfModule>';
+            }
+        }
+        array_push( $_stack, '', '# END WP Ignitor Rules' );
         return implode( "\n", $_stack );
     }
 
@@ -672,6 +772,8 @@ trait utils {
                 $post_lines
             )
         );
+        // Replace to all LF
+        $new_file_data = strtr( $new_file_data, [ "\r\n" => "\n", "\r" => "\n" ] );
         // Write to the start of the file, and truncate it to that length.
         fseek( $fp, 0 );
         $bytes = fwrite( $fp, $new_file_data );
@@ -811,6 +913,8 @@ trait utils {
                 $post_lines
             )
         );
+        // Replace to all LF
+        $new_file_data = strtr( $new_file_data, [ "\r\n" => "\n", "\r" => "\n" ] );
         // Write to the start of the file, and truncate it to that length.
         fseek( $fp, 0 );
         $bytes = fwrite( $fp, $new_file_data );
@@ -842,6 +946,7 @@ trait utils {
      * @access public
      */
     public function emergency_recovery(): void {
+        $this->remove_auth_user_file();
         $this->clear_all_options( true );
         $this->restore_htaccess();
         $this->restore_wpconfig();
@@ -849,25 +954,237 @@ trait utils {
     }
 
     /**
+     * Save the auth user file for basic authentication
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public function save_auth_user_file( string $file_path, string $auth_type ): bool {
+        $result = false;
+        $message = '';
+        $auth_users_content = $this->generate_auth_users_content( $auth_type );
+        if ( ! empty( $file_path ) && file_exists( $file_path ) && is_writable( $file_path ) ) {
+            // Update file
+            $result = file_put_contents( $file_path, $auth_users_content, LOCK_EX ) === strlen( $auth_users_content );
+            if ( $result ) {
+                @chmod( $file_path, '0644' );
+                $message = __( 'Updated the apache auth user files.', IGNITOR );
+            } else {
+                $message = __( 'Not have permission to update the apache auth user file.', IGNITOR );
+            }
+        } else
+        if ( ! empty( $file_path ) ) {
+            // Create file
+            if ( ! is_dir( dirname( $file_path ) ) ) {
+                @mkdir( dirname( $file_path ), '0750', true );
+            }
+            if ( is_writable( dirname( $file_path ) ) ) {
+                $result = file_put_contents( $file_path, $auth_users_content, LOCK_EX ) === strlen( $auth_users_content );
+                if ( $result ) {
+                    @chmod( $file_path, '0644' );
+                    $message = __( 'Created new apache auth user file.', IGNITOR );
+                } else {
+                    $message = __( 'Failed to save the apache auth user file.', IGNITOR );
+                }
+            } else {
+                $message = __( 'Not have permission to create the apache auth user file.', IGNITOR );
+            }
+        } else {
+            $message = __( 'Failed to save the apache auth user file.', IGNITOR );
+        }
+        if ( $this->debug && ! empty( $message ) ) {        
+            self::logger( $message );
+        }
+        return $result;
+    }
+
+    /**
+     * Remove the auth user file
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public function remove_auth_user_file(): bool {
+        $auth_user_file_path = $this->get_option( 'apache_auth_user_file' ) ?: $this->default_apache_auth_user_file();
+        $result = false;
+        $message = '';
+        if ( file_exists( $auth_user_file_path ) && is_file( $auth_user_file_path ) ) {
+            if ( @unlink( $auth_user_file_path ) ) {
+                if ( ! $this->dir_is_empty( dirname( $auth_user_file_path ) ) || ! @rmdir( dirname( $auth_user_file_path ) ) ) {
+                    $message = sprintf( __( 'Removed the %s file, but could not remove the parent directory.', IGNITOR ), $auth_user_file_path );
+                }
+                $result = true;
+            } else {
+                $message = sprintf( __( 'The %s file could not be removed.', IGNITOR ), $auth_user_file_path );
+            }
+        } else {
+            $message = sprintf( __( 'The %s file does not exist.', IGNITOR ), $auth_user_file_path );
+        }
+        if ( $this->debug && ! empty( $message ) ) {        
+            self::logger( $message );
+        }
+        return $result;
+    }
+
+    /**
+     * Whether the specified directory is empty or not
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public static function dir_is_empty( string $dir_path ): bool {
+        if ( ! file_exists( $dir_path ) || ! is_dir( $dir_path ) ) {
+            return false;
+        }
+        $handle = opendir( $dir_path );
+        while ( false !== ( $entry = readdir( $handle ) ) ) {
+            if ( $entry !== '.' && $entry !== '..' ) {
+                closedir( $handle );
+                return false;
+            }
+        }
+        closedir( $handle );
+        return true;
+    }
+
+    /**
+     * Generate content for the basic auth user file (as .htpasswd)
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public function generate_auth_users_content( string $auth_type ) {
+        $apache_version = $this->get_apache_version();
+        array_walk( $this->options['apache_auth_users'], function( $_passwd, $_user ) use ( &$lines, &$apache_version, &$auth_type ) {
+            if ( 'digest' === $auth_type ) {
+                $realm = __( 'Restricted Area', IGNITOR );
+                $lines[] = sprintf( '%s:%s:%s', $_user, $realm, md5( sprintf( '%s:%s:%s', $_user, $realm, $_passwd ) ) );
+            } else {
+                if ( ! $apache_version ) {
+                    $password = $this->crypt_apr1_md5( $_passwd );
+                } else {
+                    if ( version_compare( $apache_version, '2.2.18', '>=' ) ) {
+                        $password = $this->crypt_apr1_md5( $_passwd );
+                    } else {
+                        $password = $this->crypt_md5( $_passwd );
+                    }
+                }
+                $lines[] = $_user .':'. $password;
+            }
+        } );
+        return implode( "\n", $lines ) . "\n";
+    }
+
+    /**
+     * Get apache version
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public function get_apache_version() {
+        $command = 'apachectl -v';
+        $regex = '/Apache\/(\d{1,2}\.\d{1,2}\.\d{1,2})/';
+        switch ( true ) {
+            case preg_match( $regex, getenv( 'SERVER_SOFTWARE' ), $matches ):
+            case ( function_exists( 'apache_get_version' ) && preg_match( $regex, apache_get_version(), $matches ) ):
+            case preg_match( $regex, shell_exec( $command ), $matches ):
+                return $matches[1];
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Generate hash by using crypt function
+     * This is the default algorithm used by Apache 2.2.17 and older
+     * This method is same as using the command: `htpasswd -d /path/to/.htpasswd user`
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public static function crypt_md5( string $origin ): string {
+        return crypt( $origin, base64_encode( $origin ) );
+    }
+
+    /**
+     * Generate hash by APR1-MD5 encryption method
+     * This is the default method since Apache 2.2.18
+     * This method is same as using the command: `htpasswd -m /path/to/.htpasswd user`
+     *
+     * @since 1.1.0
+     * @access public
+     */
+    public static function crypt_apr1_md5( string $origin ): string {
+        $salt = substr( str_shuffle( 'abcdefghijklmnopqrstuvwxyz0123456789' ), 0, 8 );
+        $len  = strlen( $origin );
+        $text = $origin .'$apr1$'. $salt;
+        $bin  = pack( 'H32', md5( $origin . $salt . $origin ) );
+        for ( $i = $len; $i > 0; $i -= 16 ) {
+            $text .= substr( $bin, 0, min( 16, $i ) );
+        }
+        for ( $i = $len; $i > 0; $i >>= 1 ) {
+            $text .= ( $i & 1 ) ? chr( 0 ) : $origin[0];
+        }
+        $bin = pack( 'H32', md5( $text ) );
+        for ( $i = 0; $i < 1000; $i++ ) {
+            $new = ( $i & 1 ) ? $origin : $bin;
+            if ( $i % 3 ) $new .= $salt;
+            if ( $i % 7 ) $new .= $origin;
+            $new .= ( $i & 1 ) ? $bin : $origin;
+            $bin = pack( 'H32', md5( $new ) );
+        }
+        $tmp = '';
+        for ( $i = 0; $i < 5; $i++ ) {
+            $k = $i + 6;
+            $j = $i + 12;
+            if ( $j == 16 ) $j = 5;
+            $tmp = $bin[$i] . $bin[$k] . $bin[$j] . $tmp;
+        }
+        $tmp = chr( 0 ) . chr( 0 ) . $bin[11] . $tmp;
+        $tmp = strtr( strrev( substr( base64_encode( $tmp ), 2 ) ),
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+            './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        );
+        return '$'.'apr1'.'$'. $salt .'$'. $tmp;
+    }
+
+    /**
      * Logger for this plugin only
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.0
      * @access public
      *
-     * @param array|string  $logs      Array of log lines or string as one line
-     * @param string        $log_file  Log file name.
+     * @param mixed     $contents       Log contents.
+     * @param string    $identifier     Distinguished name to identify the log.
+     * @param string    $log_file       Log file name.
      */ 
-    public static function logger( $logs, string $log_file = '' ): void {
-        if ( ! is_array( $logs ) ) 
-            $logs = (array) $logs;
-        if ( ! empty( $logs ) ) {
-            $now_date = '['. date( 'Y-m-d H:i:s' ) .'] ';
-            foreach ( $logs as $_i => $_line ) {
-                if ( $_i == 0 ) {
-                    $logs[$_i] = $now_date . $_line;
-                } else {
-                    $logs[$_i] = str_repeat( ' ', strlen( $now_date ) ) . $_line;
-                }
+    public static function logger( $contents, string $identifier = '', string $log_file = '' ): void {
+        if ( ! empty( $contents ) ) {
+            switch ( gettype( $contents ) ) {
+                case 'integer':
+                    $logs = (string) intval( $contents );
+                    break;
+                case 'double':
+                    $logs = (string) floatval( $contents );
+                    break;
+                case 'boolean':
+                    $logs = $contents ? 'TRUE' : 'FALSE';
+                    break;
+                case 'array':
+                case 'object':
+                    $logs = json_encode( $contents, JSON_PRETTY_PRINT );
+                    break;
+                case 'string':
+                default:
+                    $logs = (string) $contents;
+            }
+            // Set the timezone set in WordPress
+            date_default_timezone_set( wp_timezone_string() );
+            $now_date = date_i18n( 'Y-m-d H:i:s' );
+            if ( empty( $identifier ) ) {
+                $log_line = sprintf( '[%s] %s', $now_date, $logs );
+            } else {
+                $log_line = sprintf( '[%s] "%s" %s', $now_date, $identifier, $logs );
             }
             if ( empty( $log_file ) ) 
                 $log_file = IGNITOR_PLUGIN_DIR . 'wp-ignitor.log';
@@ -878,7 +1195,7 @@ trait utils {
              * @hook  filter
              */
             $log_file = apply_filters( 'wpignitor_logfile_path', $log_file, $logs );
-            error_log( implode( "\n", $logs ) . "\n", 3, $log_file );
+            error_log( $log_line . "\n", 3, $log_file );
         }
     }
 

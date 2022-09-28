@@ -97,7 +97,7 @@ $deny_login_redirect = $this->get_option( 'deny_login_redirect' );
           </ul>
           <div class="d-flex-row">
             <input type="text" id="allow-login-ips-new" value="" class="normal-text core" placeholder="<?= __( 'Add New IP Address', IGNITOR ) ?>" pattern="^[0-9.]+$"
-            ><button
+            data-invalid-text="<?= __( 'Allowed characters: 0-9 and colons only', IGNITOR ) ?>"><button
               type="button"
               id="add-fluctuation-login-ip"
               data-from-id="allow-login-ips-new"

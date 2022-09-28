@@ -88,12 +88,17 @@ function _increaseItem( elementId, value, options ) {
  * @param {object} self  A clicked button element
  */
 function _decreaseItem( self ) {
-    let removeElm = self.parentNode
+    let removeElm = self.parentNode,
+        _callback = self.dataset.callback || ''
 
     removeElm.style.opacity = 0
-    sleep(200).then(() => {
-        removeElm.parentNode.removeChild(removeElm)
-        callback[self.dataset.callback]()
+    sleep(301).then(() => {
+        if (isElement(removeElm.parentNode)) {
+            removeElm.parentNode.removeChild(removeElm)
+            if (_callback) {
+                callback[_callback]()
+            }
+        }
     })
 }
 
@@ -112,7 +117,7 @@ function _formatError( field ) {
     }, false)
     if ( ! parentElm.querySelector('.short-lived') ) {
         alertElm.classList.add('surfix', 'text-alert', 'short-lived')
-        alertElm.textContent = 'Incorrect format of inputted'
+        alertElm.textContent = field.dataset.invalidText || 'Incorrect format of inputted'
         parentElm.appendChild(alertElm)
         sleep(1200).then(() => {
             alertElm.style.opacity = 0

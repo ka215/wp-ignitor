@@ -15,7 +15,7 @@ trait filters {
      * @package WordPress(core)
      * @since 4.6.0
      */
-    public function wp_resource_hints( array $urls, string $relation_type ): array {
+    public function wp_resource_hints( array $urls, ?string $relation_type ): array {
         $cleanup_options = $this->get_option( 'cleanup_html' );
         if ( isset( $cleanup_options['prefetch'] ) && $cleanup_options['prefetch'] && 'dns-prefetch' === $relation_type && ! is_admin() ) {
             return array_diff( wp_dependencies_unique_hosts(), $urls );
@@ -149,7 +149,7 @@ trait filters {
      * @package WordPress(core)
      * @since 2.8.0 -> 4.2.0
      */
-    public function login_url( string $login_url, string $redirect, bool $force_reauth ): string {
+    public function login_url( string $login_url, ?string $redirect, ?bool $force_reauth ): string {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
             $login_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $login_url );
@@ -164,7 +164,7 @@ trait filters {
      * @package WordPress(core)
      * @since 2.8.0
      */
-    public function logout_url( string $logout_url, string $redirect ): string {
+    public function logout_url( string $logout_url, ?string $redirect ): string {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
             $logout_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $logout_url );
@@ -194,7 +194,7 @@ trait filters {
      * @package WordPress(core)
      * @since 2.8.0
      */
-    public function lostpassword_url( string $lostpassword_url, string $redirect ): string {
+    public function lostpassword_url( string $lostpassword_url, ?string $redirect ): string {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
             $lostpassword_url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $lostpassword_url );
@@ -209,7 +209,7 @@ trait filters {
      * @package WordPress(core)
      * @since 2.1.0
      */
-    public function wp_redirect( string $location, int $status ): string {
+    public function wp_redirect( string $location, ?int $status ): string {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
             if ( strpos( $_SERVER['REQUEST_URI'], $current_new_login['path'] ) !== false ) {
@@ -229,13 +229,20 @@ trait filters {
      * @package WordPress(core)
      * @since 2.7.0
      */
-    public function site_url( string $url, string $path, ?string $scheme, ?int $blog_id ): string {
+    public function site_url( string $url, ?string $path, ?string $scheme, ?int $blog_id ): string {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
             if ( $path === 'wp-login.php' ) {
                 if ( is_user_logged_in() || strpos( $_SERVER['REQUEST_URI'], $current_new_login['path'] ) !== false ) {
                     $url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $url );
                 }
+            } else
+            if ( strpos( $path, 'wp-login.php' ) !== false ) {
+                // If called "login_form_confirm_admin_email" action when login.
+                if ( is_user_logged_in() || strpos( $_SERVER['REQUEST_URI'], $current_new_login['path'] ) !== false ) {
+                    $url = str_replace( $this->get_wp_install_dir() .'wp-login.php', $current_new_login['path'], $url );
+                }
+
             }
         }
         return $url;
@@ -248,7 +255,7 @@ trait filters {
      * @package WordPress(core)
      * @since 2.8.0
      */
-    public function admin_url( string $url, string $path, ?int $blog_id ): string {
+    public function admin_url( string $url, ?string $path, ?int $blog_id ): string {
         /*
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
@@ -262,6 +269,23 @@ trait filters {
         return $url;
     }
 
+	/**
+	 * Filters the interval for dismissing the admin email confirmation screen.
+	 * If `0` (zero) is returned, the "Remind me later" link will not be displayed.
+	 *
+     * @access public
+     * @package WordPress(core)
+	 * @since 5.3.1
+	 * @param int $interval Interval time (in seconds). Default is 3 days.
+	 */
+    public function admin_email_remind_interval( int $interval ): int {
+        $interval = 3 * DAY_IN_SECONDS;
+        // self::logger( $interval, __METHOD__ );
+        // $interval = 1 * MINUTE_IN_SECONDS;
+        return $interval;
+    }
+
+
     /**
      * Do 'all' actions first during `apply_filters()`
      *
@@ -270,8 +294,8 @@ trait filters {
      * @since 0.71
      */
     public function debug_all_filters(): void {
-        //echo '<p style="color:orange;">'. current_filter() .'</p>';
-        /*
+        // echo '<p style="color:orange;">'. current_filter() .'</p>';
+        /* * /
         switch ( current_filter() ) {
             //case 'replace_editor':
             //case 'site_url':
@@ -289,7 +313,7 @@ trait filters {
                 self::logger( $buffer );
                 break;
         }
-        */
+        /* */
     }
 
 }

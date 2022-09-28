@@ -65,16 +65,29 @@ trait actions {
         $cleanup_options = $this->get_option( 'cleanup_html' );
         if ( isset( $cleanup_options['feedlinks'] ) && $cleanup_options['feedlinks'] && array_key_exists( 'automatic-feed-links', $_wp_theme_features ) ) {
             // Prevent output all feed links
-            unset( $_wp_theme_features['automatic-feed-links'] );
+            $_wp_theme_features['automatic-feed-links'] = false;
         }
         if ( isset( $cleanup_options['comments'] ) && $cleanup_options['comments'] && array_key_exists( 'html5', $_wp_theme_features ) ) {
             // Disable comment
             unset( $_wp_theme_features['html5']['comment-form'] );
             unset( $_wp_theme_features['html5']['comment-list'] );
         }
+        if ( isset( $cleanup_options['block_editor'] ) && $cleanup_options['block_editor'] ) {
+            // Disable block editor
+            if ( array_key_exists( 'core-block-patterns', $_wp_theme_features ) ) {
+                $_wp_theme_features['core-block-patterns'] = false;
+            }
+            if ( array_key_exists( 'block-templates', $_wp_theme_features ) ) {
+                $_wp_theme_features['block-templates'] = false;
+            }
+            if ( array_key_exists( 'widgets-block-editor', $_wp_theme_features ) ) {
+                $_wp_theme_features['widgets-block-editor'] = false;
+            }
+        }
+        // self::logger( $_wp_theme_features, __METHOD__ );
         ob_start( function( $buffer ) {
-            // Remove the `<link rel="profile" href="https://gmpg.org/xfn/11">`
-            //$buffer = str_replace( "<link rel=\"profile\" href=\"https://gmpg.org/xfn/11\">\n", '', $buffer );
+            // Remove the `<link rel="profile" href="http://gmpg.org/xfn/11">`
+            $buffer = preg_replace( '@<link\s+rel=(\'|")profile(\'|")\s+href=(\'|")https?://gmpg.org/xfn/11(\'|")>@', '', $buffer );
             // Remove the `id='twentytwenty-*'` attributes
             //$buffer = preg_replace( '/id=(\'|")twentytwenty\-.*?(\'|")/', '', $buffer );
             if ( isset( $cleanup_options['oembeds'] ) && $cleanup_options['oembeds'] ) {
@@ -137,6 +150,11 @@ trait actions {
             remove_action( 'wp_head', 'rest_output_link_wp_head' );
             remove_action( 'template_redirect', 'rest_output_link_header', 11 );
         }
+        if ( isset( $cleanup_options['block_editor'] ) && $cleanup_options['block_editor'] ) {
+            remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
+            remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
+            remove_action( 'wp_footer', 'wp_enqueue_global_styles', 1 );
+        }
         remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
     }
 
@@ -174,6 +192,7 @@ trait actions {
             // Remove script tags for block editor
             wp_dequeue_style( 'wp-block-library' );
             wp_dequeue_style( 'wp-block-library-theme' );
+            wp_dequeue_style( 'global-styles' );
         }
     }
 
@@ -271,7 +290,9 @@ trait actions {
                                 $this->remove_dir_recursive( $old_install_path );
                             }
                             if ( ! empty( $failures ) ) {
-                                $this->logger( "Files that could not be removed: \n" . implode( "\n", $failures ) );
+                                if ( $this->debug ) {        
+                                    self::logger( "Files that could not be removed: \n" . implode( "\n", $failures ) );
+                                }
                                 $messages[] = __( 'The file move was successful, but some of the source files could not be removed.', IGNITOR );
                             } else {
                                 $messages[] = __( 'The files move completed successfully.', IGNITOR );
@@ -323,8 +344,18 @@ trait actions {
                     'referers' => array_values( filter_input( INPUT_POST, 'allow_referers', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [] ),
                 ];
                 $this->options['allow_sources'] = $allow_sources;
-                $advanced_htaccess = filter_input( INPUT_POST, 'advanced_htaccess', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [];
-                $advanced_htaccess = array_map( function( $item ) { return boolval( $item ); }, $advanced_htaccess );
+                $advanced_htaccess_base = filter_input( INPUT_POST, 'advanced_htaccess', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY ) ?? [];
+                $advanced_htaccess = array_map( function( $item ) {
+                    return boolval( $item );
+                }, $advanced_htaccess_base );
+                if ( isset( $advanced_htaccess['apache_auth_type'] ) && $advanced_htaccess['apache_auth_type'] ) {
+                    unset( $advanced_htaccess['apache_auth_type'] );
+                    $advanced_htaccess['apache_auth_type'] = $advanced_htaccess_base['apache_auth_type'];
+                }
+                if ( isset( $advanced_htaccess['apache_auth_user_file'] ) && $advanced_htaccess['apache_auth_user_file'] ) {
+                    unset( $advanced_htaccess['apache_auth_user_file'] );
+                    $advanced_htaccess['apache_auth_user_file'] = $advanced_htaccess_base['apache_auth_user_file'];
+                }
                 $this->options['advanced_htaccess'] = $advanced_htaccess;
                 $this->save_options();
                 $response = [
@@ -429,9 +460,7 @@ EOS;
      * @since 1.2.0
      */
     public function shutdown() {
-        if ( ob_get_contents() || ob_get_length() ) {
-            ob_end_flush();
-        }
+        while( @ob_end_flush() );
     }
 
     /**
@@ -444,8 +473,8 @@ EOS;
     public function login_init() {
         $current_new_login = $this->get_option( 'new_login' );
         if ( ! empty( $current_new_login ) ) {
-            //var_dump( __METHOD__, WPIGNITOR_LOGIN_PAGE_DIR, WPIGNITOR_LOGIN_PAGE_FILE, WPIGNITOR_LOGIN_PAGE_URL, WPIGNITOR_LOGIN_CREDENTIAL );
             $check_credential = hash( 'sha512', 'wp-ignitor@'. $_SERVER['HTTP_HOST'] .':'. $this->paths['views_dir'] .'entrance.php' );
+            // self::logger( [ __METHOD__, WPIGNITOR_LOGIN_PAGE_DIR, WPIGNITOR_LOGIN_PAGE_FILE, WPIGNITOR_LOGIN_PAGE_URL, WPIGNITOR_LOGIN_CREDENTIAL, $check_credential ] );
             if ( ! defined( 'WPIGNITOR_LOGIN_CREDENTIAL' ) || $check_credential !== WPIGNITOR_LOGIN_CREDENTIAL ) {
                 global $wp_query;
                 $wp_query->set_404();
@@ -483,6 +512,8 @@ EOS;
                 }
             }
         }
+        //update_option( 'admin_email_lifespan', time() );
+        //self::logger( date_i18n( 'Y-m-d H:i:s', get_option( 'admin_email_lifespan' ) ) );
     }
 
     /**
@@ -493,7 +524,13 @@ EOS;
      * @since 1.2.0 -> 5.3.0
      */
     public function debug_all_actions(): void {
-        //echo '<p style="color:blue;">'. current_action() .'</p>';
+        /*
+        echo '<p style="color:blue;">'. current_action() .'</p>';
+        if ( 'wpcf7_upload_dir' === current_action() ) {
+            var_dump( func_get_arg(1) );
+        }
+        */
+        //ini_set( 'memory_limit', '-1' );
         //self::logger( __METHOD__ .':'. current_action() .'::['. func_get_arg(1) .']' );
     }
 

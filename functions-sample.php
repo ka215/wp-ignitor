@@ -16,6 +16,7 @@
  * - wpignitor_remote_request_args( array $args, string $get_uri ): array
  * - wpignitor_remote_retrieve_html( string $raw_html, string $get_uri, array|WP_Error $response ): string
  * - wpignitor_emergency_recovery( bool $run_recovery ): bool
+ * - wpignitor_apache_auth_user_file_path( string $dist_path ): string
  */
 
 /* Hook implementation example:

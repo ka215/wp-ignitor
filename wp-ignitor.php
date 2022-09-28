@@ -11,9 +11,9 @@
  * Plugin Name:       WP Ignitor
  * Plugin URI:        https://ka2.org/wp-ignitor
  * Description:       Now let's ignition to your site, with conceal that we are WordPress and get starting with the stronger defensive turn.
- * Version:           1.0.4
+ * Version:           1.1.0
  * Requires at least: 5.2.9
- * Requires PHP:      7.2
+ * Requires PHP:      7.4
  * Author:            Ka2
  * Author URI:        https://ka2.org
  * Text Domain:       wpignitor
@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License
 along with WP Ignitor. If not, see http://www.gnu.org/licenses/gpl-2.0.txt.
 */
 
-defined( 'IGNITOR_PLUGIN_VERSION' ) or define( 'IGNITOR_PLUGIN_VERSION', '1.0.4' );
+defined( 'IGNITOR_PLUGIN_VERSION' ) or define( 'IGNITOR_PLUGIN_VERSION', '1.1.0' );
 defined( 'IGNITOR_PLUGIN_DIR' ) or define( 'IGNITOR_PLUGIN_DIR', str_replace( '\\', '/', plugin_dir_path( __FILE__ ) ) );
 defined( 'IGNITOR' ) or define( 'IGNITOR', 'wpignitor' );// This plugin's Text Domain
 defined( 'IGNITOR_DEBUG' ) or define( 'IGNITOR_DEBUG', false );
