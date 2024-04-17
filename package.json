@@ -1,6 +1,6 @@
 {
   "name": "wp-ignitor",
-  "version": "1.0.4",
+  "version": "1.1.1",
   "description": "WP-Ignitor is an ignition kit of WordPress. Let's hide that we are WordPress and get starting with the strong defensive turn.",
   "main": "wp-ignitor.php",
   "scripts": {
