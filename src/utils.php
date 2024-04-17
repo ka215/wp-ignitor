@@ -322,13 +322,13 @@ trait utils {
     /**
      * Check if your PHP environment supports valid Phar class.
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.1
      * @access public
      */
     public static function is_valid_phar(): bool {
         $version = \Phar::apiVersion();
         if ( ! version_compare( $version, '1.0.0', '>=' ) ) {
-            if ( $this->debug ) {
+            if ( IGNITOR_DEBUG ) {
                 self::logger( sprintf( __( 'The current PHP environment does not support Phar class (%s).', IGNITOR ), $version ) );
             }
             return false;
@@ -1151,7 +1151,7 @@ trait utils {
     /**
      * Logger for this plugin only
      *
-     * @since 1.0.0 -> 1.1.0
+     * @since 1.0.0 -> 1.1.1
      * @access public
      *
      * @param mixed     $contents       Log contents.
@@ -1179,7 +1179,16 @@ trait utils {
                     $logs = (string) $contents;
             }
             // Set the timezone set in WordPress
-            date_default_timezone_set( wp_timezone_string() );
+            $wpTimezone = wp_timezone_string();
+            if ( preg_match( '/^([+-])(2[0-3]|[01][0-9]):([0-5][0-9])$/', $wpTimezone, $matches ) ) {
+                $timezoneOffsetSecounds = ( $matches[1] === '-' ? -1 : 1 ) * ((int)$matches[2] * 3600 + (int)$matches[3] * 60);
+                $isDaylightSavingTime = date( 'I' ) == 1;
+                $wpTimezone = timezone_name_from_abbr( '', $timezoneOffsetSecounds, $isDaylightSavingTime );
+            }
+            if ( empty( $wpTimezone ) ) {
+                $wpTimezone = date_default_timezone_get();
+            }
+            date_default_timezone_set( $wpTimezone );
             $now_date = date_i18n( 'Y-m-d H:i:s' );
             if ( empty( $identifier ) ) {
                 $log_line = sprintf( '[%s] %s', $now_date, $logs );

@@ -517,13 +517,13 @@ trait admin {
      * Perform each process by handling the POST values on the plugin configuration page.
      *
      * @package WpIgnitor
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.1
      */
     public function execute_plugin_settings(): array {
         $is_success  = false;
         $messages    = [];
-        $nonce       = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
-        $current_tab = filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_STRING );
+        $nonce       = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_SPECIAL_CHARS );
+        $current_tab = filter_input( INPUT_POST, 'tab', FILTER_SANITIZE_SPECIAL_CHARS );
         if ( ! wp_verify_nonce( $nonce, $current_tab .'@'. IGNITOR ) ) {
             // Invalid access
             return [ 'state' => 'error', 'message' => __( 'Invalid access.', IGNITOR ) ];

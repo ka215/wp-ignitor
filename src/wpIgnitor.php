@@ -33,7 +33,7 @@ class wpIgnitor extends abstractClass {
      * @access public
      * @var boolean
      */
-    protected $debug = IGNITOR_DEBUG;
+    public $debug = IGNITOR_DEBUG;
 
     /**
      * Holds errors object
@@ -92,6 +92,14 @@ class wpIgnitor extends abstractClass {
     public $user_language;
 
     /**
+     * Holds flag of emergency recovery done
+     * 
+     * @access public
+     * @var boolean
+     */
+    public $emergency_recovery_done = false;
+
+    /**
      * Holds database handler
      *
      * @access protected
@@ -139,7 +147,7 @@ class wpIgnitor extends abstractClass {
     /**
      * loads the plugin
      *
-     * @since  1.0.0
+     * @since  1.0.0 -> 1.1.1
      * @access protected
      */
     protected function load() {
@@ -159,7 +167,6 @@ class wpIgnitor extends abstractClass {
         // Initialize the errors object for this plugin
         $this->errors = new \WP_Error();
 
-        $this->emergency_recovery_done = false;
         //add_filter( 'auto_update_plugin', '__return_false' );
 
         // Action hooks: refer definition in "actions" trait
@@ -220,6 +227,7 @@ class wpIgnitor extends abstractClass {
         //add_shortcode( 'shortcode_handler',         [ $this, 'shortcode_method' ] );// Reference: shortcodes
 
         // For debug
+        $this->logger( $this->debug );
         if ( $this->debug ) {
             add_action( 'all', [ $this, 'debug_all_actions' ] );
             add_filter( 'all', [ $this, 'debug_all_filters' ] );
@@ -250,7 +258,7 @@ class wpIgnitor extends abstractClass {
     /**
      * Callback that fires when the plugin is activated
      *
-     * @since  1.0.0
+     * @since  1.0.0 -> 1.1.1
      * @access public
      */
     public static function plugin_activation() {
@@ -265,7 +273,7 @@ class wpIgnitor extends abstractClass {
             ob_get_clean();
             $logs[] = $buffer;
         }
-        if ( $this->debug ) {        
+        if ( IGNITOR_DEBUG ) {        
             self::logger( $logs );
         }
     }
@@ -273,12 +281,12 @@ class wpIgnitor extends abstractClass {
     /**
      * Callback that fires when the plugin is deactivated
      *
-     * @since  1.0.0
+     * @since  1.0.0 -> 1.1.1
      * @access public
      */
     public static function plugin_deactivation() {
         $logs = [ '"WP Ignitor" plugin deactivated!' ];
-        if ( $this->debug ) {        
+        if ( IGNITOR_DEBUG ) {
             self::logger( $logs );
         }
     }

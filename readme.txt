@@ -2,8 +2,8 @@
 Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
-Tested up to: 6.0.2
-Stable tag: 1.1.0
+Tested up to: 6.5.2
+Stable tag: 1.1.1
 Text Domain: wpignitor
 Domain Path: /languages/
 License: GPL v2 or later
@@ -81,6 +81,13 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 4. The utilities section contains useful features for site management.
 
 == Changelog ==
+
+= 1.1.1 =
+Bump to version - April 17, 2024
+
+* Fixed a bug where plugins could not be activate/deactivate since PHP8.x.
+* Fixed invalid accessors for class member variables and methods.
+* Fixed some other minor bugs.
 
 = 1.1.0 =
 Bump to version - September 28, 2022
