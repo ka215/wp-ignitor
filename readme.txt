@@ -3,7 +3,7 @@ Contributors: Ka2
 Tags: management
 Requires at least: 5.2.9
 Tested up to: 6.5.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Text Domain: wpignitor
 Domain Path: /languages/
 License: GPL v2 or later
@@ -81,6 +81,12 @@ Refer to [WP_Http::request()](https://developer.wordpress.org/reference/classes/
 4. The utilities section contains useful features for site management.
 
 == Changelog ==
+
+= 1.1.2 =
+Bump to version - April 18, 2024
+
+* Add filter-hooks of "wpignitor_get_remote_hosts", "wpignitor_get_remote_addr", "wpignitor_get_fqdn" and "wpignitor_remote_request_uri".
+* Removed the process to overwrite the default time zone in this plugin.
 
 = 1.1.1 =
 Bump to version - April 17, 2024

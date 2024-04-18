@@ -96,7 +96,7 @@ trait utils {
     /**
      * Get remote hosts
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.2
      * @access public
      */
     public static function get_remote_hosts(): array {
@@ -107,13 +107,20 @@ trait utils {
         if ( ! empty( $_SERVER['REMOTE_HOST'] ) ) {
             $remote_hosts[] = $_SERVER['REMOTE_HOST'];
         }
-        return array_unique( $remote_hosts, SORT_STRING );
+        $remote_hosts = array_unique( $remote_hosts, SORT_STRING );
+        /**
+         * Filter the remote hosts retrieved from system
+         * 
+         * @since 1.1.2
+         * @hook  filter
+         */
+        return apply_filters( 'wpignitor_get_remote_hosts', $remote_hosts );
     }
 
     /**
      * Get remote IP address
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.2
      * @access public
      */
     public static function get_remote_addr(): string {
@@ -124,20 +131,31 @@ trait utils {
         } else {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
-        return $ip;
+        /**
+         * Filter the remote addr retrieved from system
+         * 
+         * @since 1.1.2
+         * @hook  filter
+         */
+        return apply_filters( 'wpignitor_get_remote_addr', $ip );
     }
 
     /**
      * Get current domain
      *
-     * @since 1.0.0
+     * @since 1.0.0 -> 1.1.2
      * @access public
      */
     public static function get_fqdn(): string {
         $urlparts = parse_url( home_url() );
         $fqdn = $urlparts['host'];
-        // $fqdn == $_SERVER['HTTP_HOST']
-        return $fqdn;
+        /**
+         * Filter the current domain from system
+         * 
+         * @since 1.1.2
+         * @hook  filter
+         */
+        return apply_filters( 'wpignitor_get_fqdn', $fqdn );
     }
 
     /**
@@ -244,11 +262,18 @@ trait utils {
     /**
      * Get frontend HTML
      *
-     * @since 1.0.0 -> 1.0.1
+     * @since 1.0.0 -> 1.0.1 -> 1.1.2
      * @access public
      */
     public function get_frontend_html( string $path = '/', string $element = '', bool $to_string = false ): string {
         $get_uri = home_url( $path );
+        /**
+         * Filter the HTTP request URI to give into wp_remote_request()
+         * 
+         * @since 1.1.2
+         * @hook  filter
+         */
+        $get_uri = apply_filters( 'wpignitor_remote_request_uri', $get_uri, $path );
         $result = '';
         /**
          * Filter the HTTP request arguments to give into wp_remote_request()
@@ -1151,7 +1176,7 @@ trait utils {
     /**
      * Logger for this plugin only
      *
-     * @since 1.0.0 -> 1.1.1
+     * @since 1.0.0 -> 1.1.2
      * @access public
      *
      * @param mixed     $contents       Log contents.
@@ -1178,6 +1203,7 @@ trait utils {
                 default:
                     $logs = (string) $contents;
             }
+            /*
             // Set the timezone set in WordPress
             $wpTimezone = wp_timezone_string();
             if ( preg_match( '/^([+-])(2[0-3]|[01][0-9]):([0-5][0-9])$/', $wpTimezone, $matches ) ) {
@@ -1189,6 +1215,7 @@ trait utils {
                 $wpTimezone = date_default_timezone_get();
             }
             date_default_timezone_set( $wpTimezone );
+            */
             $now_date = date_i18n( 'Y-m-d H:i:s' );
             if ( empty( $identifier ) ) {
                 $log_line = sprintf( '[%s] %s', $now_date, $logs );
